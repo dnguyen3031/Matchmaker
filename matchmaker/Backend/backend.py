@@ -4,7 +4,7 @@ from flask import jsonify
 from flask_cors import CORS
 import random
 import string
-from model_mongodb import User
+from mongodb import User
 from bson import ObjectId
 
 app = Flask(__name__)
