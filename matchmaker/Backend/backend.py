@@ -68,3 +68,29 @@ games = {
         }
     ]
 }
+
+@app.route('/home/<id>', methods=['GET', 'POST'])
+def get_users():
+    if request.method == 'GET':
+        user = User({"_id": id})
+        if user.reload():
+            return user
+        else:
+            return jsonify({"error": "User not found"}), 404
+    elif request.method == 'POST':
+        userToAdd = request.get_json()
+        # userToAdd['id'] = generate_id() #old code left here for comparuson
+        # users['users_list'].append(userToAdd) #old code left here for comparuson
+        newUser = User(userToAdd)
+        newUser.save()
+        resp = jsonify(newUser), 201
+        return resp
+
+@app.route('/profile/<id>', methods=['GET'])
+def get_users():
+    if request.method == 'GET':
+        user = User({"_id": id})
+        if user.reload():
+            return user
+        else:
+            return jsonify({"error": "User not found"}), 404
