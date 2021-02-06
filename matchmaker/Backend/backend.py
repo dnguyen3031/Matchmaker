@@ -38,6 +38,7 @@ users = {
 games = {
     'games_list': [
         {
+            '_id': '8582',
             'game_name': 'Krunker',
             'category': 'FPS',
             'game_modes': [

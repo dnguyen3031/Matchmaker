@@ -34,7 +34,12 @@ class Model(dict):
 
 
 class User(Model):
-    db_client = pymongo.MongoClient('localhost', 27017)
+    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
+
+    db_client = pymongo.MongoClient(
+        "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
+    # db = client.test
+
     collection = db_client["users"]["users_list"]
 
     def find_all(self):
