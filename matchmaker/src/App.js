@@ -1,24 +1,43 @@
-import logo from './logo.svg';
 import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Home from './components/pages/Home';
+import Signup from './components/pages/Signup';
+import ProfilePage from './components/pages/ProfilePage';
+import Login from './components/pages/Login';
+import Matchmaking from './components/pages/Matchmaking';
+import LeaderboardPage from './components/pages/LeaderboardPage';
+
+import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/matchmaking">
+            <Matchmaking />
+            </Route>
+          <Route path="/leaderboard">
+            <LeaderboardPage />
+          </Route>
+          <Route path="/profile">
+            <ProfilePage />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
