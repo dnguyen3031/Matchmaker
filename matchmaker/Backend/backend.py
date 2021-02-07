@@ -49,23 +49,17 @@ games = {
                 {
                     'mode_name': 'Free For All',
                     'relevant_stats': [
-                        {
-                            'stat_name': 'k/d'
-                        },
-                        {
-                            'stat_name': 'win/loss'
-                        }
+                        'kills',
+                        'deaths',
+                        'win/loss'
                     ]
                 },
                 {
                     'mode_name': 'Team Deathmatch',
                     'relevant_stats': [
-                        {
-                            'stat_name': 'k/d'
-                        },
-                        {
-                            'stat_name': 'win/loss'
-                        }
+                            'kills',
+                            'deaths',
+                            'win/loss'
                     ]
                 }
             ]
