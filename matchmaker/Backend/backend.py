@@ -90,7 +90,7 @@ def get_users():
         resp = jsonify(newUser), 201
         return resp
 
-@app.route('/users/<id>', methods=['GET', 'DELETE'])
+@app.route('/users/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_user():
     if request.method == 'GET':
         user = User({"_id": id})
@@ -104,6 +104,13 @@ def get_user():
             resp = jsonify(), 204
             return resp
         return jsonify({"error": "User not found"}), 404
+    elif request.method == 'PATCH':
+        userToUpdate = request.get_json()
+        userToUpdate["_id"] = id
+        newUser = User(userToUpdate)
+        newUser.save()
+        resp = jsonify(newUser), 201
+        return resp
 
 
 @app.route('/games', methods=['GET', 'POST'])
@@ -123,7 +130,7 @@ def get_games():
         resp = jsonify(newGame), 201
         return resp
 
-@app.route('/games/<id>', methods=['GET', 'DELETE'])
+@app.route('/games/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_game():
     if request.method == 'GET':
         game = Game({"_id": id})
@@ -137,3 +144,10 @@ def get_game():
             resp = jsonify(), 204
             return resp
         return jsonify({"error": "Game not found"}), 404
+    elif request.method == 'PATCH':
+        gameToUpdate = request.get_json()
+        gameToUpdate["_id"] = id
+        newGame = User(gameToUpdate)
+        newGame.save()
+        resp = jsonify(newGame), 201
+        return resp

@@ -32,7 +32,6 @@ class Model(dict):
             resp = self.collection.delete_one({"_id": ObjectId(self._id)})
             return resp.deleted_count
 
-
 class User(Model):
     # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
 
