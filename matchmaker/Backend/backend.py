@@ -41,7 +41,10 @@ games = {
         {
             '_id': '8582',
             'game_name': 'Krunker',
-            'category': 'FPS',
+            'categories': [
+                'FPS',
+                'Free'
+                ],
             'game_modes': [
                 {
                     'mode_name': 'Free For All',
