@@ -5,6 +5,7 @@ from flask_cors import CORS
 import random
 import string
 from mongodb import User
+from mongodb import Game
 from bson import ObjectId
 
 app = Flask(__name__)
@@ -69,28 +70,67 @@ games = {
     ]
 }
 
-@app.route('/home/<id>', methods=['GET', 'POST'])
+@app.route('/users', methods=['GET', 'POST'])
 def get_users():
     if request.method == 'GET':
-        user = User({"_id": id})
-        if user.reload():
-            return user
+        search_username = request.args.get('name')
+        if search_username:
+            # return find_users_by_name(search_username) #old code left here for comparuson
+            users = User().find_by_name(search_username)
         else:
-            return jsonify({"error": "User not found"}), 404
+            users = User().find_all()
+        return {"users_list": users}
     elif request.method == 'POST':
         userToAdd = request.get_json()
-        # userToAdd['id'] = generate_id() #old code left here for comparuson
-        # users['users_list'].append(userToAdd) #old code left here for comparuson
         newUser = User(userToAdd)
         newUser.save()
         resp = jsonify(newUser), 201
         return resp
 
-@app.route('/profile/<id>', methods=['GET'])
-def get_users():
+@app.route('/users/<id>', methods=['GET', 'DELETE'])
+def get_user():
     if request.method == 'GET':
         user = User({"_id": id})
         if user.reload():
             return user
         else:
             return jsonify({"error": "User not found"}), 404
+    elif request.method == 'DELETE':  ## still the old version. Turn it into the DB version
+        user = User({"_id": id})
+        if user.remove():
+            resp = jsonify(), 204
+            return resp
+        return jsonify({"error": "User not found"}), 404
+
+
+@app.route('/games', methods=['GET', 'POST'])
+def get_games():
+    if request.method == 'GET':
+        search_gamename = request.args.get('game_name')
+        if search_gamename:
+            # return find_users_by_name(search_username) #old code left here for comparuson
+            games = Game().find_by_name(search_gamename)
+        else:
+            games = Game().find_all()
+        return {"games_list": games}
+    elif request.method == 'POST':
+        gameToAdd = request.get_json()
+        newGame = Game(gameToAdd)
+        newGame.save()
+        resp = jsonify(newGame), 201
+        return resp
+
+@app.route('/games/<id>', methods=['GET', 'DELETE'])
+def get_game():
+    if request.method == 'GET':
+        game = Game({"_id": id})
+        if game.reload():
+            return game
+        else:
+            return jsonify({"error": "Game not found"}), 404
+    elif request.method == 'DELETE':  ## still the old version. Turn it into the DB version
+        game = Game({"_id": id})
+        if game.remove():
+            resp = jsonify(), 204
+            return resp
+        return jsonify({"error": "Game not found"}), 404
