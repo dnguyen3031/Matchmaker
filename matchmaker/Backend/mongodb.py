@@ -54,8 +54,24 @@ class User(Model):
             user["_id"] = str(user["_id"])
         return users
 
-    def find_by_name_job(self, name, job):
-        users = list(self.collection.find({"name": name, "job": job}))
-        for user in users:
-            user["_id"] = str(user["_id"])
-        return users
+
+class Game(Model):
+    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
+
+    db_client = pymongo.MongoClient(
+        "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
+    # db = client.test
+
+    collection = db_client["games"]["games_list"]
+
+    def find_all(self):
+        games = list(self.collection.find())
+        for game in games:
+            game["_id"] = str(game["_id"])  # converting ObjectId to str
+        return games
+
+    def find_by_name(self, name):
+        games = list(self.collection.find({"name": name}))
+        for game in games:
+            game["_id"] = str(game["_id"])
+        return games
