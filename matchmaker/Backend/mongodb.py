@@ -19,12 +19,15 @@ class Model(dict):
         self._id = str(self._id)
 
     def patch(self):
-        old_entry = self.collection.find_one({"_id": ObjectId(self._id)})
-        for field in old_entry.keys():
-            if field not in self:
-                self.update({field: old_entry[field]})
-        self.collection.update(
-            {"_id": ObjectId(self._id)}, self)
+        if not self._id:
+            self.collection.insert(self)
+        else:
+            old_entry = self.collection.find_one({"_id": ObjectId(self._id)})
+            for field in old_entry.keys():
+                if field not in self:
+                    self.update({field: old_entry[field]})
+            self.collection.update(
+                {"_id": ObjectId(self._id)}, self)
         self._id = str(self._id)
 
     def reload(self):
