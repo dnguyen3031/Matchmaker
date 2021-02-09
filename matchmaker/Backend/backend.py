@@ -67,6 +67,12 @@ games = {
     ]
 }
 
+
+@app.route('/')
+def backend_home():
+    return 'You have reached the backend'
+
+
 @app.route('/users', methods=['GET', 'POST'])
 def get_users():
     if request.method == 'GET':
@@ -85,7 +91,7 @@ def get_users():
         return resp
 
 @app.route('/users/<id>', methods=['GET', 'DELETE', 'PATCH'])
-def get_user():
+def get_user(id):
     if request.method == 'GET':
         user = User({"_id": id})
         if user.reload():
@@ -100,9 +106,9 @@ def get_user():
         return jsonify({"error": "User not found"}), 404
     elif request.method == 'PATCH':
         userToUpdate = request.get_json()
-        userToUpdate["_id"] = id
+        userToUpdate["_id"] = ObjectId(id)
         newUser = User(userToUpdate)
-        newUser.save()
+        newUser.patch()
         resp = jsonify(newUser), 201
         return resp
 
@@ -112,7 +118,6 @@ def get_games():
     if request.method == 'GET':
         search_gamename = request.args.get('game_name')
         if search_gamename:
-            # return find_users_by_name(search_username) #old code left here for comparuson
             games = Game().find_by_name(search_gamename)
         else:
             games = Game().find_all()
@@ -125,7 +130,7 @@ def get_games():
         return resp
 
 @app.route('/games/<id>', methods=['GET', 'DELETE', 'PATCH'])
-def get_game():
+def get_game(id):
     if request.method == 'GET':
         game = Game({"_id": id})
         if game.reload():
@@ -140,8 +145,8 @@ def get_game():
         return jsonify({"error": "Game not found"}), 404
     elif request.method == 'PATCH':
         gameToUpdate = request.get_json()
-        gameToUpdate["_id"] = id
-        newGame = User(gameToUpdate)
-        newGame.save()
+        gameToUpdate["_id"] = ObjectId(id)
+        newGame = Game(gameToUpdate)
+        newGame.patch()
         resp = jsonify(newGame), 201
         return resp

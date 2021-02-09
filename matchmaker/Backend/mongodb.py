@@ -18,6 +18,15 @@ class Model(dict):
                 {"_id": ObjectId(self._id)}, self)
         self._id = str(self._id)
 
+    def patch(self):
+        old_entry = self.collection.find_one({"_id": ObjectId(self._id)})
+        for field in old_entry.keys():
+            if field not in self:
+                self.update({field: old_entry[field]})
+        self.collection.update(
+            {"_id": ObjectId(self._id)}, self)
+        self._id = str(self._id)
+
     def reload(self):
         if self._id:
             result = self.collection.find_one({"_id": ObjectId(self._id)})
@@ -69,8 +78,8 @@ class Game(Model):
             game["_id"] = str(game["_id"])  # converting ObjectId to str
         return games
 
-    def find_by_name(self, name):
-        games = list(self.collection.find({"name": name}))
+    def find_by_name(self, game_name):
+        games = list(self.collection.find({"game_name": game_name}))
         for game in games:
             game["_id"] = str(game["_id"])
         return games
