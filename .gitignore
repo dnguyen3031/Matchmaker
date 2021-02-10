@@ -28,7 +28,7 @@ share/python-wheels/
 MANIFEST
 
 # dependencies
-/node_modules
+node_modules/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
