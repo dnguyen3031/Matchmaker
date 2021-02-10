@@ -13,59 +13,73 @@ app = Flask(__name__)
 # CORS stands for Cross Origin Requests.
 CORS(app)  # Here we'll allow requests coming from any domain. Not recommended for production environment.
 
-users = {
-    'users_list': [
-        {
-            '_id': 'xyz789',
-            'Username': 'Charlie',
-            'bio': 'Janitor',
-            'password': '123',
-            'contact_info': [
-                {
-                    'email': 'fuck@gmail.com',
-                    'discord': 'damn#1234'
-                }
-            ],
-            'games_table': [
-                {
-                    'game_name': 'Krunker',
-                    'game_score': '420'
-                }
-            ]
-        }
-    ]
-}
 
-games = {
-    'games_list': [
-        {
-            '_id': '8582',
-            'game_name': 'Krunker',
-            'categories': [
-                'FPS',
-                'Free'
-                ],
-            'game_modes': [
-                {
-                    'mode_name': 'Free For All',
-                    'relevant_stats': [
-                        'kills',
-                        'deaths',
-                        'win/loss'
-                    ]
-                },
-                {
-                    'mode_name': 'Team Deathmatch',
-                    'relevant_stats': [
-                            'kills',
-                            'deaths',
-                            'win/loss'
-                    ]
-                }
-            ]
-        }
-    ]
-}
+# users = {
+#     'users_list': [
+#         {
+#             "_id": "6024098ac9b27e9f9995df97",
+#             "bio": "the template for a user",
+#             "contact_info": {
+#                 "discord": "template#1234",
+#                 "email": "template@gmail.com"
+#             },
+#             "games_table": {
+#                 "Krunker": {
+#                     "game_score": "420",
+#                     "time_played": "2.4"
+#                 },
+#                 "Minecraft": {
+#                     "game_score": "69",
+#                     "time_played": "128.2"
+#                 }
+#             },
+#             "name": "Template",
+#             "password": "no security"
+#         }
+#     ]
+# }
+#
+# games = {
+#     "games_list": [
+#         {
+#             "_id": "60240d8261cfcfb0e9a958cb",
+#             "categories": [
+#                 "FPS",
+#                 "Free",
+#                 "Browser Game"
+#             ],
+#             "game_modes": {
+#                 "Capture_The_Flag": {
+#                     "relevant_stats": [
+#                         "Score",
+#                         "Kills",
+#                         "Deaths",
+#                         "Win/Loss/Draw",
+#                         "Caps"
+#                     ]
+#                 },
+#                 "Free_For_All": {
+#                     "relevant_stats": [
+#                         "Kills",
+#                         "Deaths",
+#                         "Win/Loss/Draw",
+#                         "Score"
+#                     ]
+#                 },
+#                 "Team_Deathmatch": {
+#                     "relevant_stats": [
+#                         "Kills",
+#                         "Deaths",
+#                         "Win/Loss/Draw",
+#                         "Score"
+#                     ]
+#                 }
+#             },
+#             "game_name": "Krunker",
+#             "run_difficulty": "3"
+#         }
+#     ]
+# }
 
 
 @app.route('/')
@@ -89,6 +103,7 @@ def get_users():
         newUser.save()
         resp = jsonify(newUser), 201
         return resp
+
 
 @app.route('/users/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_user(id):
@@ -128,6 +143,7 @@ def get_games():
         newGame.save()
         resp = jsonify(newGame), 201
         return resp
+
 
 @app.route('/games/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_game(id):

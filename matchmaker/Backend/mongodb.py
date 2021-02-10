@@ -18,14 +18,22 @@ class Model(dict):
                 {"_id": ObjectId(self._id)}, self)
         self._id = str(self._id)
 
+    def merge_dict(self, cur, old):
+        for field in old.keys():
+            if field not in cur:
+                cur.update({field: old[field]})
+            elif isinstance(old[field], dict) and (field in cur):
+                self.merge_dict(cur[field], old[field])
+
     def patch(self):
         if not self._id:
             self.collection.insert(self)
         else:
             old_entry = self.collection.find_one({"_id": ObjectId(self._id)})
-            for field in old_entry.keys():
-                if field not in self:
-                    self.update({field: old_entry[field]})
+            self.merge_dict(self, old_entry)
+            # for field in old_entry.keys():
+            #     if field not in self:
+            #         self.update({field: old_entry[field]})
             self.collection.update(
                 {"_id": ObjectId(self._id)}, self)
         self._id = str(self._id)
@@ -43,6 +51,7 @@ class Model(dict):
         if self._id:
             resp = self.collection.delete_one({"_id": ObjectId(self._id)})
             return resp.deleted_count
+
 
 class User(Model):
     # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
