@@ -12,6 +12,7 @@ import ProfilePage from './components/pages/ProfilePage';
 import Login from './components/pages/Login';
 import Matchmaking from './components/pages/Matchmaking';
 import LeaderboardPage from './components/pages/LeaderboardPage';
+import CreateAccount from './components/pages/CreateAccount';
 
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
@@ -31,6 +32,9 @@ function App() {
           </Route>
           <Route path="/profile">
             <ProfilePage />
+          </Route>
+          <Route path="/create-account">
+            <CreateAccount />
           </Route>
           <Route path="/">
             <Home />
