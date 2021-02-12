@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Nav, Dropdown, DropdownButton, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 
 function CustomNavbar() {
    return <div>
@@ -11,16 +11,18 @@ function CustomNavbar() {
                <Nav.Link href="/matchmaking">Find Match</Nav.Link>
                <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                <Nav.Link href="/profile">Profile</Nav.Link>
+               <Nav.Link href="/create-account">Create Account (TEMPORARY PLACEMENT)</Nav.Link>
             </Nav>
-            <Nav className="justify-content-end">
-            <NavDropdown menuAlign="right" title="Dropdown" id="basic-nav-dropdown">
-               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-               <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-               <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-               <NavDropdown.Divider />
-               <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-            </NavDropdown>
-            </Nav>
+   
+            <DropdownButton variant="secondary" menuAlign="right" title="D0ughB0y25" id="dropdown-menu-align-right"> 
+            {/* className="pt-2" */}
+               <Dropdown.Item eventKey="1">Account Settings</Dropdown.Item>
+               <Dropdown.Item eventKey="2">Reload Vbucks</Dropdown.Item>
+               <Dropdown.Item eventKey="3">OMEGALUL</Dropdown.Item>
+               <Dropdown.Divider />
+               <Dropdown.Item eventKey="4">Logout</Dropdown.Item>
+            </DropdownButton>
+
          </Navbar.Collapse>
       </Navbar>
    </div>;
