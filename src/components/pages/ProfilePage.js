@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Row, Col, Container, Table, Card, Button} from 'react-bootstrap';
 import CustomNavbar from '../../CustomNavbar';
+import MakeGetCall from '../MakeCall';
 
-function ProfilePage() {
+function ProfilePage(props) {
    return <div> 
       <CustomNavbar />
       <Container fluid>
