@@ -7,11 +7,12 @@ function ProfilePage() {
       <CustomNavbar />
       <Container fluid>
          <Row>
-            <Col /> // there are 2 empty columns so that
-            <Col>  // profile is in the middle col
+            <Col /> 
+            {/*2 empty cols ensure middle col is centered */}
+            <Col> 
                <ProfileCard />
             </Col>
-            <Col /> // ^
+            <Col /> 
          </Row>
          <Row>
             <Col>
