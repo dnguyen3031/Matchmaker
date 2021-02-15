@@ -6,14 +6,13 @@ import axios from 'axios';
 function ProfilePage(props) {
    const [user, setUser] = useState([]);
    const [gamesList, setGamesList] = useState([]);
+   const [contactInfo, setContactInfo] = useState([]);
 
    useEffect(() => {
       fetchUser(props.id).then( result => {
          if (result)
             setUser(result);
-            // console.log("TT");
-            // console.log(result.games_table);
-            // console.log("TT");
+            setContactInfo(result.contact_info);
       });
    }, []);
 
@@ -30,10 +29,10 @@ function ProfilePage(props) {
    }
 
    for (var key in user.games_table){
-      gamesList.push([key, user.games_table[key]]);
+      gamesList.push([key, user.games_table[key]]); // This for loop takes the JSON response data and loads it into an useState array ([game title, game information])
    }
 
-   const rows = gamesList.map(game => {
+   const rows = gamesList.map(game => {  // Go through gamesList to format and to add it into rows. (game[0] is the title, and games[1] is the other information about game)
       return (
          <tr>
             <td>{game[0]}</td>
@@ -57,12 +56,12 @@ function ProfilePage(props) {
                   <Card.Text>
                      {user.bio}
                   </Card.Text>
-                  {/* <Card.Text>
-                     Discord: {user.contact_info}
-                  </Card.Text> */}
-                  {/* <Card.Text>
-                     Email: {user.contact_info.email}
-                  </Card.Text> */}
+                  <Card.Text>
+                     Discord: {contactInfo["discord"]}
+                  </Card.Text>
+                  <Card.Text>
+                     Email: {contactInfo["email"]}
+                  </Card.Text>
                   <Button variant="primary">Edit Profile</Button>
                </Card.Body>
                </Card>
@@ -71,7 +70,6 @@ function ProfilePage(props) {
          </Row>
          <Row>
             <Col>
-               {console.log(user.games_table)}
                <Table striped bordered hover className="mt-2">
                   <thead>
                      <tr>
