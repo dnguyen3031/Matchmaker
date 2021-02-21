@@ -31,7 +31,7 @@ function App() {
             <LeaderboardPage />
           </Route>
           <Route path="/profile">
-            <ProfilePage />
+            <ProfilePage id="6024098ac9b27e9f9995df97" />
           </Route>
           <Route path="/create-account">
             <CreateAccount />
