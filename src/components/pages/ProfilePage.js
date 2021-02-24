@@ -28,6 +28,7 @@ function ProfilePage(props) {
       }
    }
 
+   // if gamesList === []
    for (var key in user.games_table){
       gamesList.push([key, user.games_table[key]]); // This for loop takes the JSON response data and loads it into an useState array ([game title, game information])
    }
@@ -41,7 +42,8 @@ function ProfilePage(props) {
          </tr>
       )
    });
-
+   console.log(gamesList)
+ console.log(rows);
    return <div> 
       <CustomNavbar />
       <Container fluid>
