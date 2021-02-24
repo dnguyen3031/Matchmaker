@@ -4,17 +4,30 @@ import CustomNavbar from '../../CustomNavbar';
 import axios from 'axios';
 
 function ProfilePage(props) {
-   const [user, setUser] = useState([]);
+   const [id, setId] = useState("");
+   const [user, setUser] = useState({bio: "", 
+                                 contact_info: {discord: "", email: ""},
+                                 games_table: {},
+                                 name: "",
+                                 password: "",
+                                 _id: ""});
    const [gamesList, setGamesList] = useState([]);
-   const [contactInfo, setContactInfo] = useState([]);
+   const [contactInfo, setContactInfo] = useState({ discord: "", email: ""});
+   const [gamesTable, setGamesTable] = useState([]);
 
    useEffect(() => {
       fetchUser(props.id).then( result => {
-         if (result)
+         if (result) {
             setUser(result);
-            setContactInfo(result.contact_info);
+            // setContactInfo(result.contact_info);
+            // console.log(result.contact_info);
+            // setGamesTable(result.games_table);
+            // processGamesTable(result.games_table);
+         }
       });
    }, []);
+
+   console.log("THIS IS USER: ", user);
 
    async function fetchUser(id){
       try {
@@ -28,22 +41,44 @@ function ProfilePage(props) {
       }
    }
 
-   // if gamesList === []
-   for (var key in user.games_table){
-      gamesList.push([key, user.games_table[key]]); // This for loop takes the JSON response data and loads it into an useState array ([game title, game information])
+   const processGamesTable = param => {
+      for (var key in param) {
+         gamesList.push([key, param[key]]); // This for loop takes the JSON response data and loads it into an useState array ([game title, game information])
+      }
+
    }
 
-   const rows = gamesList.map(game => {  // Go through gamesList to format and to add it into rows. (game[0] is the title, and games[1] is the other information about game)
+   function TableBody() {
+      const rows = gamesList.map((game, index) => {  // Go through gamesList to format and to add it into rows. (game[0] is the title, and games[1] is the other information about game)
+         console.log(game[0]);
+         return (
+            <tr key={index}>
+               <td>{game[0]}</td>
+               <td>{game[1].game_score}</td>
+               <td>{game[1].time_played}</td>
+            </tr>
+         )
+      })
+      
       return (
-         <tr>
-            <td>{game[0]}</td>
-            <td>{game[1].game_score}</td>
-            <td>{game[1].time_played}</td>
-         </tr>
-      )
-   });
-   console.log(gamesList)
- console.log(rows);
+         <tbody>
+            {rows}
+         </tbody>
+      );
+   }
+
+   
+
+   // const rows = gamesList.map(game => {  // Go through gamesList to format and to add it into rows. (game[0] is the title, and games[1] is the other information about game)
+   //    return (
+   //       <tr>
+   //          <td>{game[0]}</td>
+   //          {/* <td>{game[1].game_score}</td>
+   //          <td>{game[1].time_played}</td> */}
+   //       </tr>
+   //    )
+   // });
+
    return <div> 
       <CustomNavbar />
       <Container fluid>
@@ -59,10 +94,10 @@ function ProfilePage(props) {
                      {user.bio}
                   </Card.Text>
                   <Card.Text>
-                     Discord: {contactInfo["discord"]}
+                     Discord: {user.contact_info.discord}
                   </Card.Text>
                   <Card.Text>
-                     Email: {contactInfo["email"]}
+                     Email: {user.contact_info.email}
                   </Card.Text>
                   <Button variant="primary">Edit Profile</Button>
                </Card.Body>
@@ -80,9 +115,23 @@ function ProfilePage(props) {
                         <th>Time Played</th>
                      </tr>
                   </thead>
-                  <tbody>
-                     {rows}
-                  </tbody>
+                  {/* {usersgamesList.map((game) => (
+                     <tr>
+                        <td>{game[0]}</td>
+                        <td>{game[1].game_score}</td>
+                        <td>{game[1].time_played}</td>
+                     </tr>
+                  ))} */}
+                  {Object.keys(user.games_table).map((game, i) => (  // Note we are mapping through a list of user.games_table keys, because of the Object.keys function
+                     <tr key={i}>
+                        <td>{game}</td>
+                        <td>{(user.games_table[game]).game_score}</td>
+                        <td>{(user.games_table[game]).time_played}</td>
+                     </tr>
+                  ))
+                  }
+      
+                  <TableBody />
                   </Table>
             </Col>
          </Row>
