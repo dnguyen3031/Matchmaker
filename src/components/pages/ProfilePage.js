@@ -7,12 +7,15 @@ function ProfilePage(props) {
    const [user, setUser] = useState([]);
    const [gamesList, setGamesList] = useState([]);
    const [contactInfo, setContactInfo] = useState([]);
+   const [gamesTable, setGamesTable] = useState([]);
 
    useEffect(() => {
       fetchUser(props.id).then( result => {
-         if (result)
+         if (result) {
             setUser(result);
             setContactInfo(result.contact_info);
+            setGamesTable(result.games_table);
+         }
       });
    }, []);
 
@@ -36,8 +39,8 @@ function ProfilePage(props) {
       return (
          <tr>
             <td>{game[0]}</td>
-            <td>{game[1].game_score}</td>
-            <td>{game[1].time_played}</td>
+            {/* <td>{game[1].game_score}</td>
+            <td>{game[1].time_played}</td> */}
          </tr>
       )
    });
@@ -46,6 +49,9 @@ function ProfilePage(props) {
       <CustomNavbar />
       <Container fluid>
          <Row>
+         {console.log("PRINING CONTACT INFO STATE: ", contactInfo)}
+         {console.log("PRINING user INFO STATE: ", user)}
+         {console.log("Printing games table", gamesTable)}
             <Col /> 
             {/*2 empty cols ensure middle col is centered */}
             <Col> 
