@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomNavbar from '../../CustomNavbar';
+import CustomNavbar from '../CustomNavbar';
 
 function Matchmaking() {
    return <div> 

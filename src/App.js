@@ -30,8 +30,8 @@ function App() {
           <Route path="/leaderboard">
             <LeaderboardPage />
           </Route>
-          <Route path="/profile">
-            <ProfilePage id="6024098ac9b27e9f9995df97" />
+          <Route path="/profile/:_id">
+            <ProfilePage />
           </Route>
           <Route path="/create-account">
             <CreateAccount />

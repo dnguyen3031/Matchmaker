@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink
 } from 'react-bootstrap';
-import CustomNavbar from '../../CustomNavbar';
+import CustomNavbar from '../CustomNavbar';
 
 function Login() {
   return <div> 
