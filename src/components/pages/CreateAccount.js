@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-   Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink, Alert
+   Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink, Alert, Modal
  } from 'react-bootstrap';
  import axios from 'axios';
 
@@ -10,17 +10,35 @@ function CreateAccount() {
    const [password, setpassword] = useState('');
    const [confirmPassword, setconfirmPassword] = useState('');
 
+   /*Error Model*/
+   const [showError, setErrorShow] = useState(false);
+   const handleErrorClose = () => setErrorShow(false);
+   const handleErrorShow = () => setErrorShow(true);
+
+   /*Success Model*/
+   const [showSucess, setSuccessShow] = useState(false);
+   const handleSuccessClose = () => setSuccessShow(false);
+   const handleSuccessShow = () => setSuccessShow(true);
+
    const handleSubmit = (e) => {
       e.preventDefault();
       var jsonData = { "name": username, "contact_info": { "email": email }, "password": password };
-      console.log(jsonData);
-      // postUser(jsonData);
+      if (password.localeCompare(confirmPassword) == 0)
+      {
+         postUser(jsonData);
+         handleSuccessShow();
+      } else {
+         console.log("Invalid Password Matching\n");
+         handleErrorShow();
+      }
+      
    }
 
    async function postUser(account) {
       try {
          // get character at index 's id number
-         const response = await axios.post('http://127.0.0.1:5000/users/', account);
+         console.log(account);
+         const response = await axios.post('http://127.0.0.1:5000/users', account);
          return response.data;
       }
       catch (error) {
@@ -73,6 +91,22 @@ function CreateAccount() {
             </Row>
             <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
          </Form>
+
+         
+         <Modal show={showError} onHide={handleErrorClose}>
+         <Modal.Header closeButton>
+          <Modal.Title>Error!</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>Your password and confirm password fields do not match!</Modal.Body>
+         </Modal>
+
+         <Modal show={showSucess} onHide={handleSuccessClose}>
+         <Modal.Header closeButton>
+          <Modal.Title>Success!</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>You have sucessfully created your account!</Modal.Body>
+         </Modal>
+
       </Container>;
       </>
  }
