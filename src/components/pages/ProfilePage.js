@@ -24,6 +24,12 @@ function ProfilePage(props) {
       });
    }, []);
 
+   if (viewer_id === id && user._id) {
+      return <EditableProfile user={user} handleSubmit={updateUser}/>;
+   }
+   return <ViewableProfile user={user}/>;
+
+
    async function fetchUser(id){
       try {
          // get character at index 's id number
@@ -36,27 +42,41 @@ function ProfilePage(props) {
       }
    }
 
-   if (viewer_id === id && user._id) {
-      return <EditableProfile user={user}/>;
+   function updateUser(change) { 
+      makePatchCall(change).then( result => {
+         if (result.status === 201) {
+            fetchUser(props.id).then( result => {
+               if (result) {
+                  setUser(result);
+                  console.log("updated user")
+               } else {
+                  console.log("failed to update user")
+               }
+            });
+         }
+      });
    }
-   return <ViewableProfile user={user}/>;
+
+   async function makePatchCall(change){
+      console.log(user._id)
+      console.log(change)
+      try {
+         const response = await axios.patch('http://localhost:5000/users/' + user._id, change);
+         return response;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
+   }
 }
+
+
 
 function EditableProfile(props) {
    const [modalShow, setModalShow] = React.useState(false);
-   const [modalField, setModalField] = useState({fName:"",dName:""});
-   const [field, setField] = useState({input: props.user[modalField.fName]});
-
-   function ActivateModal(fields) {
-      setModalShow(true)
-      setModalField({fName: fields[1], dName: fields[0]})
-      setField({input: props.user[fields[1]]});
-   }
-
-   function handleChange(event) {
-      const { value } = event.target;
-      setField({input: value});
-   }  
+   const [modalField, setModalField] = useState({dName:"",fName:"",fPath:"",endBraces:""});
+   const [data, setData] = useState({input: props.user[modalField.fName]});
 
    const handleClose = () => setModalShow(false);
 
@@ -68,8 +88,8 @@ function EditableProfile(props) {
          <CustomNavbar />
          <h2>EditableProfile</h2>
          <img src={props.user.profile_pic}/>
-         <p onClick={() => ActivateModal(["Name", "name"])}>{props.user.name}</p>
-         <p onClick={() => ActivateModal(["Bio", "bio"])}>{props.user.bio}</p>
+         <p onClick={() => ActivateModal(["Name", "name", "name:", ""])}>{props.user.name}</p>
+         <p onClick={() => ActivateModal(["Bio", "bio", "bio:", ""])}>{props.user.bio}</p>
          
          <Modal 
             show={modalShow}
@@ -86,18 +106,38 @@ function EditableProfile(props) {
             <Modal.Body>
                <input
                type="text"
-               value={field.input}
+               value={data.input}
                onChange={handleChange} />
             </Modal.Body>
             <Modal.Footer>
-            {/* <Button onClick={submitChange}>Change</Button>  */}
+            <Button onClick={submitChange}>Change</Button> 
             <Button onClick={handleClose}>Cancel</Button>
             </Modal.Footer>
          </Modal>
 
       </div>
    </div>;
+
+
+   function ActivateModal(fields) {
+      setModalShow(true)
+      setModalField({dName: fields[0], fName: fields[1], fPath: fields[2], endBraces: fields[3]})
+      setData({input: props.user[fields[1]]});
+   }
+
+   function handleChange(event) {
+      const { value } = event.target;
+      setData({input: value});
+   }  
+
+   function submitChange() {
+      const change = "{" + modalField.fPath + data.input + modalField.endBraces + "}"
+      props.handleSubmit(change);
+      handleClose()
+   }
 }
+
+
 
 function ViewableProfile(props) {
    console.log("ViewableProfile")
