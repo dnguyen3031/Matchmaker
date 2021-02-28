@@ -22,16 +22,32 @@ function CreateAccount() {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      var jsonData = { "name": username, "contact_info": { "email": email }, "password": password };
-      if (password.localeCompare(confirmPassword) == 0)
-      {
-         postUser(jsonData);
-         handleSuccessShow();
-      } else {
-         console.log("Invalid Password Matching\n");
-         handleErrorShow();
-      }
+      var jsonData = { "name": username, "email": email, "password": password };
+      fetchUser(email).then( result => {
+         console.log(result);
+         if (password.localeCompare(confirmPassword) == 0 && result == 0)
+         {
+            postUser(jsonData);
+            handleSuccessShow();
+         } else {
+            console.log("Invalid Password Matching\n");
+            handleErrorShow();
+         }
+      });
       
+   }
+
+   async function fetchUser(email){
+      try {
+         // get character at index 's id number
+         const response = await axios.get('http://127.0.0.1:5000/users?email=' + email);
+         console.log(response.data.users_list.length);
+         return response.data.users_list.length;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
    }
 
    async function postUser(account) {
@@ -97,7 +113,7 @@ function CreateAccount() {
          <Modal.Header closeButton>
           <Modal.Title>Error!</Modal.Title>
          </Modal.Header>
-         <Modal.Body>Your password and confirm password fields do not match!</Modal.Body>
+         <Modal.Body>Your password and confirm password fields do not match or your email has already been used!</Modal.Body>
          </Modal>
 
          <Modal show={showSucess} onHide={handleSuccessClose}>
