@@ -37,7 +37,7 @@ function App() {
             <CreateAccount />
           </Route>
           <Route path="/">
-            <Home />
+            <Home id="6024098ac9b27e9f9995df97"/>
           </Route>
         </Switch>
       </div>

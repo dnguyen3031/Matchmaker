@@ -6,7 +6,9 @@ import random
 import string
 from mongodb import User
 from mongodb import Game
+from ELO import *
 from bson import ObjectId
+
 
 app = Flask(__name__)
 
@@ -166,3 +168,28 @@ def get_game(id):
         newGame.patch()
         resp = jsonify(newGame), 201
         return resp
+
+@app.route('/users/submit-results', methods=['PATCH'])
+def submit_results():
+    if request.method == 'PATCH':
+        #JSON has user ID, opponents's elo, win/loss, game name
+        results = request.get_json()
+        #print(results)
+        #for key, value in results.items():
+        #    print(key, value)
+        #print(results['user_id'])
+        #print(results.user_id)
+        user = User({"_id": results['user_id']})
+        if user.reload():
+            elo = user.games_table[results['game_name']]['game_score']
+            new_elo = calc_elo(int(elo),int(results['opp_elo']), float(results['win']))
+            user.games_table[results['game_name']]['game_score'] = new_elo
+            user["_id"] = ObjectId(results['user_id'])
+            user.patch()
+            resp = jsonify(user), 201
+            return resp
+        else:
+            return jsonify({"error": "User not found"}), 404
+
+
+
