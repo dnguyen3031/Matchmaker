@@ -38,6 +38,23 @@ class Model(dict):
                 {"_id": ObjectId(self._id)}, self)
         self._id = str(self._id)
 
+    def replace_dict(self, cur, old):
+        new = {"_id": ObjectId(self._id)}
+        for field in old.keys():
+            if field not in cur:
+                new.update({field: old[field]})
+        return new
+
+    def delete_field(self):
+        if not self._id:
+            self.collection.insert(self)
+        else:
+            old_entry = self.collection.find_one({"_id": ObjectId(self._id)})
+            new_entry = self.replace_dict(self, old_entry)
+            self.collection.update(
+                {"_id": ObjectId(self._id)}, new_entry)
+        self._id = str(self._id)
+
     def reload(self):
         if self._id:
             result = self.collection.find_one({"_id": ObjectId(self._id)})
