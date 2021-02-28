@@ -12,6 +12,7 @@ function CustomNavbar() {
                <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                <Nav.Link href="/profile">Profile</Nav.Link>
                <Nav.Link href="/login">Login</Nav.Link>
+               <Nav.Link href="/testpage">TESTPAGE FOR TESTING PURPOSES ONLY, OF COURSE...</Nav.Link>
             </Nav>
    
             <DropdownButton variant="secondary" menuAlign="right" title="D0ughB0y25" id="dropdown-menu-align-right"> 
