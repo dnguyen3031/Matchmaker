@@ -120,13 +120,12 @@ function ProfilePage(props) {
 
 
 function EditableProfile(props) {
+   console.log("EditableProfile")
    const [modalShow, setModalShow] = React.useState(false);
    const [modalField, setModalField] = useState({dName:"",fName:""});
    const [data, setData] = useState({input: props.user[modalField.fName]});
 
    const handleClose = () => setModalShow(false);
-
-   console.log(props.user)
 
    return <div>
       <div>
@@ -251,10 +250,58 @@ function EditableProfile(props) {
 
 function ViewableProfile(props) {
    console.log("ViewableProfile")
-    return <div> 
-      <CustomNavbar />
-      <h2>ViewableProfile</h2>
+   const [modalShow, setModalShow] = React.useState(false);
+   const [modalField, setModalField] = useState({dName:"",fName:""});
+   const [data, setData] = useState({input: props.user[modalField.fName]});
+
+   const handleClose = () => setModalShow(false);
+
+   console.log(props.user)
+
+   return <div>
+      <div>
+         <title>Profile Page</title>
+      </div>
+      <div>
+         <CustomNavbar />
+         <h2>ViewableProfile</h2>
+         <img src={props.user.profile_info.profile_pic}/>
+         <h2>{props.user.name}</h2>
+         <h4>Bio</h4>
+         <p>{props.user.profile_info.bio}</p>
+         <h4>Contact info:</h4>
+         <h5>Email:</h5>
+         <p>{props.user.email}</p>
+         <h5>Discord:</h5>
+         <p>{props.user.profile_info.discord}</p>
+         <h5>Steam Name:</h5>
+         <p>{props.user.profile_info.steam_name}</p>
+         <h5>Steam Friend Code:</h5>
+         <p>{props.user.profile_info.steam_friend_code}</p>
+         <h4>Games:</h4>
+         <GameTable />
+      </div>
    </div>;
+
+   function GameTable()
+   {
+      const rows = Object.keys(props.user.games_table).map((game, index) => {
+         return (
+            <tr key={index}>
+               <td>
+                  <h5>{game}</h5>
+                  <p>{props.user.games_table[game].Rank}</p>
+               </td>
+            </tr>
+         );
+      })
+      console.log(rows)
+      return (
+         <tbody>
+            {rows}
+         </tbody>
+      );
+   }
 }
 
 export default ProfilePage;
