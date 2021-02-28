@@ -13,8 +13,8 @@ function TestPage() {
          <Row>
             <Col>TEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST 
             PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGE</Col>
-            <Col md={{ span: 2}}>
-               <FriendBar _id="6024098ac9b27e9f9995df97" />
+            <Col md={{ span: 3}}>
+               <FriendBar _id="603aea0c5adbbd2ac5e5d9f1" />
             </Col>
          </Row>
       </Container>

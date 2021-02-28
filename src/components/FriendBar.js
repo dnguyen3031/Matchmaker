@@ -1,23 +1,9 @@
 import React from 'react';
-import { Button, Card, Row, Accordion } from "react-bootstrap";
+import { Button, Card, Col, Row, Accordion, ListGroup } from "react-bootstrap";
 import Collapse from 'react-bootstrap/Collapse';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-
-function FriendsList(props) {
-   const rows = Object.keys(props.list).map((friend, i) => {
-      return (
-           <Button key={i}>{friend}</Button>
-      )
-   })
-
-   return (
-      <div>
-         {rows}
-      </div>
-   );
-   
-   }
+import { BsFillPersonFill, BsFillPlusSquareFill } from "react-icons/bs";
 
 function FriendBar(props) {
    const [openFriends, setOpenFriends] = React.useState(true);
@@ -30,17 +16,17 @@ function FriendBar(props) {
                                  profile_info: {bio: "", discord: "", profile_pic: "", steam_friend_code: "", steam_name: ""}});
 
    React.useEffect(() => {
-      fetchUser().then( result => {
+      fetchUser(props._id).then( result => {
          if (result) {
             setUser(result);
          }
       });
    }, []);
    
-   async function fetchUser(){
+   async function fetchUser(_id){
       try {
          // get character at index 's id number
-         const response = await axios.get('http://127.0.0.1:5000/users/' + props._id);
+         const response = await axios.get('http://127.0.0.1:5000/users/' + _id);
          console.log("here is the response data: ", response.data);
          return response.data;
       }
@@ -50,6 +36,35 @@ function FriendBar(props) {
          return false;
       }
    }
+
+   function FriendsList(props) {
+      
+      const rows = Object.keys(props.list).map((friend, i) => {
+         return (
+            <Col>
+               {/* <Card variant="light" className="d-flex flex-row justify-content-between align-items-center">
+                     {props.list[friend]}
+                     <BsFillPersonFill />
+                     <BsFillPlusSquareFill />
+               </Card> */}
+               <ListGroup variant="flush">
+                  <ListGroup.Item>
+                     <Row>
+                        {props.list[friend]}
+                     </Row>
+                  </ListGroup.Item>
+               </ListGroup>
+            </Col>
+         )
+      })
+   
+      return (
+         <div>
+            {rows}
+         </div>
+      );
+      
+      }
 
    return <div> 
      {/* <Row>
