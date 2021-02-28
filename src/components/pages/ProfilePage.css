@@ -1,3 +1,76 @@
-body {
+p {
+	color: rgb(125, 125, 125);
+}
+
+h6 {
+	color: rgb(150, 150, 150);
+}
+
+h4 {
+	color: rgb(175, 175, 175);
+}
+
+h2 {
+	color: rgb(255, 255, 255);
+}
+
+hr {
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+.page {
+	display: grid;
+	grid-template-columns: 75% 25%;
+}
+
+.page-wrapper {
 	background: #36393f;
 }
+
+.section {
+	background: rgb(35, 35, 35);
+	padding: 20px;
+	justify-content: center;
+	justify-self: center;
+	border-radius: 40%;
+	text-align: center;
+}
+
+.game-section {
+	background: rgb(35, 35, 35);
+	padding: 10px;
+	width:250%;
+	border-radius: 40%;
+	text-align: center;
+}
+
+.section-content {
+	display: grid;
+	padding: 10px;
+	grid-template-columns: 50% 50%;
+	justify-content: center;
+	justify-self: center;
+	text-align: center;
+}
+
+.section-container {
+	padding: 25px;
+	justify-content: center;
+	justify-self: center;
+}
+
+.Top_Card {
+	display: grid;
+	padding: 5%;
+	grid-template-columns: 30% 70%;
+}
+
+.profile-picture {
+	border-radius: 15%;
+	justify-content: center;
+	width: 200px;
+	height: 200px;
+}
+

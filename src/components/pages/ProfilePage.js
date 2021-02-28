@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Row, Col, Container, Table, Card, Button, Modal} from 'react-bootstrap';
 import CustomNavbar from '../../CustomNavbar';
 import axios from 'axios';
+import './ProfilePage.css';
 
 function ProfilePage(props) {
    const viewer_id = props.viewer_id;
@@ -23,10 +24,6 @@ function ProfilePage(props) {
          }
       });
    }, []);
-
-   // set_game_ranks()
-
-   // console.log(user)
 
    if (viewer_id === id && user._id) {
       return <EditableProfile user={user} handleSubmit={updateUser}/>;
@@ -81,7 +78,7 @@ function ProfilePage(props) {
          let games = await get_game(key)
          let game = games.games_list[0]
          updated_user.games_table[key]["_id"] = game._id
-         if(updated_user.games_table[key].time_played < game.time_to_learn) {
+         if(updated_user.games_table[key].time_played < game.time_to_learn && updated_user.games_table[key].game_score < game.ranking_levels[0]) {
             updated_user.games_table[key]["Rank"] = "Noob"
          } else if (updated_user.games_table[key].game_score < game.ranking_levels[0]) {
             updated_user.games_table[key]["Rank"] = "Iron"
@@ -98,7 +95,7 @@ function ProfilePage(props) {
          } else if (updated_user.games_table[key].game_score < game.ranking_levels[6]) {
             updated_user.games_table[key]["Rank"] = "Pro"
          } else {
-            updated_user.games_table[key]["Rank"] = "Undefined"
+            updated_user.games_table[key]["Rank"] = "God"
          }
       }
       return updated_user
@@ -120,7 +117,7 @@ function ProfilePage(props) {
 
 
 function EditableProfile(props) {
-   console.log("EditableProfile")
+   // console.log("EditableProfile")
    const [modalShow, setModalShow] = React.useState(false);
    const [modalField, setModalField] = useState({dName:"",fName:""});
    const [data, setData] = useState({input: props.user[modalField.fName]});
@@ -132,50 +129,177 @@ function EditableProfile(props) {
          <title>Profile Page</title>
       </div>
       <div>
-         <CustomNavbar />
-         <h2>EditableProfile</h2>
-         <img src={props.user.profile_info.profile_pic}/>
-         <h3 onClick={() => ActivateModal(["Name", "name"])}>{props.user.name}</h3>
-         <h4>Bio</h4>
-         <p onClick={() => ActivateModal(["Bio", "bio", "profile_info"])}>{props.user.profile_info.bio}</p>
-         <h4>Contact info:</h4>
-         <h5>Email:</h5>
-         <p onClick={() => ActivateModal(["Email", "email"])}>{props.user.email}</p>
-         <h5>Discord:</h5>
-         <p onClick={() => ActivateModal(["Discord", "discord", "profile_info"])}>{props.user.profile_info.discord}</p>
-         <h5>Steam Name:</h5>
-         <p onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])}>{props.user.profile_info.steam_name}</p>
-         <h5>Steam Friend Code:</h5>
-         <p onClick={() => ActivateModal(["Steam Friend Code", "steam_friend_code", "profile_info"])}>{props.user.profile_info.steam_friend_code}</p>
-         <h4>Password:</h4>
-         <p onClick={() => ActivateModal(["Password", "password"])}>{props.user.password}</p>
-         <h4>Games:</h4>
-         <GameTable />
-         
+         <div class="page-wrapper">
+            <CustomNavbar />
+            <div class="page">
+               <div class="body">
+                  <div class="Top_Card">
+                     <img class="profile-picture" src={props.user.profile_info.profile_pic}/>
+                     <div>
+                        <h2 onClick={() => ActivateModal(["Name", "name"])}>{props.user.name}</h2>
+                        <h4>Bio:</h4>
+                        <p onClick={() => ActivateModal(["Bio", "bio", "profile_info"])}>{props.user.profile_info.bio}</p>
+                     </div>
+                  </div>
+                  <div class="section-container">
+                     <div class="section">
+                        <h4>Contact info:</h4>
+                        <div class="section-content">
+                           <h6>Email:</h6>
+                           <p onClick={() => ActivateModal(["Email", "email"])}>{props.user.email}</p>
+                           <h6>Discord:</h6>
+                           <p onClick={() => ActivateModal(["Discord", "discord", "profile_info"])}>{props.user.profile_info.discord}</p>
+                           <h6>Steam Name:</h6>
+                           <p onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])}>{props.user.profile_info.steam_name}</p>
+                        </div>
+                     </div>
+                  </div>
+                  <h4>Games:</h4>
+                  <GameTable />
+                  
 
-         <Modal 
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-         >
-            <Modal.Header closeButton>
-               <Modal.Title id="contained-modal-title-vcenter">
-                  {modalField.dName}
-               </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               <input
-               type="text"
-               value={data.input}
-               onChange={handleChange} />
-            </Modal.Body>
-            <Modal.Footer>
-            <Button onClick={submitChange}>Change</Button> 
-            <Button onClick={handleClose}>Cancel</Button>
-            </Modal.Footer>
-         </Modal>
+                  <Modal 
+                     show={modalShow}
+                     onHide={() => setModalShow(false)}
+                     size="lg"
+                     aria-labelledby="contained-modal-title-vcenter"
+                     centered
+                  >
+                     <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                           {modalField.dName}
+                        </Modal.Title>
+                     </Modal.Header>
+                     <Modal.Body>
+                        <input
+                        type="text"
+                        value={data.input}
+                        onChange={handleChange} />
+                     </Modal.Body>
+                     <Modal.Footer>
+                     <Button onClick={submitChange}>Change</Button> 
+                     <Button onClick={handleClose}>Cancel</Button>
+                     </Modal.Footer>
+                  </Modal>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>;
+
+
+   function ActivateModal(fields) {
+      setModalShow(true)
+      setModalField({dName: fields[0], fName: fields[1]})
+      switch(fields.length) {
+         case 2:{
+            setData({input: props.user[fields[1]]});
+            break
+         }
+         case 3:{
+            setData({input: props.user[fields[2]][fields[1]]});
+            break
+         }
+         case 4:{
+            setData({input: props.user[fields[3]][fields[2]][fields[1]]});
+            break
+         }
+      }
+   }
+
+   function handleChange(event) {
+      const { value } = event.target;
+      setData({input: value});
+   }  
+
+   function submitChange() {
+      const change = switchCases(modalField.fName)
+      props.handleSubmit(change);
+      handleClose()
+   }
+
+   function switchCases(fName) {
+      switch(fName) {
+         case "name":
+            return {"name": data.input}
+         case "bio":
+            return {"profile_info": {"bio": data.input}}
+         case "discord":
+            return {"profile_info": {"discord": data.input}}
+         case "email":
+            return {"email": data.input}
+         case "steam_name":
+            return {"profile_info": {"steam_name": data.input}}
+      }
+   }
+
+   function GameTable()
+   {
+      const rows = Object.keys(props.user.games_table).map((game, index) => {
+         return (
+            <tr key={index}>
+               <td>
+                  <div class="game-section">
+                     <h4>{game}</h4>
+                     <p>{props.user.games_table[game].Rank}</p>
+                  </div>
+               </td>
+            </tr>
+         );
+      })
+      return (
+         <tbody>
+            {rows}
+         </tbody>
+      );
+   }
+}
+
+
+
+function ViewableProfile(props) {
+   // console.log("ViewableProfile")
+   const [modalShow, setModalShow] = React.useState(false);
+   const [modalField, setModalField] = useState({dName:"",fName:""});
+   const [data, setData] = useState({input: props.user[modalField.fName]});
+
+   const handleClose = () => setModalShow(false);
+
+   return <div>
+      <div>
+         <title>Profile Page</title>
+      </div>
+      <div>
+         <div class="page-wrapper">
+            <CustomNavbar />
+            <div class="page">
+               <div class="body">
+                  <div class="Top_Card">
+                     <img class="profile-picture" src={props.user.profile_info.profile_pic}/>
+                     <div>
+                        <h2>{props.user.name}</h2>
+                        <h4>Bio:</h4>
+                        <p>{props.user.profile_info.bio}</p>
+                     </div>
+                  </div>
+                  <div class="section-container">
+                     <div class="section">
+                        <h4>Contact info:</h4>
+                        <div class="section-content">
+                           <h6>Email:</h6>
+                           <p>{props.user.email}</p>
+                           <h6>Discord:</h6>
+                           <p>{props.user.profile_info.discord}</p>
+                           <h6>Steam Name:</h6>
+                           <p>{props.user.profile_info.steam_name}</p>
+                        </div>
+                     </div>
+                  </div>
+                  <h4>Games:</h4>
+                  <GameTable />
+               </div>
+            </div>
+         </div>
       </div>
    </div>;
 
@@ -231,71 +355,14 @@ function EditableProfile(props) {
          return (
             <tr key={index}>
                <td>
-                  <h5>{game}</h5>
-                  <p>{props.user.games_table[game].Rank}</p>
+                  <div class="game-section">
+                     <h4>{game}</h4>
+                     <p>{props.user.games_table[game].Rank}</p>
+                  </div>
                </td>
             </tr>
          );
       })
-      console.log(rows)
-      return (
-         <tbody>
-            {rows}
-         </tbody>
-      );
-   }
-}
-
-
-
-function ViewableProfile(props) {
-   console.log("ViewableProfile")
-   const [modalShow, setModalShow] = React.useState(false);
-   const [modalField, setModalField] = useState({dName:"",fName:""});
-   const [data, setData] = useState({input: props.user[modalField.fName]});
-
-   const handleClose = () => setModalShow(false);
-
-   console.log(props.user)
-
-   return <div>
-      <div>
-         <title>Profile Page</title>
-      </div>
-      <div>
-         <CustomNavbar />
-         <h2>ViewableProfile</h2>
-         <img src={props.user.profile_info.profile_pic}/>
-         <h2>{props.user.name}</h2>
-         <h4>Bio</h4>
-         <p>{props.user.profile_info.bio}</p>
-         <h4>Contact info:</h4>
-         <h5>Email:</h5>
-         <p>{props.user.email}</p>
-         <h5>Discord:</h5>
-         <p>{props.user.profile_info.discord}</p>
-         <h5>Steam Name:</h5>
-         <p>{props.user.profile_info.steam_name}</p>
-         <h5>Steam Friend Code:</h5>
-         <p>{props.user.profile_info.steam_friend_code}</p>
-         <h4>Games:</h4>
-         <GameTable />
-      </div>
-   </div>;
-
-   function GameTable()
-   {
-      const rows = Object.keys(props.user.games_table).map((game, index) => {
-         return (
-            <tr key={index}>
-               <td>
-                  <h5>{game}</h5>
-                  <p>{props.user.games_table[game].Rank}</p>
-               </td>
-            </tr>
-         );
-      })
-      console.log(rows)
       return (
          <tbody>
             {rows}

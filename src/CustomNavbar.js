@@ -1,9 +1,10 @@
 import React from 'react';
 import { Navbar, Nav, Dropdown, DropdownButton, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
+import './CustomNavbar.css';
 
 function CustomNavbar() {
    return <div>
-       <Navbar bg="light" expand="lg">
+       <Navbar className="color-nav" expand="lg" variant="light">
          <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
          <Navbar.Toggle aria-controls="basic-navbar-nav" />
          <Navbar.Collapse id="basic-navbar-nav">
