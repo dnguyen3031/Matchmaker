@@ -78,9 +78,10 @@ function ProfilePage(props) {
          let games = await get_game(key)
          let game = games.games_list[0]
          updated_user.games_table[key]["_id"] = game._id
-         if(updated_user.games_table[key].time_played < game.time_to_learn && updated_user.games_table[key].game_score < game.ranking_levels[0]) {
-            updated_user.games_table[key]["Rank"] = "Noob"
-         } else if (updated_user.games_table[key].game_score < game.ranking_levels[0]) {
+         // if(updated_user.games_table[key].time_played < game.time_to_learn && updated_user.games_table[key].game_score < game.ranking_levels[0]) {
+         //    updated_user.games_table[key]["Rank"] = "Noob"
+         // } else 
+         if (updated_user.games_table[key].game_score < game.ranking_levels[0]) {
             updated_user.games_table[key]["Rank"] = "Iron"
          } else if (updated_user.games_table[key].game_score < game.ranking_levels[1]) {
             updated_user.games_table[key]["Rank"] = "Bronze"
