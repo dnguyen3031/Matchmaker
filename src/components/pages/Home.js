@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form'
 import axios from 'axios';
 
 function Home(props) {
-   const[data, setData] = useState({input:''});
+   const[ELO, setELO] = useState({input:''});
    const[name, setName] = useState({input:'Krunker'});
    const[win, setWin] = useState({input:.5});
    const id = props.id
@@ -27,14 +27,16 @@ function Home(props) {
                   type="radio"
                   label="Win"
                   name="formHorizontalRadios"
-                  id="formHorizontalRadios1"
+                  id="winRadio"
+                  onChange={winRadioClicked}
                />
                <Form.Check
                   inline
                   type="radio"
                   label="Loss"
                   name="formHorizontalRadios"
-                  id="formHorizontalRadios2"
+                  id="lossRadio"
+                  onChange = {lossRadioClicked}
                />
                </Col>
             </Form.Group>
@@ -46,7 +48,17 @@ function Home(props) {
             </Form.Label>
             <Col sm={10}>
                <Form.Control type="ELO" placeholder="1300"
-                  value={data.input} onChange={handleChange}/>
+                  value={ELO.input} onChange={handleELO}/>
+            </Col>
+         </Form.Group>
+
+         <Form.Group as={Row} controlId="GameName">
+            <Form.Label column sm={2}>
+               Game Name
+            </Form.Label>
+            <Col sm={10}>
+               <Form.Control type="GameName" placeholder="Krunker"
+                  value={name.input} onChange={handleGame}/>
             </Col>
          </Form.Group>
          
@@ -59,9 +71,20 @@ function Home(props) {
       </Form>
    </div>;
 
-   function handleChange(event) {
+   function winRadioClicked(){
+      setWin({input:1})
+   }
+   function lossRadioClicked(){
+      setWin({input:0})
+   }
+
+   function handleELO(event) {
       const { value } = event.target;
-      setData({input: value});
+      setELO({input: value});
+   }  
+   function handleGame(event) {
+      const { value } = event.target;
+      setName({input: value});
    }  
 
    function submitChange() {
@@ -70,7 +93,7 @@ function Home(props) {
       updateELO(packet);
    }
    function createJSON(){
-      return {'user_id':id, 'win':win.input, 'opp_elo':data.input, 'game_name':name.input}
+      return {'user_id':id, 'win':win.input, 'opp_elo':ELO.input, 'game_name':name.input}
    }
 
    function updateELO(packet) { 
