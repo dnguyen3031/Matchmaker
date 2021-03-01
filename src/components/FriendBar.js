@@ -40,11 +40,13 @@ function FriendBar(props) {
       <Accordion defaultActiveKey="0">
       {console.log(user.friends)}
          <Card>
-            <Accordion.Toggle as={Button} eventKey="0">
+            <Accordion.Toggle as={Card.Header} eventKey="0" className="text-center">
                Friends
             </Accordion.Toggle>
          <Accordion.Collapse eventKey="0">
-            <FriendsList list={user.friends}></FriendsList>
+            <Card.Body className="pl-0">
+               <FriendsList list={user.friends}></FriendsList>
+            </Card.Body>
          </Accordion.Collapse>
          </Card>
       </Accordion>
