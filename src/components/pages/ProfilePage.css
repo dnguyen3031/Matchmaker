@@ -14,45 +14,83 @@ h2 {
 	color: rgb(255, 255, 255);
 }
 
-hr {
-	border: 0;
-	height: 1px;
-	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-}
-
-.page {
+.background {
 	display: grid;
-	grid-template-columns: 75% 25%;
+	background: rgb(0, 0, 0);
+	justify-self: center;
 }
 
 .page-wrapper {
 	background: #36393f;
+	width: 1000px;
+	height: 1800px;
+	justify-self: center;
 }
 
-.section {
+.page {
+	display: grid;
+	padding: 5%;
+	grid-template-columns: 70% 30%;
+	grid-template-rows: 300px 100%;
+}
+
+.top-card {
+	display: grid;
+	padding: 2.5%;
+	grid-template-columns: 40% 60%;
+}
+
+.section-wrapper {
+	padding: 10px;
+	justify-content: left;
+	text-align: left;
+	display: grid;
+}
+
+.contact-section {
 	background: rgb(35, 35, 35);
-	padding: 20px;
+	padding: 10px;
+	grid-template-columns: 100%;
+	grid-template-rows: 20% 80%;
 	justify-content: center;
 	justify-self: center;
-	border-radius: 40%;
 	text-align: center;
+	display: grid;
+}
+
+.contact-section-content {
+	display: grid;
+	padding: 10px;
+	grid-template-columns: 30% 70%;
+	grid-template-rows: 33% 33% 34%;
+	justify-content: center;
+	justify-self: center;
+	text-align: left;
+}
+
+.games-table {
+	padding: 10px;
+	justify-content: left;
+	text-align: left;
+	display: grid;
+	grid-template-columns: 100%;
+	grid-template-rows: 50px 100%;
+}
+
+.game-box {
+	background: rgb(35, 35, 35);
+	padding: 10px;
 }
 
 .game-section {
 	background: rgb(35, 35, 35);
 	padding: 10px;
-	width:250%;
-	border-radius: 40%;
-	text-align: center;
+	width: 200px;
 }
 
-.section-content {
-	display: grid;
-	padding: 10px;
-	grid-template-columns: 50% 50%;
-	justify-content: center;
-	justify-self: center;
-	text-align: center;
+.friends-list {
+	background: rgb(35, 35, 35);
+	padding: 125px;
 }
 
 .section-container {
@@ -61,16 +99,9 @@ hr {
 	justify-self: center;
 }
 
-.Top_Card {
-	display: grid;
-	padding: 5%;
-	grid-template-columns: 30% 70%;
-}
-
 .profile-picture {
-	border-radius: 15%;
+	border-radius: 10%;
 	justify-content: center;
 	width: 200px;
 	height: 200px;
 }
-
