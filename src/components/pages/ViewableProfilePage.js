@@ -1,4 +1,4 @@
-import CustomNavbar from '../../CustomNavbar';
+import CustomNavbar from '../CustomNavbar';
 import React, {useState, useEffect} from 'react';
 import './ProfilePage.css';
 

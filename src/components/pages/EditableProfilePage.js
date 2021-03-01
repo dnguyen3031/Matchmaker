@@ -1,5 +1,5 @@
 import {Row, Col, Container, Table, Card, Button, Modal} from 'react-bootstrap';
-import CustomNavbar from '../../CustomNavbar';
+import CustomNavbar from '../CustomNavbar';
 import React, {useState, useEffect} from 'react';
 import './ProfilePage.css';
 

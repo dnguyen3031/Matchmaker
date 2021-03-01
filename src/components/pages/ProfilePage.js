@@ -15,7 +15,7 @@ function ProfilePage(props) {
                                  _id: ""});
    
    useEffect(() => {
-      fetchUser().then( result => {
+      fetchUser(props.id).then( result => {
          if (result) {
             setUser(result);
             console.log("got user")
@@ -39,8 +39,6 @@ function ProfilePage(props) {
       }
       catch (error) {
          console.log(error);
-         setShowError(true);
-         console.log("NOPE!!!!");
          return false;
       }
    }

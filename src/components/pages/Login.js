@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink, Modal}
 from 'react-bootstrap';
-import CustomNavbar from '../../CustomNavbar';
+import CustomNavbar from '../CustomNavbar';
 import axios from 'axios';
 
 function Login(props) {
@@ -26,7 +26,8 @@ function Login(props) {
     console.log(password);
     
     fetchUser(name).then( result => {
-      if (result)
+      console.log(result);
+      if (result && result.users_list.length > 0)
       {
           if(result.users_list[0].password == password)
           {
@@ -49,7 +50,7 @@ function Login(props) {
   async function fetchUser(name){
     try {
        // get user matching inputted email
-       const response = await axios.get('http://127.0.0.1:5000/users?name=' + name);
+       const response = await axios.get('http://localhost:5000/users?name=' + name);
        return response.data;
     }
     catch (error) {

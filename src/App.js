@@ -7,7 +7,6 @@ import {
   Link
 } from "react-router-dom";
 import Home from './components/pages/Home';
-import Signup from './components/pages/Signup';
 import ProfilePage from './components/pages/ProfilePage';
 import Login from './components/pages/Login';
 import TestPage from './components/pages/TestPage';
