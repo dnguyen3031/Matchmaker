@@ -3,7 +3,6 @@ import { Button, Card, Col, Row, Accordion, ListGroup } from "react-bootstrap";
 import Collapse from 'react-bootstrap/Collapse';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { BsFillPersonFill, BsFillPlusSquareFill } from "react-icons/bs";
 
 function FriendBar(props) {
    const [openFriends, setOpenFriends] = React.useState(true);
@@ -27,7 +26,7 @@ function FriendBar(props) {
       try {
          // get character at index 's id number
          const response = await axios.get('http://127.0.0.1:5000/users/' + _id);
-         console.log("here is the response data: ", response.data);
+         console.log("GETTING THIS INFO FOR THIS ID ", _id);
          return response.data;
       }
       catch (error) {
@@ -37,49 +36,9 @@ function FriendBar(props) {
       }
    }
 
-   function FriendsList(props) {
-      
-      const rows = Object.keys(props.list).map((friend, i) => {
-         return (
-            <Col>
-               {/* <Card variant="light" className="d-flex flex-row justify-content-between align-items-center">
-                     {props.list[friend]}
-                     <BsFillPersonFill />
-                     <BsFillPlusSquareFill />
-               </Card> */}
-               <ListGroup variant="flush">
-                  <ListGroup.Item>
-                     <Row>
-                        {props.list[friend]}
-                     </Row>
-                  </ListGroup.Item>
-               </ListGroup>
-            </Col>
-         )
-      })
-   
-      return (
-         <div>
-            {rows}
-         </div>
-      );
-      
-      }
-
    return <div> 
-     {/* <Row>
-               <Button block
-                  onClick={() => setOpenFriends(!openFriends)}
-                  aria-expanded={openFriends}
-                  >
-                  Friends
-                  </Button>
-                  <Collapse in={openFriends}>
-                     <Button>TEST</Button>
-                     <div>TDD</div>
-                  </Collapse>
-   </Row> */}
       <Accordion defaultActiveKey="0">
+      {console.log(user.friends)}
          <Card>
             <Accordion.Toggle as={Button} eventKey="0">
                Friends
@@ -91,6 +50,84 @@ function FriendBar(props) {
       </Accordion>
              
    </div>;
+
+function FriendsList(props) {
+   
+   const [friendList, setFriendList] = React.useState([]);
+
+   async function getAllFriends() {
+      for (var key in props.list) {
+         const response = await fetchUser(key);
+         console.log("RESPONSE: ", response);
+         setFriendList(friendList => [... friendList, response.name]);
+      }
+   }
+
+   React.useEffect(() => {
+      getAllFriends();
+   }, []);
+
+   const rows = friendList.map((friend, i) => {
+
+      return (
+         <Col>
+            <ListGroup variant="flush">
+               <ListGroup.Item>
+                  <Row>
+                     {friend}
+                  </Row>
+               </ListGroup.Item>
+            </ListGroup>
+         </Col>
+      )
+   })
+
+   return (
+      <div>
+         {rows}
+      </div>
+   );
+   
+   }
  }
+
+// function FriendsList(props) {
+   
+//    const [friendList, setFriendList] = React.useState([]);
+
+//    async function getAllFriends() {
+//       for (var key in props.list) {
+//          const response = await props.fetchUser(key);
+//          console.log("RESPONSE: ", response);
+//          setFriendList(friendList => [... friendList, response.name]);
+//       }
+//    }
+
+//    React.useEffect(() => {
+//       getAllFriends();
+//    }, []);
+
+//    const rows = friendList.map((friend, i) => {
+
+//       return (
+//          <Col>
+//             <ListGroup variant="flush">
+//                <ListGroup.Item>
+//                   <Row>
+//                      {friend}
+//                   </Row>
+//                </ListGroup.Item>
+//             </ListGroup>
+//          </Col>
+//       )
+//    })
+
+//    return (
+//       <div>
+//          {rows}
+//       </div>
+//    );
+   
+//    }
 
 export default FriendBar;
