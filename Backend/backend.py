@@ -93,8 +93,10 @@ def backend_home():
 def get_users():
     if request.method == 'GET':
         search_username = request.args.get('name')
-        if search_username:
-            # return find_users_by_name(search_username) #old code left here for comparuson
+        search_email = request.args.get('email')
+        if search_email:
+            users = User().find_by_email(search_email)
+        elif search_username:
             users = User().find_by_name(search_username)
         else:
             users = User().find_all()

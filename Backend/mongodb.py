@@ -91,6 +91,12 @@ class User(Model):
             user["_id"] = str(user["_id"])
         return users
 
+    def find_by_email(self, email):
+        users = list(self.collection.find({"email": email}))
+        for user in users:
+            user["_id"] = str(user["_id"])
+        return users
+
 
 class Game(Model):
     # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
