@@ -10,6 +10,7 @@ import Home from './components/pages/Home';
 import Signup from './components/pages/Signup';
 import ProfilePage from './components/pages/ProfilePage';
 import Login from './components/pages/Login';
+import TestPage from './components/pages/TestPage';
 import Matchmaking from './components/pages/Matchmaking';
 import LeaderboardPage from './components/pages/LeaderboardPage';
 import CreateAccount from './components/pages/CreateAccount';
@@ -35,7 +36,10 @@ function App() {
           </Route>
           <Route path="/create-account">
             <CreateAccount />
-          </Route>
+         </Route>
+         <Route path="/testpage">
+            <TestPage />
+         </Route>
           <Route path="/">
             <Home id="6024098ac9b27e9f9995df97"/>
           </Route>

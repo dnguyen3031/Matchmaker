@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { Navbar, Nav, Dropdown, DropdownButton, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 import './CustomNavbar.css';
 
@@ -19,7 +20,7 @@ function CustomNavbar() {
             {/* className="pt-2" */}
                <Dropdown.Item eventKey="1">Account Settings</Dropdown.Item>
                <Dropdown.Item eventKey="2">Reload Vbucks</Dropdown.Item>
-               <Dropdown.Item eventKey="3">OMEGALUL</Dropdown.Item>
+               <Dropdown.Item eventKey="3"><Link style={{ color: 'black', textDecoration: 'none' }} to="/testpage">Test Page for FriendBar</Link></Dropdown.Item>
                <Dropdown.Divider />
                <Dropdown.Item eventKey="4">Logout</Dropdown.Item>
             </DropdownButton>
