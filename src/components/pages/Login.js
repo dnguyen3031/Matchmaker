@@ -85,9 +85,7 @@ function Login(props) {
           required
           />
         </Form.Group>
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
+      
         
         <Container>
           <Row>
