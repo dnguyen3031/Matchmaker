@@ -64,7 +64,7 @@ function Login(props) {
     <Container className="justify-content-md-center">
       <Form>
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Username</Form.Label>
           <Form.Control type="text"
           placeholder="Enter username"
           value={name}
@@ -72,7 +72,7 @@ function Login(props) {
           required
           />
           <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
+              We'll never share your information with anyone else.
           </Form.Text>
         </Form.Group>
 
