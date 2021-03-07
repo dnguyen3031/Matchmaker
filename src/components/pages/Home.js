@@ -13,7 +13,7 @@ function Home(props) {
    const id = props.id
    return <div> 
       <CustomNavbar />
-      <h2>Last Game results</h2>
+      <h2 style={{color: 'black'}}> Last Game Results</h2>
       <Form>
 
       <fieldset>
