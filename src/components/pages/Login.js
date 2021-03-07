@@ -3,10 +3,10 @@ import { Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar,
 from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
 import axios from 'axios';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
 function Login(props) {
-  const bcrypt = require('bcrypt');
+  const bcrypt = require('bcryptjs');
   const saltRounds = 9;
   /*Error Model*/
   const [showError, setErrorShow] = useState(false);
@@ -31,17 +31,15 @@ function Login(props) {
       console.log(result);
       if (result && result.users_list.length > 0)
       {
-        bcrypt.compare(password, result.users_list[0].password, function(err, result) {
-          if(result)
-          {
-            handleSuccessShow();
-            
-          }
-          else
-          {
-            handleErrorShow();
-          }
-        });
+        if(bcrypt.compareSync(password, result.users_list[0].password))
+        {
+          handleSuccessShow();
+          
+        }
+        else
+        {
+          handleErrorShow();
+        }
       }
       else
       {

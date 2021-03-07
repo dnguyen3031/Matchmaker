@@ -3,10 +3,10 @@ import {
    Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink, Alert, Modal
  } from 'react-bootstrap';
  import axios from 'axios';
- import bcrypt from 'bcrypt';
+ import bcryptjs from 'bcryptjs';
 
 function CreateAccount() {
-   const bcrypt = require('bcrypt');
+   const bcrypt = require('bcryptjs');
    const saltRounds = 9;
    
    const [email, setEmail] = useState('');
@@ -31,8 +31,7 @@ function CreateAccount() {
          console.log(result);
          if (password.localeCompare(confirmPassword) == 0 && result == 0)
          {
-            jsonData = hashPassword(jsonData)
-            postUser(jsonData);
+            postUser(hashPassword(jsonData));
             handleSuccessShow();
          } else {
             console.log("Invalid Password Matching\n");
@@ -42,10 +41,8 @@ function CreateAccount() {
    }
 
    function hashPassword(jsonData) {
-      bcrypt.hash(jsonData.password, saltRounds, function(err, hash) {
-         jsonData.password = hash
-     });
-     return jsonData
+      jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
+      return jsonData
    }
 
    async function fetchUser(email){
