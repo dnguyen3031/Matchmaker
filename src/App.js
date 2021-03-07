@@ -18,12 +18,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Boo
 
 function App() {
   const [token, setToken] = useState();
+
+  function temp(id) {
+    console.log("something interesting")
+    console.log(id)
+    setToken(id)
+    console.log(token)
+  }
+  console.log("rerender")
   return (
     <Router>
       <div>
         <Switch>
           <Route path="/login">
-            <Login setToken={(id) => setToken(id)}/>
+            <Login setToken={(id) => temp(id)}/>
           </Route>
           <Route path="/matchmaking">
             <Matchmaking />
