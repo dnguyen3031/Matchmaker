@@ -33,7 +33,7 @@ function Login(props) {
       {
         if(bcrypt.compareSync(password, result.users_list[0].password))
         {
-          handleSuccessShow();
+          handleSuccess(result.users_list[0]._id);
           
         }
         else
@@ -48,6 +48,12 @@ function Login(props) {
     });
  }
 
+  function handleSuccess(id){
+    console.log("line 52")
+    console.log(id)
+    props.setToken(id)
+    handleSuccessShow()
+  }
 
   async function fetchUser(name){
     try {

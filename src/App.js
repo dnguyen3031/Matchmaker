@@ -1,5 +1,5 @@
 import './App.css';
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -17,12 +17,13 @@ import CreateAccount from './components/pages/CreateAccount';
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
 function App() {
+  const [token, setToken] = useState();
   return (
     <Router>
       <div>
         <Switch>
           <Route path="/login">
-            <Login />
+            <Login setToken={(id) => setToken(id)}/>
           </Route>
           <Route path="/matchmaking">
             <Matchmaking />
@@ -31,7 +32,7 @@ function App() {
             <LeaderboardPage />
           </Route>
           <Route path="/profile">
-            <ProfilePage id="6024098ac9b27e9f9995df97" viewer_id="6024098ac9b27e9f9995df97"/>
+            <ProfilePage id="6024098ac9b27e9f9995df97" viewer_id={token}/>
           </Route>
           <Route path="/create-account">
             <CreateAccount />

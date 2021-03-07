@@ -13,7 +13,6 @@ function Home(props) {
    const id = props.id
    return <div> 
       <CustomNavbar />
-      <h1>It Might have Worked</h1>
       <h2>Last Game results</h2>
       <Form>
 

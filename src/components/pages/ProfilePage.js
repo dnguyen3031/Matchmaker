@@ -24,7 +24,8 @@ function ProfilePage(props) {
          }
       });
    }, []);
-
+   console.log(viewer_id);
+   console.log(id);
    if (viewer_id === id && user._id) {
       return <EditableProfile user={user} handleSubmit={updateUser}/>;
    }
