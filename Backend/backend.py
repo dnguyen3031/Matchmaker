@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, Blueprint
 from flask import request
 from flask import jsonify
 from flask_cors import CORS
@@ -50,6 +50,9 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 #                 "Free",
 #                 "Browser Game"
 #             ],
+#             "queue": = [
+#             lobby1
+#             lobby2]
 #             "game_modes": {
 #                 "Capture_The_Flag": {
 #                     "relevant_stats": [
@@ -87,7 +90,6 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 @app.route('/')
 def backend_home():
     return 'You have reached the backend'
-
 
 @app.route('/users', methods=['GET', 'POST'])
 def get_users():
@@ -170,6 +172,10 @@ def get_game(id):
         newGame.patch()
         resp = jsonify(newGame), 201
         return resp
+
+@app.route('/games/add-to-queue/<id>', methods=['PATCH'])
+def add_to_queue(id):
+
 
 @app.route('/users/submit-results', methods=['PATCH'])
 def submit_results():
