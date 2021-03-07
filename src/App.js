@@ -17,21 +17,22 @@ import CreateAccount from './components/pages/CreateAccount';
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
 function App() {
-  const [token, setToken] = useState();
+  const [token, setToken] = useState({});
 
-  function temp(id) {
-    console.log("something interesting")
-    console.log(id)
-    setToken(id)
-    console.log(token)
-  }
+  // function temp(id) {
+  //   console.log("something interesting")
+  //   console.log(id)
+  //   setToken({token:id})
+  //   console.log(token)
+  // }
   console.log("rerender")
+  console.log(token)
   return (
     <Router>
       <div>
         <Switch>
           <Route path="/login">
-            <Login setToken={(id) => temp(id)}/>
+            <Login setToken={(id) => setToken(id)}/>
           </Route>
           <Route path="/matchmaking">
             <Matchmaking />
