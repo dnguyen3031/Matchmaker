@@ -6,7 +6,8 @@ import axios from 'axios';
 import bcrypt from 'bcrypt';
 
 function Login(props) {
-
+  const bcrypt = require('bcrypt');
+  const saltRounds = 9;
   /*Error Model*/
   const [showError, setErrorShow] = useState(false);
   const handleErrorClose = () => setErrorShow(false);
@@ -30,7 +31,8 @@ function Login(props) {
       console.log(result);
       if (result && result.users_list.length > 0)
       {
-          if(result.users_list[0].password == password)
+        bcrypt.compare(password, result.users_list[0].password, function(err, result) {
+          if(result)
           {
             handleSuccessShow();
             
@@ -39,6 +41,7 @@ function Login(props) {
           {
             handleErrorShow();
           }
+        });
       }
       else
       {
