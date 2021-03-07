@@ -50,9 +50,14 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 #                 "Free",
 #                 "Browser Game"
 #             ],
-#             "queue": = [
-#             lobby1
-#             lobby2]
+#             "queue": [
+#                   {"Lobby1_ID":
+#                       Groups: [Group1, Group2,...],
+#                       AvgELO: float,
+#                       WindowSize: int,
+#                       NumPlayers: int
+#                    }
+#               ]
 #             "game_modes": {
 #                 "Capture_The_Flag": {
 #                     "relevant_stats": [
