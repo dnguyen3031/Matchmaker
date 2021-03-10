@@ -71,6 +71,7 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 #             "lobby2252": {
 #                   "avg_elo": 861
 #                   "window_size": 240
+#                   "num_players": 1
 #                   "groups":[
 #                       "group1": {
 #                           "players": [
