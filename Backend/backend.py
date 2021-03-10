@@ -201,8 +201,13 @@ def get_game(id):
         resp = jsonify(newGame), 201
         return resp
 
-@app.route('/games/add-to-queue/<id>', methods=['PATCH'])
-def add_to_queue(id):
+@app.route('/games/add-to-queue', methods=['PATCH'])
+def add_to_queue():
+    if request.method == 'PATCH':
+        game_name = request.args.get('game_name')
+        user_id = request.args.get('user_id')
+        json_object = {}
+    pass
 
 
 @app.route('/users/submit-results', methods=['PATCH'])
