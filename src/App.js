@@ -16,41 +16,43 @@ import CreateAccount from './components/pages/CreateAccount';
 
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
-function App() {
-  const [token, setToken] = useState({});
+function setToken(userToken) {
+  sessionStorage.setItem('token', JSON.stringify(userToken));
+}
 
-  // function temp(id) {
-  //   console.log("something interesting")
-  //   console.log(id)
-  //   setToken({token:id})
-  //   console.log(token)
-  // }
-  console.log("rerender")
-  console.log(token)
+function getToken() {
+  const tokenString = sessionStorage.getItem('token');
+  const userToken = JSON.parse(tokenString);
+  return userToken
+}
+
+function App() {
+  const token = getToken();
+
   return (
     <Router>
       <div>
         <Switch>
           <Route path="/login">
-            <Login setToken={(id) => setToken(id)}/>
+            <Login setToken={(id) => setToken(id)} viewer_id={token}/>
           </Route>
           <Route path="/matchmaking">
-            <Matchmaking />
+            <Matchmaking viewer_id={token}/>
             </Route>
           <Route path="/leaderboard">
-            <LeaderboardPage />
+            <LeaderboardPage viewer_id={token}/>
           </Route>
           <Route path="/profile">
             <ProfilePage id="6024098ac9b27e9f9995df97" viewer_id={token}/>
           </Route>
           <Route path="/create-account">
-            <CreateAccount />
+            <CreateAccount viewer_id={token}/>
          </Route>
          <Route path="/testpage">
-            <TestPage />
+            <TestPage viewer_id={token}/>
          </Route>
           <Route path="/">
-            <Home id="6024098ac9b27e9f9995df97"/>
+            <Home viewer_id={token}/>
           </Route>
         </Switch>
       </div>

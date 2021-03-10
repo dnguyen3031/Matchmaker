@@ -24,11 +24,10 @@ function Login(props) {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name);
-    console.log(password);
+    // console.log(name);
+    // console.log(password);
     
     fetchUser(name).then( result => {
-      console.log(result);
       if (result && result.users_list.length > 0)
       {
         if(bcrypt.compareSync(password, result.users_list[0].password))
@@ -49,8 +48,6 @@ function Login(props) {
  }
 
   function handleSuccess(id){
-    console.log("line 52")
-    console.log(id)
     props.setToken(id)
     handleSuccessShow()
   }

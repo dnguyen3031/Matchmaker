@@ -10,7 +10,7 @@ function Home(props) {
    const[ELO, setELO] = useState({input:''});
    const[name, setName] = useState({input:'Krunker'});
    const[win, setWin] = useState({input:.5});
-   const id = props.id
+   const id = props.viewer_id
    return <div> 
       <CustomNavbar />
       <h2>Last Game results</h2>
