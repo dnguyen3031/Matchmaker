@@ -51,8 +51,35 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 #                 "Browser Game"
 #             ],
 #             "queue": = [
-#             lobby1
-#             lobby2]
+#             "lobby1203": {
+#                   "avg_elo": 1243
+#                   "window_size": 30
+#                   "num_players": 2
+#                   "groups":[
+#                       "group1": {
+#                           "players": [
+#                               12341234124
+#                           ]
+#                       },
+#                       "group2": {
+#                           "players": [
+#                               51613467671
+#                           ]
+#                       }
+#                    ]
+#             },
+#             "lobby2252": {
+#                   "avg_elo": 861
+#                   "window_size": 240
+#                   "groups":[
+#                       "group1": {
+#                           "players": [
+#                               12341234124
+#                           ]
+#                       }
+#                    ]
+#             }
+#             ]
 #             "game_modes": {
 #                 "Capture_The_Flag": {
 #                     "relevant_stats": [
