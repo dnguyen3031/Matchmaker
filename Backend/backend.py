@@ -204,9 +204,28 @@ def get_game(id):
 @app.route('/games/add-to-queue', methods=['PATCH'])
 def add_to_queue():
     if request.method == 'PATCH':
+        starting_window_size = 50
         game_name = request.args.get('game_name')
-        user_id = request.args.get('user_id')
-        json_object = {}
+        user_id = request.args.get('id')
+        user = User({"_id": user_id})
+        if user.reload():
+            elo = user.games_table[game_name]['game_score'] # use . ?
+            new_lobby = {
+                "avg_elo": elo,
+                "groups": [
+                    {
+                        "players": [
+                            user_id
+                        ]
+                    }
+                ],
+                "num_players": 1,
+                "window_size": starting_window_size,
+            }
+            Game().append_to_queue(user_id, new_lobby)
+        else:
+            return jsonify({"error": "User not found"}), 404
+
     pass
 
 

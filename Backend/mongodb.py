@@ -118,3 +118,9 @@ class Game(Model):
         for game in games:
             game["_id"] = str(game["_id"])
         return games
+
+    def append_to_queue(self, game_id, new_lobby):
+        self.collection.update(
+            {"_id": game_id},
+            { '$push': {'queue': new_lobby}}
+        )
