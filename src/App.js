@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  useParams
 } from "react-router-dom";
 import Home from './components/pages/Home';
 import ProfilePage from './components/pages/ProfilePage';
@@ -42,8 +43,8 @@ function App() {
           <Route path="/leaderboard">
             <LeaderboardPage viewer_id={token}/>
           </Route>
-          <Route path="/profile">
-            <ProfilePage id="6024098ac9b27e9f9995df97" viewer_id={token}/>
+          <Route path="/profile/:id">
+            <ProfilePage viewer_id={token}/>
           </Route>
           <Route path="/create-account">
             <CreateAccount viewer_id={token}/>

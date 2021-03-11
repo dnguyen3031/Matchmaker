@@ -3,10 +3,14 @@ import axios from 'axios';
 import './ProfilePage.css';
 import EditableProfile from './EditableProfilePage'
 import ViewableProfile from './ViewableProfilePage'
+import {
+   useParams
+ } from "react-router-dom";
 
 function ProfilePage(props) {
    const viewer_id = props.viewer_id;
-   const id = props.id;
+   const id = useParams().id;
+   console.log(id)
    const [user, setUser] = useState({email: "", 
                                  profile_info: {discord: "", profile_pic: "", bio: ""},
                                  games_table: {},
@@ -15,7 +19,7 @@ function ProfilePage(props) {
                                  _id: ""});
    
    useEffect(() => {
-      fetchUser(props.id).then( result => {
+      fetchUser(id).then( result => {
          if (result) {
             setUser(result);
             console.log("got user")
@@ -27,8 +31,10 @@ function ProfilePage(props) {
 
    if (viewer_id === id && user._id) {
       return <EditableProfile user={user} handleSubmit={updateUser}/>;
+   } else if (user._id) {
+      return <ViewableProfile user={user}/>;
    }
-   return <ViewableProfile user={user}/>;
+   return <h1>404: Failed to load user</h1>
 
    async function fetchUser(id){
       try {
@@ -46,7 +52,7 @@ function ProfilePage(props) {
    function updateUser(change) { 
       makePatchCall(change).then( result => {
          if (result.status === 201) {
-            fetchUser(props.id).then( result => {
+            fetchUser(id).then( result => {
                if (result) {
                   setUser(result);
                   console.log("updated user")
