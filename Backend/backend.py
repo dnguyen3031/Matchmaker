@@ -207,6 +207,7 @@ def add_to_queue():
         starting_window_size = 50
         game_name = request.args.get('game_name')
         user_id = request.args.get('id')
+        game = Game({"game_name": game_name})
         user = User({"_id": user_id})
         if user.reload():
             elo = user.games_table[game_name]['game_score'] # use . ?
@@ -222,11 +223,10 @@ def add_to_queue():
                 "num_players": 1,
                 "window_size": starting_window_size,
             }
-            Game().append_to_queue(user_id, new_lobby)
+            resp = game.append_to_queue(game_name, new_lobby) #game name might need to match (line 210)
+            return jsonify(resp), 201
         else:
             return jsonify({"error": "User not found"}), 404
-
-    pass
 
 
 @app.route('/users/submit-results', methods=['PATCH'])
