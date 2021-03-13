@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint
+from flask import Flask
 from flask import request
 from flask import jsonify
 from flask_cors import CORS
@@ -201,6 +201,7 @@ def get_game(id):
         resp = jsonify(newGame), 201
         return resp
 
+
 @app.route('/games/add-to-queue', methods=['PATCH'])
 def add_to_queue():
     if request.method == 'PATCH':
@@ -225,8 +226,6 @@ def add_to_queue():
             Game().append_to_queue(user_id, new_lobby)
         else:
             return jsonify({"error": "User not found"}), 404
-
-    pass
 
 
 @app.route('/users/submit-results', methods=['PATCH'])
