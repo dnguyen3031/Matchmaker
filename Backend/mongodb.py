@@ -125,3 +125,10 @@ class Game(Model):
             { '$push': {'queue': new_lobby}}
         )
         return {new_lobby}
+
+    #currnetly never called
+    def update_window_size(self, game_name, queue):
+        self.collection.update(
+            {"game_name": game_name},
+            {'$set': {'queue': queue }}
+        )
