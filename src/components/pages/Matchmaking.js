@@ -11,22 +11,32 @@ function getNumGames() {
 }
 
 function Matchmaking(props) {
-   return <> 
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-      <h2>matchmaking</h2>
-      <Container className="justify-content-md-center">
-         <Dropdown>
-         </Dropdown>
-         <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-            <Dropdown.Item onClick={addToQueue}>Krunker</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Minecraft</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">idk</Dropdown.Item>
-         </DropdownButton>
-
-         <Button variant="outline-primary">Add New Game</Button>{' '}
-      </Container>
-   </>;
-
+    return <div> 
+    <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+    <Container fluid> 
+       <Row>
+          <Col className="side-col" />
+          <Col xs={8} className="main-col pr-0">
+             <Row>
+                <Col>
+                   <Dropdown>
+                   </Dropdown>
+                   <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+                      <Dropdown.Item onClick={addToQueue}>Krunker</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Minecraft</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">idk</Dropdown.Item>
+                   </DropdownButton>
+                   <Button variant="outline-primary">Add New Game</Button>{' '}
+                </Col>
+                <Col md={3}>
+                   <FriendBar _id={props.id} />
+                </Col>
+             </Row>
+          </Col>
+          <Col className="side-col" />
+       </Row>
+    </Container>
+ </div>;
 
    function addToQueue() { 
       makePatchCall().then( result => {
