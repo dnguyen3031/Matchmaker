@@ -72,7 +72,7 @@ function Login(props) {
   }
 
   return <div> 
-    <CustomNavbar setToken={(id) => props.setToken(id)}/>
+    <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
     <Container className="justify-content-md-center">
       <Form>
         <Form.Group controlId="formBasicEmail">

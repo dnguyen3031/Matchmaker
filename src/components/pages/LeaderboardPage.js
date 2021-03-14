@@ -3,7 +3,7 @@ import CustomNavbar from '../CustomNavbar';
 
 function LeaderboardPage(props) {
    return <div> 
-      <CustomNavbar setToken={(id) => props.setToken(id)}/>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <h2>leaderboardpage</h2>
    </div>;
  }

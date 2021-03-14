@@ -17,7 +17,7 @@ function EditableProfile(props) {
         </div>
         <div class="background">
             <div class="page-wrapper">
-                <CustomNavbar setToken={(id) => props.setToken(id)}/>
+                <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
                 <div class="page">
                     <div class="top-card">
                         <img class="profile-picture" src={props.user.profile_info.profile_pic}/>

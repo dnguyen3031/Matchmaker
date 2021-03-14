@@ -8,7 +8,7 @@ import axios from 'axios';
 function TestPage(props) {
                                     
    return <div> 
-      <CustomNavbar setToken={(id) => props.setToken(id)}/>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid className="pr-0"> 
          <Row>
             <Col>TEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST 

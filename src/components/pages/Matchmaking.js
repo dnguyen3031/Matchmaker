@@ -3,7 +3,7 @@ import CustomNavbar from '../CustomNavbar';
 
 function Matchmaking(props) {
    return <div> 
-      <CustomNavbar setToken={(id) => props.setToken(id)}/>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <h2>matchmaking</h2>
    </div>;
  }

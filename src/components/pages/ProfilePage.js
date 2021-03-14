@@ -10,7 +10,7 @@ import {
 function ProfilePage(props) {
    const viewer_id = props.viewer_id;
    const id = useParams().id;
-   console.log(id)
+   // console.log(id)
    const [user, setUser] = useState({email: "", 
                                  profile_info: {discord: "", profile_pic: "", bio: ""},
                                  games_table: {},
@@ -30,9 +30,9 @@ function ProfilePage(props) {
    }, []);
 
    if (viewer_id === id && user._id) {
-      return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)}/>;
+      return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
    } else if (user._id) {
-      return <ViewableProfile user={user} setToken={(id) => props.setToken(id)}/>;
+      return <ViewableProfile user={user} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
    }
    return <h1>404: Failed to load user</h1>
 
