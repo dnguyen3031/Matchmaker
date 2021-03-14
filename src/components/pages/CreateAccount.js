@@ -4,8 +4,11 @@ import {
  } from 'react-bootstrap';
  import axios from 'axios';
  import bcryptjs from 'bcryptjs';
+ import { useHistory } from "react-router-dom";
 
 function CreateAccount() {
+   const history = useHistory();
+
    const bcrypt = require('bcryptjs');
    const saltRounds = 9;
    
@@ -38,6 +41,7 @@ function CreateAccount() {
          if (password.localeCompare(confirmPassword) == 0 && result == 0)
          {
             postUser(hashPassword(jsonData));
+            history.push("/home");
             handleSuccessShow();
          } else {
             console.log("Invalid Password Matching\n");

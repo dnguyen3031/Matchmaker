@@ -19,6 +19,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Boo
 
 function setToken(userToken) {
   sessionStorage.setItem('token', JSON.stringify(userToken));
+  window.location.reload()
 }
 
 function getToken() {
