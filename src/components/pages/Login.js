@@ -5,8 +5,10 @@ import CustomNavbar from '../CustomNavbar';
 import axios from 'axios';
 import bcryptjs from 'bcryptjs';
 import "./PageTemplate.css";
+import { Redirect, useHistory } from "react-router-dom";
 
 function Login(props) {
+  const history = useHistory();
   const bcrypt = require('bcryptjs');
   const saltRounds = 9;
   /*Error Model*/
@@ -52,7 +54,8 @@ function Login(props) {
     props.setToken(id)
     console.log("login sucessful of")
     console.log(id)
-    handleSuccessShow()
+    // handleSuccessShow()
+    // history.push("/");
   }
 
   function handleFailure(){
