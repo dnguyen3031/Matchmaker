@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react';
 import './ProfilePage.css';
 import FriendBar from "../FriendBar";
 import { BsPencil } from "react-icons/bs";
+import img from "./../../public/DefaultProfilePic.jpg"
 
 function EditableProfile(props) {
     // console.log("EditableProfile")
@@ -23,7 +24,7 @@ function EditableProfile(props) {
                      <Col>
                         <Row className="pt-3 pb-3">
                            <Col xs={3}>
-                              <Image src="testProfilePic.JPG" rounded fluid/>
+                              <Image src={img} rounded fluid/>
                            </Col>
                            <Col xs={4} className="pt-2 text-white">
                               <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(["Name", "name"])}/></div>
