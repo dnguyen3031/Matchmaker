@@ -124,7 +124,7 @@ class Game(Model):
             {"game_name": game_name},
             { '$push': {'queue': new_lobby}}
         )
-        return {new_lobby}
+        return new_lobby
 
     #currnetly never called
     def update_window_size(self, game_name, queue):
