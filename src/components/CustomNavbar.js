@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
-import { Navbar, Nav, Dropdown, DropdownButton, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
-import './CustomNavbar.css';
+import { Col, Row, Navbar, Nav, Dropdown, DropdownButton, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 
 function CustomNavbar(props) {
    if (props.viewer_id) {
@@ -45,8 +44,8 @@ function LoggedInNavbar(props){
    const profile_url = "/profile/" + props.viewer_id
 
    return <div>
-       <Navbar className="color-nav" expand="lg" variant="light">
-         <Navbar.Brand href="/" style={{color: 'white'}}> Matchmaker</Navbar.Brand>
+       <Navbar bg="dark" variant="dark" expand="lg">
+         <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
          <Navbar.Toggle aria-controls="basic-navbar-nav" />
          <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">

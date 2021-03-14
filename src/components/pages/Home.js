@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import CustomNavbar from '../CustomNavbar';
-import Button from 'react-bootstrap/Button'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
+import { Col, Row, Button, Container, Form } from 'react-bootstrap';
 import axios from 'axios';
+import './PageTemplate.css';
+import FriendBar from "../FriendBar";
 
 function Home(props) {
    const[ELO, setELO] = useState({input:''});
@@ -13,62 +12,77 @@ function Home(props) {
    const id = props.viewer_id
    return <div> 
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-      <h2 style={{color: 'black'}}>Last Game results</h2>
-      <Form>
+      <Container fluid> 
+         <Row>
+            <Col className="side-col" />
+            <Col xs={8} className="pr-0">
+               <Row>
+                  <Col>
+                  <h2 style={{color: 'black'}}> Last Game Results</h2>
+                  <Form>
+                     <fieldset>
+                           <Form.Group as={Row}>
+                              <Form.Label as="score" column sm={2}>
+                              Previous Result
+                              </Form.Label>
+                              <Col sm={10}>
+                              <Form.Check
+                                 inline
+                                 type="radio"
+                                 label="Win"
+                                 name="formHorizontalRadios"
+                                 id="winRadio"
+                                 onChange={winRadioClicked}
+                              />
+                              <Form.Check
+                                 inline
+                                 type="radio"
+                                 label="Loss"
+                                 name="formHorizontalRadios"
+                                 id="lossRadio"
+                                 onChange = {lossRadioClicked}
+                              />
+                              </Col>
+                           </Form.Group>
+                        </fieldset>
 
-      <fieldset>
-            <Form.Group as={Row}>
-               <Form.Label as="score" column sm={2}>
-               Previous Result
-               </Form.Label>
-               <Col sm={10}>
-               <Form.Check
-                  inline
-                  type="radio"
-                  label="Win"
-                  name="formHorizontalRadios"
-                  id="winRadio"
-                  onChange={winRadioClicked}
-               />
-               <Form.Check
-                  inline
-                  type="radio"
-                  label="Loss"
-                  name="formHorizontalRadios"
-                  id="lossRadio"
-                  onChange = {lossRadioClicked}
-               />
-               </Col>
-            </Form.Group>
-         </fieldset>
+                        <Form.Group as={Row} controlId="OpponentELO">
+                           <Form.Label column sm={2}>
+                              Opponenent ELO
+                           </Form.Label>
+                           <Col sm={10}>
+                              <Form.Control type="ELO" placeholder="1300"
+                                 value={ELO.input} onChange={handleELO}/>
+                           </Col>
+                        </Form.Group>
 
-         <Form.Group as={Row} controlId="OpponentELO">
-            <Form.Label column sm={2}>
-               Opponenent ELO
-            </Form.Label>
-            <Col sm={10}>
-               <Form.Control type="ELO" placeholder="1300"
-                  value={ELO.input} onChange={handleELO}/>
-            </Col>
-         </Form.Group>
+                        <Form.Group as={Row} controlId="GameName">
+                           <Form.Label column sm={2}>
+                              Game Name
+                           </Form.Label>
+                           <Col sm={10}>
+                              <Form.Control type="GameName" placeholder="Krunker"
+                                 value={name.input} onChange={handleGame}/>
+                           </Col>
+                        </Form.Group>
+                        
+                        <Form.Group as={Row}>
+                           <Col sm={{ span: 10, offset: 2 }}>
+                              <Button onClick={submitChange}
+                              type="button">Submit</Button>
+                           </Col>
+                        </Form.Group>
+                     </Form>
+                  </Col>
 
-         <Form.Group as={Row} controlId="GameName">
-            <Form.Label column sm={2}>
-               Game Name
-            </Form.Label>
-            <Col sm={10}>
-               <Form.Control type="GameName" placeholder="Krunker"
-                  value={name.input} onChange={handleGame}/>
+                  <Col md={3}>
+                     <FriendBar _id="603aea0c5adbbd2ac5e5d9f1" />
+                  </Col>
+               </Row>
             </Col>
-         </Form.Group>
-         
-         <Form.Group as={Row}>
-            <Col sm={{ span: 10, offset: 2 }}>
-               <Button onClick={submitChange}
-               type="button">Submit</Button>
-            </Col>
-         </Form.Group>
-      </Form>
+            <Col className="side-col" />
+         </Row>
+      </Container>
    </div>;
 
    function winRadioClicked(){

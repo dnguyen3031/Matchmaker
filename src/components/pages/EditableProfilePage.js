@@ -1,7 +1,9 @@
-import {Row, Col, Container, Table, Card, Button, Modal} from 'react-bootstrap';
+import { Row, Col, Container, Image, Table, Card, Button, Modal} from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
 import React, {useState, useEffect} from 'react';
 import './ProfilePage.css';
+import FriendBar from "../FriendBar";
+import { BsPencil } from "react-icons/bs";
 
 function EditableProfile(props) {
     // console.log("EditableProfile")
@@ -12,45 +14,57 @@ function EditableProfile(props) {
     const handleClose = () => setModalShow(false);
  
     return <div>
-        <div>
-            <title>Profile Page</title>
-        </div>
-        <div class="background">
-            <div class="page-wrapper">
-                <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-                <div class="page">
-                    <div class="top-card">
-                        <img class="profile-picture" src={props.user.profile_info.profile_pic}/>
-                        <div>
-                            <h2 onClick={() => ActivateModal(["Name", "name"])}>{props.user.name}</h2>
-                            <h4>Bio:</h4>
-                            <p onClick={() => ActivateModal(["Bio", "bio", "profile_info"])}>{props.user.profile_info.bio}</p>
-                        </div>
-                    </div>
-                    <div class="section-wrapper">
-                        <div class="contact-section">
-                            <h4>Contact info:</h4>
-                            <div class="contact-section-content">
-                                <h6>Email:</h6>
-                                <p onClick={() => ActivateModal(["Email", "email"])}>{props.user.email}</p>
-                                <h6>Discord:</h6>
-                                <p onClick={() => ActivateModal(["Discord", "discord", "profile_info"])}>{props.user.profile_info.discord}</p>
-                                <h6>Steam Name:</h6>
-                                <p onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])}>{props.user.profile_info.steam_name}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="games-table">
-                        <div class="game-box">
-                            <h4>Games:</h4>
-                        </div>
-                        <GameTable />
-                    </div>
-                    <div class="section-wrapper">
-                        <div class="friends-list"/> 
-                    </div>
-                </div>
-            </div>
+         <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+         <Container fluid> 
+            <Row>
+               <Col className="side-col" />
+               <Col xs={8} className="main-col pr-0">
+                  <Row>
+                     <Col>
+                        <Row className="pt-3 pb-3">
+                           <Col xs={3}>
+                              <Image src="test_profile_pic.jpg" rounded fluid/>
+                           </Col>
+                           <Col xs={4} className="pt-2 text-white">
+                              <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(["Name", "name"])}/></div>
+                              <div className="h5">Bio: </div>
+                              <div>
+                                {props.user.profile_info.bio} <BsPencil onClick={() => ActivateModal(["Bio", "bio", "profile_info"])}/>
+                              </div>
+                           </Col>
+                           <Col xs={4} className="pt-2 bg-dark text-white">
+                              <div className="text-center">Contact Info</div>
+                              <div className="pt-4">Email: {props.user.email} <BsPencil onClick={() => ActivateModal(["Email", "email"])} /></div>
+                              <div className="pt-4">Discord: {props.user.profile_info.discord} <BsPencil onClick={() => ActivateModal(["Discord", "discord", "profile_info"])} /></div>
+                              <div className="pt-4 pb-4">Steam Name: {props.user.profile_info.steam_name} 
+                                 <BsPencil onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])} /></div>
+                           </Col>
+                        </Row>
+                        <Row>
+                           <Col xs={8}>
+                              <Table variant="dark">
+                                 <thead>
+                                    <tr>
+                                       <th>Game</th>
+                                       <th>Rank</th>
+                                    </tr>
+                                 </thead>
+                                <GameTable />
+                              </Table>
+                           </Col>
+                           <Col></Col>
+                        </Row>
+                        
+                     </Col>
+                     <Col md={3}>
+                        <FriendBar _id={props.user._id} /> 
+                        {/* _id="603c339a5ef99cf0de73b4b8" */}
+                     </Col>
+                  </Row>
+               </Col>
+               <Col className="side-col" />
+            </Row>
+         </Container>
             <Modal 
                 show={modalShow}
                 onHide={() => setModalShow(false)}
@@ -74,7 +88,6 @@ function EditableProfile(props) {
                 <Button onClick={handleClose}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
-        </div>
     </div>;
  
  
@@ -128,12 +141,8 @@ function EditableProfile(props) {
        const rows = Object.keys(props.user.games_table).map((game, index) => {
           return (
              <tr key={index}>
-                <td>
-                   <div class="game-section">
-                      <h4>{game}</h4>
-                      <p>{props.user.games_table[game].Rank}</p>
-                   </div>
-                </td>
+                <td>{game}</td>
+                <td>{props.user.games_table[game].Rank}</td>
              </tr>
           );
        })
