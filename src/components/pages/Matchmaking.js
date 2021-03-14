@@ -16,7 +16,7 @@ function Matchmaking(props) {
          <Dropdown>
          </Dropdown>
          <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-            <Dropdown.Item href="#/action-1">Krunker</Dropdown.Item>
+            <Dropdown.Item href={"/matchmaking/add-to-queue?game_name=Krunker&id="+props.viewer_id}>Krunker</Dropdown.Item>
             <Dropdown.Item href="#/action-2">Minecraft</Dropdown.Item>
             <Dropdown.Item href="#/action-3">idk</Dropdown.Item>
          </DropdownButton>
