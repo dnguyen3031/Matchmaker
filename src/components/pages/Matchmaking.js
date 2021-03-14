@@ -8,7 +8,7 @@ function getNumGames() {
    return 3;
 }
 
-function Matchmaking() {
+function Matchmaking(props) {
    return <> 
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <h2>matchmaking</h2>

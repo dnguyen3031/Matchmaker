@@ -69,7 +69,7 @@ function LoggedInNavbar(props){
 
 function DefaultNavbar() {
    return <div>
-       <Navbar className="color-nav" expand="lg" variant="light">
+       <Navbar className="color-nav" expand="lg" bg="dark" variant="dark">
          <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
          <Navbar.Toggle aria-controls="basic-navbar-nav" />
          <Navbar.Collapse id="basic-navbar-nav">

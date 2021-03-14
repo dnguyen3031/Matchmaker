@@ -23,7 +23,7 @@ function EditableProfile(props) {
                      <Col>
                         <Row className="pt-3 pb-3">
                            <Col xs={3}>
-                              <Image src="test_profile_pic.jpg" rounded fluid/>
+                              <Image src="testProfilePic.JPG" rounded fluid/>
                            </Col>
                            <Col xs={4} className="pt-2 text-white">
                               <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(["Name", "name"])}/></div>
