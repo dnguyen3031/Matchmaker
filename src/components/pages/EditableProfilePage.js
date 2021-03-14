@@ -23,26 +23,19 @@ function EditableProfile(props) {
                   <Row>
                      <Col>
                         <Row className="pt-3 pb-3">
-                           <Col xs={3}>
+                           <Col >
                               <Image src={"DefaultProfilePic.jpg"} rounded fluid/>
                            </Col>
-                           <Col xs={4} className="pt-2 text-white">
+                           <Col className="pt-2 text-white">
                               <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(["Name", "name"])}/></div>
                               <div className="h5">Bio: </div>
                               <div>
                                 {props.user.profile_info.bio} <BsPencil onClick={() => ActivateModal(["Bio", "bio", "profile_info"])}/>
                               </div>
                            </Col>
-                           <Col xs={4} className="pt-2 bg-dark text-white">
-                              <div className="text-center">Contact Info</div>
-                              <div className="pt-4">Email: {props.user.email} <BsPencil onClick={() => ActivateModal(["Email", "email"])} /></div>
-                              <div className="pt-4">Discord: {props.user.profile_info.discord} <BsPencil onClick={() => ActivateModal(["Discord", "discord", "profile_info"])} /></div>
-                              <div className="pt-4 pb-4">Steam Name: {props.user.profile_info.steam_name} 
-                                 <BsPencil onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])} /></div>
-                           </Col>
                         </Row>
                         <Row>
-                           <Col xs={8}>
+                           <Col xs={6}>
                               <Table variant="dark">
                                  <thead>
                                     <tr>
@@ -53,7 +46,13 @@ function EditableProfile(props) {
                                 <GameTable />
                               </Table>
                            </Col>
-                           <Col></Col>
+                           <Col xs={6} className="bg-dark text-white">
+                              <div>Contact Info</div>
+                              <div className="pt-4">Email: {props.user.email} <BsPencil onClick={() => ActivateModal(["Email", "email"])} /></div>
+                              <div className="pt-4">Discord: {props.user.profile_info.discord} <BsPencil onClick={() => ActivateModal(["Discord", "discord", "profile_info"])} /></div>
+                              <div className="pt-4 pb-4">Steam Name: {props.user.profile_info.steam_name} 
+                                 <BsPencil onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])} /></div>
+                           </Col>
                         </Row>
                         
                      </Col>
