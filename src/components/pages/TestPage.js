@@ -5,10 +5,10 @@ import FriendBar from "../FriendBar";
 import { Row, Col, Container } from "react-bootstrap";
 import axios from 'axios';
 
-function TestPage() {
+function TestPage(props) {
                                     
    return <div> 
-      <CustomNavbar />
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid className="pr-0"> 
          <Row>
             <Col>TEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST 

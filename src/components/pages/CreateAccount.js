@@ -3,8 +3,12 @@ import {
    Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink, Alert, Modal
  } from 'react-bootstrap';
  import axios from 'axios';
+ import bcryptjs from 'bcryptjs';
 
 function CreateAccount() {
+   const bcrypt = require('bcryptjs');
+   const saltRounds = 9;
+   
    const [email, setEmail] = useState('');
    const [username, setusername] = useState('');
    const [password, setpassword] = useState('');
@@ -22,19 +26,29 @@ function CreateAccount() {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      var jsonData = { "name": username, "email": email, "password": password };
+      var jsonData = { "name": username, "email": email, "password": password, "friends": {}, "games_table": {}, "profile_info": {
+          "bio": "This user has no bio",
+          "discord": "",
+          "profile_pic": "DefaultProfilePic.jpg",
+          "steam_friend_code": "",
+          "steam_name": ""
+      } };
       fetchUser(email).then( result => {
          console.log(result);
          if (password.localeCompare(confirmPassword) == 0 && result == 0)
          {
-            postUser(jsonData);
+            postUser(hashPassword(jsonData));
             handleSuccessShow();
          } else {
             console.log("Invalid Password Matching\n");
             handleErrorShow();
          }
       });
-      
+   }
+
+   function hashPassword(jsonData) {
+      jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
+      return jsonData
    }
 
    async function fetchUser(email){

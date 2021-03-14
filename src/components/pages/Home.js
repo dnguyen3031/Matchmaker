@@ -10,10 +10,10 @@ function Home(props) {
    const[ELO, setELO] = useState({input:''});
    const[name, setName] = useState({input:'Krunker'});
    const[win, setWin] = useState({input:.5});
-   const id = props.id
+   const id = props.viewer_id
    return <div> 
-      <CustomNavbar />
-      <h2 style={{color: 'black'}}> Last Game Results</h2>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+      <h2 style={{color: 'black'}}>Last Game results</h2>
       <Form>
 
       <fieldset>
@@ -120,5 +120,5 @@ function Home(props) {
 
    
 }
- 
+
 export default Home;

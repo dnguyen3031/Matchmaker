@@ -10,7 +10,7 @@ function getNumGames() {
 
 function Matchmaking() {
    return <> 
-      <CustomNavbar />
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <h2>matchmaking</h2>
       <Container className="justify-content-md-center">
          <Dropdown>

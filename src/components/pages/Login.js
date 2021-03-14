@@ -3,9 +3,11 @@ import { Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar,
 from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
 import axios from 'axios';
+import bcryptjs from 'bcryptjs';
 
 function Login(props) {
-
+  const bcrypt = require('bcryptjs');
+  const saltRounds = 9;
   /*Error Model*/
   const [showError, setErrorShow] = useState(false);
   const handleErrorClose = () => setErrorShow(false);
@@ -22,30 +24,40 @@ function Login(props) {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name);
-    console.log(password);
+    // console.log(name);
+    // console.log(password);
     
     fetchUser(name).then( result => {
-      console.log(result);
       if (result && result.users_list.length > 0)
       {
-          if(result.users_list[0].password == password)
-          {
-            handleSuccessShow();
-            
-          }
-          else
-          {
-            handleErrorShow();
-          }
+        if(bcrypt.compareSync(password, result.users_list[0].password))
+        {
+          handleSuccess(result.users_list[0]._id);
+          
+        }
+        else
+        {
+          handleFailure()
+        }
       }
       else
       {
-        handleErrorShow();
+        handleFailure()
       }
     });
  }
 
+  function handleSuccess(id){
+    props.setToken(id)
+    console.log("login sucessful of")
+    console.log(id)
+    handleSuccessShow()
+  }
+
+  function handleFailure(){
+    console.log("login failed")
+    handleErrorShow();
+  }
 
   async function fetchUser(name){
     try {
@@ -60,7 +72,7 @@ function Login(props) {
   }
 
   return <div> 
-    <CustomNavbar />
+    <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
     <Container className="justify-content-md-center">
       <Form>
         <Form.Group controlId="formBasicEmail">

@@ -16,7 +16,7 @@ function ViewableProfile(props) {
        </div>
        <div>
           <div class="page-wrapper">
-             <CustomNavbar />
+             <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
              <div class="page">
                 <div class="body">
                    <div class="Top_Card">
