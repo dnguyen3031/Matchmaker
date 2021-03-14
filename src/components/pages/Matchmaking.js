@@ -40,7 +40,7 @@ function Matchmaking(props) {
 
    async function makePatchCall(){
       try{
-         const response= await axios.patch('/matchmaking/add-to-queue?game_name=Krunker&id='+props.viewer_id)
+         const response= await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker&id='+props.viewer_id)
          return response;
       }
       catch(error){
