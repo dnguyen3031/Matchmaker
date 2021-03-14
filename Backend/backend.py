@@ -203,7 +203,7 @@ def get_game(id):
         return resp
 
 
-@app.route('/games/add-to-queue', methods=['PATCH'])
+@app.route('/matchmaking/add-to-queue', methods=['PATCH'])
 def add_to_queue():
     if request.method == 'PATCH':
         starting_window_size = 50
