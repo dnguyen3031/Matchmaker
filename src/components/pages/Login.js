@@ -3,6 +3,7 @@ import { Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar,
 from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
 import axios from 'axios';
+import "./PageTemplate.css";
 
 function Login(props) {
 
@@ -61,48 +62,54 @@ function Login(props) {
 
   return <div> 
     <CustomNavbar />
-    <Container className="justify-content-md-center">
-      <Form>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Username</Form.Label>
-          <Form.Control type="text"
-          placeholder="Enter username"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          />
-          <Form.Text className="text-muted">
-              We'll never share your information with anyone else.
-          </Form.Text>
-        </Form.Group>
+    <Container fluid >
+       <Row>
+          <Col className="side-col" />
+          <Col xs={8}>
+            <Form>
+               <Form.Group controlId="formBasicEmail">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control type="text"
+                  placeholder="Enter username"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  />
+                  <Form.Text className="text-muted">
+                     We'll never share your information with anyone else.
+                  </Form.Text>
+               </Form.Group>
 
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          />
-        </Form.Group>
-      
-        
-        <Container>
-          <Row>
-            <Col>
-              <Button block variant="primary" type="submit" onClick = {handleSubmit}>
-                Login
-              </Button>
-            </Col>
-            <Col>
-              <Button block variant="primary" type="submit" href="/create-account">
-                Create Account
-              </Button>
-            </Col>
-          </Row>
-        </Container>
+               <Form.Group controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  />
+               </Form.Group>
+               <Container>
+                  <Row>
+                     <Col>
+                     <Button block variant="primary" type="submit" onClick = {handleSubmit}>
+                        Login
+                     </Button>
+                     </Col>
+                     <Col>
+                     <Button block variant="primary" type="submit" href="/create-account">
+                        Create Account
+                     </Button>
+                     </Col>
+                  </Row>
+               </Container>
 
-      </Form>
+         </Form>
+
+          </Col>
+          <Col className="side-col" />
+       </Row>
+    
 
       <Modal show={showError} onHide={handleErrorClose}>
       <Modal.Header closeButton>

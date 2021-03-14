@@ -27,6 +27,7 @@ function ProfilePage(props) {
 
    if (viewer_id === id && user._id) {
       return <EditableProfile user={user} handleSubmit={updateUser}/>;
+
    }
    return <ViewableProfile user={user}/>;
 

@@ -4,18 +4,24 @@ import { useParams } from 'react-router-dom';
 import FriendBar from "../FriendBar";
 import { Row, Col, Container } from "react-bootstrap";
 import axios from 'axios';
+import "./PageTemplate.css";
 
 function TestPage() {
                                     
    return <div> 
       <CustomNavbar />
-      <Container fluid className="pr-0"> 
+      <Container fluid> 
          <Row>
-            <Col>TEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST 
-            PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGETEST PAGE</Col>
-            <Col md={3}>
-               <FriendBar _id="603aea0c5adbbd2ac5e5d9f1" />
+            <Col className="side-col" />
+            <Col xs={8} className="pr-0">
+               <Row>
+                  <Col>INSERT PAGE CONTENT HERE</Col>
+                  <Col md={3}>
+                     <FriendBar _id="603c339a5ef99cf0de73b4b8" />
+                  </Col>
+               </Row>
             </Col>
+            <Col className="side-col" />
          </Row>
       </Container>
    </div>;
