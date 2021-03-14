@@ -30,9 +30,9 @@ function ProfilePage(props) {
    }, []);
 
    if (viewer_id === id && user._id) {
-      return <EditableProfile user={user} handleSubmit={updateUser}/>;
+      return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)}/>;
    } else if (user._id) {
-      return <ViewableProfile user={user}/>;
+      return <ViewableProfile user={user} setToken={(id) => props.setToken(id)}/>;
    }
    return <h1>404: Failed to load user</h1>
 

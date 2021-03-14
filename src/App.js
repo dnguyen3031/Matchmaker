@@ -38,22 +38,22 @@ function App() {
             <Login setToken={(id) => setToken(id)} viewer_id={token}/>
           </Route>
           <Route path="/matchmaking">
-            <Matchmaking viewer_id={token}/>
+            <Matchmaking viewer_id={token} setToken={(id) => setToken(id)}/>
             </Route>
           <Route path="/leaderboard">
-            <LeaderboardPage viewer_id={token}/>
+            <LeaderboardPage viewer_id={token} setToken={(id) => setToken(id)}/>
           </Route>
           <Route path="/profile/:id">
-            <ProfilePage viewer_id={token}/>
+            <ProfilePage viewer_id={token} setToken={(id) => setToken(id)}/>
           </Route>
           <Route path="/create-account">
-            <CreateAccount viewer_id={token}/>
+            <CreateAccount viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
          <Route path="/testpage">
-            <TestPage viewer_id={token}/>
+            <TestPage viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
           <Route path="/">
-            <Home viewer_id={token}/>
+            <Home viewer_id={token} setToken={(id) => setToken(id)}/>
           </Route>
         </Switch>
       </div>

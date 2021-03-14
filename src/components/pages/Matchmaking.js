@@ -1,9 +1,9 @@
 import React from 'react';
 import CustomNavbar from '../CustomNavbar';
 
-function Matchmaking() {
+function Matchmaking(props) {
    return <div> 
-      <CustomNavbar />
+      <CustomNavbar setToken={(id) => props.setToken(id)}/>
       <h2>matchmaking</h2>
    </div>;
  }

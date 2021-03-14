@@ -12,7 +12,7 @@ function Home(props) {
    const[win, setWin] = useState({input:.5});
    const id = props.viewer_id
    return <div> 
-      <CustomNavbar />
+      <CustomNavbar setToken={(id) => props.setToken(id)}/>
       <h2>Last Game results</h2>
       <Form>
 

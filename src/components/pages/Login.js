@@ -37,19 +37,26 @@ function Login(props) {
         }
         else
         {
-          handleErrorShow();
+          handleFailure()
         }
       }
       else
       {
-        handleErrorShow();
+        handleFailure()
       }
     });
  }
 
   function handleSuccess(id){
     props.setToken(id)
+    console.log("login sucessful of")
+    console.log(id)
     handleSuccessShow()
+  }
+
+  function handleFailure(){
+    console.log("login failed")
+    handleErrorShow();
   }
 
   async function fetchUser(name){
@@ -65,7 +72,7 @@ function Login(props) {
   }
 
   return <div> 
-    <CustomNavbar />
+    <CustomNavbar setToken={(id) => props.setToken(id)}/>
     <Container className="justify-content-md-center">
       <Form>
         <Form.Group controlId="formBasicEmail">

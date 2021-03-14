@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Navbar, Nav, Dropdown, DropdownButton, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 import './CustomNavbar.css';
 
-function CustomNavbar() {
+function CustomNavbar(props) {
    return <div>
        <Navbar className="color-nav" expand="lg" variant="light">
          <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
@@ -12,7 +12,7 @@ function CustomNavbar() {
             <Nav className="mr-auto">
                <Nav.Link href="/matchmaking">Find Match</Nav.Link>
                <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
-               <Nav.Link href="/profile">Profile</Nav.Link>
+               <Nav.Link href="/profile/">Profile</Nav.Link>
                <Nav.Link href="/login">Login</Nav.Link>
             </Nav>
    
@@ -22,7 +22,7 @@ function CustomNavbar() {
                <Dropdown.Item eventKey="2">Reload Vbucks</Dropdown.Item>
                <Dropdown.Item eventKey="3"><Link style={{ color: 'black', textDecoration: 'none' }} to="/testpage">Test Page for FriendBar</Link></Dropdown.Item>
                <Dropdown.Divider />
-               <Dropdown.Item eventKey="4">Logout</Dropdown.Item>
+               <Dropdown.Item eventKey="4" onClick={() => props.setToken("")}>Logout</Dropdown.Item>
             </DropdownButton>
 
          </Navbar.Collapse>
