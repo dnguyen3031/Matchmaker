@@ -27,7 +27,9 @@ def make_matches(game):
 
 def merge_matches(game, lobby, matched_lobby):
     # takes the two lobbies, removes them from game and returns a merged lobby
+    #TODO: record avg elo for each groop for team-making purposes
     merged_elo = (lobby["avg_elo"] + matched_lobby["avg_elo"])/2
+    #TODO: weight the elos
     merged_groups = lobby["groups"] + matched_lobby["groups"]
     merged_num_players = lobby["num_players"] + matched_lobby["num_players"]
     larger_window_size = max(lobby["window_size"], matched_lobby["window_size"])
@@ -61,7 +63,7 @@ def check_sizes(lobby, o_lobby, num_players_needed):
 def within_range(lobby, o_lobby):
     higher_lobby = o_lobby
     lower_lobby = lobby
-    if lobby["avg_elo"] > o_lobby["avg_elo"]
+    if lobby["avg_elo"] > o_lobby["avg_elo"]:
         higher_lobby= lobby
         lower_lobby= o_lobby
 

@@ -114,6 +114,7 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 #     ]
 # }
 
+#TODO: start timer_module asynchronously on startup
 
 @app.route('/')
 def backend_home():
