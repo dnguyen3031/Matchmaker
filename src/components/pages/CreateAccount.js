@@ -26,7 +26,13 @@ function CreateAccount() {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      var jsonData = { "name": username, "email": email, "password": password };
+      var jsonData = { "name": username, "email": email, "password": password, "friends": {}, "games_table": {}, "profile_info": {
+          "bio": "This user has no bio",
+          "discord": "",
+          "profile_pic": "DefaultProfilePic.jpg",
+          "steam_friend_code": "",
+          "steam_name": ""
+      } };
       fetchUser(email).then( result => {
          console.log(result);
          if (password.localeCompare(confirmPassword) == 0 && result == 0)
