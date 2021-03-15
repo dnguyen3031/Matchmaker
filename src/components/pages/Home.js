@@ -76,7 +76,7 @@ function Home(props) {
                   </Col>
 
                   <Col md={3}>
-                     <FriendBar _id="603aea0c5adbbd2ac5e5d9f1" />
+                     <FriendBar _id={props.viewer_id}/>
                   </Col>
                </Row>
             </Col>

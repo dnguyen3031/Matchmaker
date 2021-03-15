@@ -13,7 +13,7 @@ function LeaderboardPage(props) {
             <Row>
                <Col>Leaderboard</Col>
                <Col md={3}>
-                  <FriendBar _id={props.id} />
+                  <FriendBar _id={props.viewer_id} />
                </Col>
             </Row>
          </Col>
