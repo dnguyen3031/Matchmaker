@@ -15,11 +15,11 @@ function Home(props) {
       <Container fluid> 
          <Row>
             <Col className="side-col" />
-            <Col xs={8} className="pr-0">
+            <Col xs={8} className="pr-0 main-col">
                <Row>
                   <Col>
-                  <h2 style={{color: 'black'}}> Last Game Results</h2>
-                  <Form>
+                  <h2 style={{color: 'white'}}> Last Game Results</h2>
+                  <Form className="text-white">
                      <fieldset>
                            <Form.Group as={Row}>
                               <Form.Label as="score" column sm={2}>
