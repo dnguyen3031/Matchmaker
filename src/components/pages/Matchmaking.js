@@ -29,7 +29,7 @@ function Matchmaking(props) {
                    <Button variant="outline-primary">Add New Game</Button>{' '}
                 </Col>
                 <Col md={3}>
-                   <FriendBar _id={props.id} />
+                   <FriendBar _id={props.viewer_id} />
                 </Col>
              </Row>
           </Col>
