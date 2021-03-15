@@ -57,7 +57,7 @@ function LoggedInNavbar(props){
             <DropdownButton variant="secondary" menuAlign="right" title={user.name} id="dropdown-menu-align-right"> 
             {/* className="pt-2" */}
                <Dropdown.Item eventKey="1">Account Settings</Dropdown.Item>
-               <Dropdown.Item eventKey="2"><Link style={{ color: 'black', textDecoration: 'none' }} to="/testpage">Test Page for FriendBar</Link></Dropdown.Item>
+               {/* <Dropdown.Item eventKey="2"><Link style={{ color: 'black', textDecoration: 'none' }} to="/testpage">Test Page for FriendBar</Link></Dropdown.Item> */}
                <Dropdown.Divider />
                <Dropdown.Item eventKey="3" onClick={() => props.setToken("")}>Logout</Dropdown.Item>
             </DropdownButton>
