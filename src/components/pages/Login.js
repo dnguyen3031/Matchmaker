@@ -80,8 +80,8 @@ function Login(props) {
     <Container fluid >
        <Row>
           <Col className="side-col" />
-          <Col xs={8}>
-            <Form>
+          <Col xs={8} className="main-col">
+            <Form className="text-white">
                <Form.Group controlId="formBasicEmail">
                   <Form.Label>Username</Form.Label>
                   <Form.Control type="text"
@@ -90,7 +90,7 @@ function Login(props) {
                   onChange={(e) => setName(e.target.value)}
                   required
                   />
-                  <Form.Text className="text-muted">
+                  <Form.Text className="text-white">
                      We'll never share your information with anyone else.
                   </Form.Text>
                </Form.Group>
