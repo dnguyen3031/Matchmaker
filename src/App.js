@@ -1,10 +1,11 @@
 import './App.css';
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  useParams
 } from "react-router-dom";
 import Home from './components/pages/Home';
 import ProfilePage from './components/pages/ProfilePage';
@@ -16,31 +17,44 @@ import CreateAccount from './components/pages/CreateAccount';
 
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
+function setToken(userToken) {
+  sessionStorage.setItem('token', JSON.stringify(userToken));
+  window.location.reload()
+}
+
+function getToken() {
+  const tokenString = sessionStorage.getItem('token');
+  const userToken = JSON.parse(tokenString);
+  return userToken
+}
+
 function App() {
+  const token = getToken();
+
   return (
     <Router>
       <div>
         <Switch>
           <Route path="/login">
-            <Login />
+            <Login setToken={(id) => setToken(id)} viewer_id={token}/>
           </Route>
           <Route path="/matchmaking">
-            <Matchmaking />
+            <Matchmaking viewer_id={token} setToken={(id) => setToken(id)}/>
             </Route>
           <Route path="/leaderboard">
-            <LeaderboardPage />
+            <LeaderboardPage viewer_id={token} setToken={(id) => setToken(id)}/>
           </Route>
-          <Route path="/profile">
-            <ProfilePage id="6024098ac9b27e9f9995df97" viewer_id="6024098ac9b27e9f9995df97"/>
+          <Route path="/profile/:id">
+            <ProfilePage viewer_id={token} setToken={(id) => setToken(id)}/>
           </Route>
           <Route path="/create-account">
-            <CreateAccount />
+            <CreateAccount viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
          <Route path="/testpage">
-            <TestPage />
+            <TestPage viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
           <Route path="/">
-            <Home id="6024098ac9b27e9f9995df97"/>
+            <Home viewer_id={token} setToken={(id) => setToken(id)}/>
           </Route>
         </Switch>
       </div>

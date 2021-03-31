@@ -118,3 +118,17 @@ class Game(Model):
         for game in games:
             game["_id"] = str(game["_id"])
         return games
+
+    def append_to_queue(self, game_name, new_lobby):
+        self.collection.update(
+            {"game_name": game_name},
+            { '$push': {'queue': new_lobby}}
+        )
+        return new_lobby
+
+    #currnetly never called
+    def update_window_size(self, game_name, queue):
+        self.collection.update(
+            {"game_name": game_name},
+            {'$set': {'queue': queue }}
+        )

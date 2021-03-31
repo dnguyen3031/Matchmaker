@@ -50,6 +50,37 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 #                 "Free",
 #                 "Browser Game"
 #             ],
+#             "queue": = [
+#             "lobby1203": {
+#                   "avg_elo": 1243
+#                   "window_size": 30
+#                   "num_players": 2
+#                   "groups":[
+#                       "group1": {
+#                           "players": [
+#                               12341234124
+#                           ]
+#                       },
+#                       "group2": {
+#                           "players": [
+#                               51613467671
+#                           ]
+#                       }
+#                    ]
+#             },
+#             "lobby2252": {
+#                   "avg_elo": 861
+#                   "window_size": 240
+#                   "num_players": 1
+#                   "groups":[
+#                       "group1": {
+#                           "players": [
+#                               12341234124
+#                           ]
+#                       }
+#                    ]
+#             }
+#             ]
 #             "game_modes": {
 #                 "Capture_The_Flag": {
 #                     "relevant_stats": [
@@ -83,11 +114,11 @@ CORS(app)  # Here we'll allow requests coming from any domain. Not recommended f
 #     ]
 # }
 
+#TODO: start timer_module asynchronously on startup
 
 @app.route('/')
 def backend_home():
     return 'You have reached the backend'
-
 
 @app.route('/users', methods=['GET', 'POST'])
 def get_users():
@@ -170,6 +201,35 @@ def get_game(id):
         newGame.patch()
         resp = jsonify(newGame), 201
         return resp
+
+
+@app.route('/matchmaking/add-to-queue', methods=['PATCH'])
+def add_to_queue():
+    if request.method == 'PATCH':
+        starting_window_size = 50
+        game_name = request.args.get('game_name')
+        user_id = request.args.get('id')
+        game = Game({"game_name": game_name})
+        user = User({"_id": user_id})
+        if user.reload():
+            elo = user.games_table[game_name]['game_score'] # use . ?
+            new_lobby = {
+                "avg_elo": elo,
+                "groups": [
+                    {
+                        "players": [
+                            user_id
+                        ]
+                    }
+                ],
+                "num_players": 1,
+                "window_size": starting_window_size,
+            }
+            resp = game.append_to_queue(game_name, new_lobby) #game name might need to match (line 210)
+            return jsonify(resp), 201
+        else:
+            return jsonify({"error": "User not found"}), 404
+
 
 @app.route('/users/submit-results', methods=['PATCH'])
 def submit_results():
