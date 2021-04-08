@@ -197,6 +197,29 @@ def get_group(id):
         resp = jsonify(newGroup), 201
         return resp
 
+@app.route('/groups/join-group', methods=['PATCH'])
+def join_group():
+    if request.method == 'PATCH':
+        groupID = request.args.get('group')
+        userID = request.args.get('id')
+        group = Group({"_id": groupID})
+        group.reload()
+        groupUsers = group.get('players')
+        groupUsers.append(userID)
+        groupUsers = list(set(groupUsers))
+        group['players'] = groupUsers
+        group["_id"] = ObjectId(groupID)
+        group.patch()
+
+        user = User({"_id": userID})
+        user.reload()
+        user['group'] = groupID
+        user["_id"] = ObjectId(userID)
+        user.patch()
+
+        resp = jsonify(group), 201
+        return resp
+
 @app.route('/groups', methods=['GET', 'POST'])
 def get_games():
     if request.method == 'GET':

@@ -22,6 +22,31 @@ function Groups(props) {
    const handleSuccessClose = () => setSuccessShow(false);
    const handleSuccessShow = () => setSuccessShow(true);
 
+   const joinGroup = (e) => { 
+      e.preventDefault();
+      makePatchCall(groupcode).then( result => {
+         if (result.status === 201) {
+            console.log('Added Successfully')
+         }
+         else{
+            console.log('failed to add to group')
+         }
+      });
+   }
+
+   async function makePatchCall(groupcode) {
+      try {
+         // get character at index 's id number
+         console.log(groupcode);
+         const response = await axios.patch('http://localhost:5000/groups/join-group?id='+props.viewer_id+"&group="+groupcode);
+         return response.data;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
+   }
+
 
    return <div> 
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
@@ -35,7 +60,7 @@ function Groups(props) {
                         <Form.Label>Enter Group Code</Form.Label>
                         <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
                      </FormGroup>
-                     <Button variant="primary" onClick = {console.log(groupcode)}>Join Group</Button>{' '}
+                     <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
                   </Col>
                   <Col md={3}>
                      <FriendBar _id="603c339a5ef99cf0de73b4b8" />
@@ -48,7 +73,7 @@ function Groups(props) {
                </Row>
                <Row>
                   <Col>
-                     <Button variant="primary">Create Group</Button>{' '}
+                     <Button variant="primary" onclick='console.log(groupcode)'>Create Group</Button>{' '}
                   </Col>
                </Row>
             </Col>
