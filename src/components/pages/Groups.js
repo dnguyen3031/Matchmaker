@@ -35,7 +35,7 @@ function Groups(props) {
                         <Form.Label>Enter Group Code</Form.Label>
                         <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
                      </FormGroup>
-                     <Button variant="primary">Join Group</Button>{' '}
+                     <Button variant="primary" onClick = {console.log(groupcode)}>Join Group</Button>{' '}
                   </Col>
                   <Col md={3}>
                      <FriendBar _id="603c339a5ef99cf0de73b4b8" />
