@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button, Card, Col, Row, Accordion, ListGroup } from "react-bootstrap";
 import Collapse from 'react-bootstrap/Collapse';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+
 
 function FriendBar(props) {
    const [openFriends, setOpenFriends] = React.useState(true);
@@ -41,7 +42,7 @@ function FriendBar(props) {
       {console.log(user.friends)}
          <Card>
             <Accordion.Toggle as={Card.Header} eventKey="0" className="text-center">
-               Friends
+               Your Friends
             </Accordion.Toggle>
          <Accordion.Collapse eventKey="0">
             <Card.Body className="pl-0">
@@ -56,12 +57,14 @@ function FriendBar(props) {
 function FriendsList(props) {
    
    const [friendList, setFriendList] = React.useState([]);
+   const [responseList, setResponseList] = React.useState([]);
 
    async function getAllFriends() {
       for (var key in props.list) {
          const response = await fetchUser(key);
          console.log("RESPONSE: ", response);
          setFriendList(friendList => [... friendList, response.name]);
+         setResponseList(responseList => [... responseList, response]);
       }
    }
 
@@ -69,15 +72,17 @@ function FriendsList(props) {
       getAllFriends();
    }, []);
 
-   const rows = friendList.map((friend, i) => {
+   console.log("friendsList: ", friendList);
+   console.log("responseList: ", responseList);
+   const rows = responseList.map((friend, i) => {
 
       return (
          <Col>
             <ListGroup variant="flush">
                <ListGroup.Item>
-                  <Row>
-                     {friend}
-                  </Row>
+                  <Link to={'/profile/' + friend._id} >
+                     {friend.name}
+                  </Link>
                </ListGroup.Item>
             </ListGroup>
          </Col>

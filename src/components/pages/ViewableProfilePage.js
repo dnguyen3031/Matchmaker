@@ -50,7 +50,8 @@ function ViewableProfile(props) {
                         
                      </Col>
                      <Col md={3}>
-                        <FriendBar _id={props.user._id} />
+                        <FriendBar _id={props.viewer_id} />  
+                        {/* changed from user_id to viewer_id because we want to keep freinds bar of the person that is logged in */}
                      </Col>
                   </Row>
                </Col>
