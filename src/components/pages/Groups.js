@@ -22,16 +22,44 @@ function Groups(props) {
    const handleSuccessClose = () => setSuccessShow(false);
    const handleSuccessShow = () => setSuccessShow(true);
 
+
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      var jsonData = { "players": [props.viewer_id] };
+      postGroup(jsonData).then( result => {
+         if (result.status == 201) {
+            console.log('Created Successfully')
+         }
+         else{
+            console.log('failed to create group')
+         }
+      });
+   }
+
    const joinGroup = (e) => { 
       e.preventDefault();
       makePatchCall(groupcode).then( result => {
-         if (result.status === 201) {
+         if (result.status == 201) {
             console.log('Added Successfully')
          }
          else{
             console.log('failed to add to group')
          }
       });
+   }
+
+
+   async function postGroup(group) {
+      try {
+         // get character at index 's id number
+         console.log(group);
+         const response = await axios.post('http://127.0.0.1:5000/groups', group);
+         return response.data;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
    }
 
    async function makePatchCall(groupcode) {
@@ -73,7 +101,7 @@ function Groups(props) {
                </Row>
                <Row>
                   <Col>
-                     <Button variant="primary" onclick='console.log(groupcode)'>Create Group</Button>{' '}
+                     <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
                   </Col>
                </Row>
             </Col>
