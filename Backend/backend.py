@@ -144,9 +144,13 @@ def get_users():
 @app.route('/users/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_user(id):
     if request.method == 'GET':
+        search_for_group = request.args.get('group')
         user = User({"_id": id})
         if user.reload():
-            return user
+            if search_for_group:
+                return str(user.get('group'))
+            else:
+                return user
         else:
             return jsonify({"error": "User not found"}), 404
     elif request.method == 'DELETE':  ## still the old version. Turn it into the DB version
@@ -172,7 +176,7 @@ def get_groups():
         groupToAdd = request.get_json()
         newGroup = Group(groupToAdd)
         newGroup.save()
-        resp = jsonify(newGroup), 201
+        resp = jsonify(newGroup._id), 201
         return resp
 
 @app.route('/groups/<id>', methods=['GET', 'DELETE', 'PATCH'])
@@ -214,6 +218,29 @@ def join_group():
         user = User({"_id": userID})
         user.reload()
         user['group'] = groupID
+        user["_id"] = ObjectId(userID)
+        user.patch()
+
+        resp = jsonify(group), 201
+        return resp
+
+@app.route('/groups/leave-group', methods=['PATCH'])
+def leave_group():
+    if request.method == 'PATCH':
+        groupID = request.args.get('group')
+        userID = request.args.get('id')
+        group = Group({"_id": groupID})
+        group.reload()
+        groupUsers = group.get('players')
+        groupUsers.remove(userID)
+        groupUsers = list(set(groupUsers))
+        group['players'] = groupUsers
+        group["_id"] = ObjectId(groupID)
+        group.patch()
+
+        user = User({"_id": userID})
+        user.reload()
+        user['group'] = None
         user["_id"] = ObjectId(userID)
         user.patch()
 

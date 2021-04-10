@@ -54,6 +54,9 @@ function Groups(props) {
          // get character at index 's id number
          console.log(group);
          const response = await axios.post('http://127.0.0.1:5000/groups', group);
+         console.log(response.data);
+         var group = { group: response.data };
+         response = await axios.patch('http://127.0.0.1:5000/users/' + props.viewer_id, group)
          return response.data;
       }
       catch (error) {
@@ -67,6 +70,35 @@ function Groups(props) {
          // get character at index 's id number
          console.log(groupcode);
          const response = await axios.patch('http://localhost:5000/groups/join-group?id='+props.viewer_id+"&group="+groupcode);
+         return response.data;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
+   }
+
+   const leaveSubmit = (e) => { 
+      e.preventDefault();
+      makeLeaveCall().then( result => {
+         if (result.status == 201) {
+            console.log('Left Successfully')
+         }
+         else{
+            console.log('failed to leave group')
+         }
+      });
+   }
+
+   async function makeLeaveCall() {
+      try {
+         // get character at index 's id number
+         const currGroup = await axios.get('http://localhost:5000/users/' + props.viewer_id + '?group=true');
+         console.log(currGroup);
+         const response = await axios.patch('http://localhost:5000/groups/leave-group?id='+props.viewer_id+"&group="+currGroup.data);
+         if (response == 0) {
+            response = await axios.delete('http://localhost:5000/groups/'+currGroup.data);
+         }
          return response.data;
       }
       catch (error) {
@@ -102,6 +134,11 @@ function Groups(props) {
                <Row>
                   <Col>
                      <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
+                  </Col>
+               </Row>
+               <Row>
+                  <Col>
+                     <Button variant="primary" onClick = {leaveSubmit}>Leave Group</Button>{' '}
                   </Col>
                </Row>
             </Col>
