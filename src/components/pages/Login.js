@@ -66,7 +66,7 @@ function Login(props) {
   async function fetchUser(name){
     try {
        // get user matching inputted email
-       const response = await axios.get('http://localhost:5000/users?name=' + name);
+       const response = await axios.get('http://localhost:5000/users?email=' + name);
        return response.data;
     }
     catch (error) {
@@ -83,9 +83,9 @@ function Login(props) {
           <Col xs={8} className="main-col">
             <Form className="text-white">
                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Username</Form.Label>
+                  <Form.Label>Email Address</Form.Label>
                   <Form.Control type="text"
-                  placeholder="Enter username"
+                  placeholder="Enter email"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
