@@ -104,7 +104,7 @@ class Group(Model):
         "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
     # db = client.test
 
-    collection = db_client["group"]["groups_list"]
+    collection = db_client["groups"]["groups_list"]
 
     def find_all(self):
         groups = list(self.collection.find())

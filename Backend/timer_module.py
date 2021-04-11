@@ -24,7 +24,6 @@ def make_matches(game):
             updated_game["_id"] = ObjectId(game["_id"])  # mongoDB doesn't like string IDs
             updated_game.patch()  # create updated game object and update db
 
-
 def merge_matches(game, lobby, matched_lobby):
     # takes the two lobbies, removes them from game and returns a merged lobby
     #TODO: record avg elo for each groop for team-making purposes
