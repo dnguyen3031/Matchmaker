@@ -4,7 +4,7 @@ from flask import jsonify
 from flask_cors import CORS
 import random
 import string
-from mongodb import Game, User, Lobby
+from mongodb import Game, User, Lobby, Group
 from ELO import *
 from bson import ObjectId
 
@@ -245,7 +245,8 @@ def leave_group():
         resp = jsonify(group), 201
         return resp
 
-@app.route('/groups', methods=['GET', 'POST'])
+
+@app.route('/games', methods=['GET', 'POST'])
 def get_games():
     if request.method == 'GET':
         search_gamename = request.args.get('game_name')

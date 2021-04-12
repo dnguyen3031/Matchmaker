@@ -36,6 +36,7 @@ function ProfilePage(props) {
             console.log("failed to get user")
          }
       });
+      // console.log(viewer_id);
       fetchUser(viewer_id).then( result => {
          if (result) {
             setViewUser(result);
@@ -58,6 +59,7 @@ function ProfilePage(props) {
       try {
          // get character at index 's id number
          const response = await axios.get('http://127.0.0.1:5000/users/' + id);
+         // console.log(response)
          const updated_response = await set_game_ranks(response.data)
          return updated_response;
       }
@@ -155,6 +157,7 @@ function ProfilePage(props) {
       try {
          // get character at index 's id number
          const response = await axios.get('http://127.0.0.1:5000/games?game_name=' + game_name);
+         // console.log(response)
          return response.data;
       }
       catch (error) {
