@@ -14,6 +14,8 @@ import TestPage from './components/pages/TestPage';
 import Matchmaking from './components/pages/Matchmaking';
 import LeaderboardPage from './components/pages/LeaderboardPage';
 import CreateAccount from './components/pages/CreateAccount';
+import Lobby from './components/pages/Lobby';
+import Queue from './components/pages/Queue';
 
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
@@ -52,6 +54,12 @@ function App() {
          </Route>
          <Route path="/testpage">
             <TestPage viewer_id={token} setToken={(id) => setToken(id)}/>
+         </Route>
+         <Route path="/lobby">
+            <Lobby match_id="6073da450ca8c96d47143b03" viewer_id={token} setToken={(id) => setToken(id)}/>
+         </Route>
+         <Route path="/queue">
+            <Queue viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
           <Route path="/">
             <Home viewer_id={token} setToken={(id) => setToken(id)}/>

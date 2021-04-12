@@ -6,7 +6,7 @@ from flask import request
 from flask import jsonify
 from flask_cors import CORS
 from mongodb import User
-from mongodb import Game
+from mongodb import Game, Lobby
 
 
 def make_matches(game):
@@ -16,13 +16,68 @@ def make_matches(game):
             merged_lobby = merge_matches(game, lobby, matched_lobby)
             if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
                 #send lobby to in progress
-                game["in_progress_matches"].append(merged_lobby)
+                print("lobby to add")
+                full_lobby = Lobby(merged_lobby)
+                print("full_lobby", full_lobby)
+                assignteams(full_lobby)
+                print("full_lobby", full_lobby)
+                full_lobby.save()
+                set_player_lobby(full_lobby)
+
             else:
                 #num players too small, sent back to queue
                 game["queue"].append(merged_lobby)
             updated_game = Game(game)  # create updated game
             updated_game["_id"] = ObjectId(game["_id"])  # mongoDB doesn't like string IDs
             updated_game.patch()  # create updated game object and update db
+
+
+def assignteams(full_lobby):
+    print("assiging teams")
+    game = Game({"_id": full_lobby["game_id"]})
+    game.reload()
+    team1, team2 = find_best_teams(full_lobby["groups"])
+    full_lobby["teams"] = [team1, team2]
+    print("teams", team1, " ", team2)
+
+
+def find_best_teams(groups):
+    team1, team2 = {"size": 0, "groups": []}, {"size": 0, "groups": []}
+    unused_groups = [] + groups
+    print("unused_groups ", unused_groups)
+    for i in range(len(groups)):
+        if team1["size"] > team2["size"]:
+            temp = largest_group(unused_groups)
+            print("temp: ", temp)
+            team2["groups"] += [temp]
+            team2["size"] += len(temp["players"])
+        else:
+            temp = largest_group(unused_groups)
+            print("temp: ", temp)
+            team1["groups"] += [temp]
+            team1["size"] += len(temp["players"])
+    print("team1 ", team1)
+    print("team2 ", team2)
+    return team1["groups"], team2["groups"]
+
+
+def largest_group(unused_groups):
+    largest_group = 0
+    for i in range(len(unused_groups)):
+        if len(unused_groups[i]["players"]) > len(unused_groups[largest_group]["players"]):
+            largest_group = i
+    return unused_groups.pop(largest_group)
+
+
+def set_player_lobby(lobby):
+    lobby.reload()
+    for group in lobby["groups"]:
+        for id in group["players"]:
+            player = User({"_id": id})
+            player.reload()
+            player["lobby"] = lobby["_id"]
+            player["_id"] = ObjectId(id)
+            player.patch()
 
 
 def merge_matches(game, lobby, matched_lobby):
@@ -35,6 +90,7 @@ def merge_matches(game, lobby, matched_lobby):
     larger_window_size = max(lobby["window_size"], matched_lobby["window_size"])
     merged_lobby ={
         "avg_elo": merged_elo,
+        "game_id": lobby["game_id"],
         "groups": merged_groups,
         "num_players": merged_num_players,
         "window_size": larger_window_size,
@@ -77,7 +133,8 @@ def within_range(lobby, o_lobby):
 
 def expand_window(game):
     window_increment = 10
-    print(game)
+    print("expanding")
+    # print(game)
     for lobby in game["queue"]:
         lobby["window_size"] += window_increment        #use dot operator?
     updated_game = Game(game)  # create updated game
