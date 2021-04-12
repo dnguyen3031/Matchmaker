@@ -4,8 +4,7 @@ from flask import jsonify
 from flask_cors import CORS
 import random
 import string
-from mongodb import User
-from mongodb import Game
+from mongodb import Game, User, Lobby
 from ELO import *
 from bson import ObjectId
 
@@ -203,17 +202,58 @@ def get_game(id):
         return resp
 
 
+@app.route('/lobbies', methods=['GET', 'POST'])
+def get_lobbies():
+    if request.method == 'GET':
+        lobbies = Lobby().find_all()
+        return {"lobbies_list": lobbies}
+    elif request.method == 'POST':
+        lobbyToAdd = request.get_json()
+        newLobby = Lobby(lobbyToAdd)
+        newLobby.save()
+        resp = jsonify(newLobby), 201
+        return resp
+
+
+@app.route('/lobbies/<id>', methods=['GET', 'DELETE', 'PATCH'])
+def get_lobby(id):
+    if request.method == 'GET':
+        lobby = Lobby({"_id": id})
+        if lobby.reload():
+            return lobby
+        else:
+            return jsonify({"error": "Lobby not found"}), 404
+    elif request.method == 'DELETE':  ## still the old version. Turn it into the DB version
+        lobby = Lobby({"_id": id})
+        if lobby.remove():
+            resp = jsonify(), 204
+            return resp
+        return jsonify({"error": "Lobby not found"}), 404
+    elif request.method == 'PATCH':
+        lobbyToUpdate = request.get_json()
+        lobbyToUpdate["_id"] = ObjectId(id)
+        newLobby = Lobby(lobbyToUpdate)
+        newLobby.patch()
+        resp = jsonify(newLobby), 201
+        return resp
+
+
 @app.route('/matchmaking/add-to-queue', methods=['PATCH'])
 def add_to_queue():
     if request.method == 'PATCH':
         starting_window_size = 50
         game_name = request.args.get('game_name')
         user_id = request.args.get('id')
-        game = Game({"game_name": game_name})
+        search_game = Game().find_by_name(game_name)[0]
+        game = Game({"_id": search_game["_id"]})
+        game.reload()
+        # print("game_name", game_name)
+        # print("\n\ngame dic", game, "\n\n")
         user = User({"_id": user_id})
         if user.reload():
             elo = user.games_table[game_name]['game_score'] # use . ?
             new_lobby = {
+                "game_id": game["_id"],
                 "avg_elo": elo,
                 "groups": [
                     {

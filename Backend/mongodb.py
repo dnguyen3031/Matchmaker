@@ -132,3 +132,19 @@ class Game(Model):
             {"game_name": game_name},
             {'$set': {'queue': queue }}
         )
+
+
+class Lobby(Model):
+    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
+
+    db_client = pymongo.MongoClient(
+        "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
+    # db = client.test
+
+    collection = db_client["lobbies"]["lobbies_list"]
+
+    def find_all(self):
+        lobbies = list(self.collection.find())
+        for lobby in lobbies:
+            lobby["_id"] = str(lobby["_id"])  # converting ObjectId to str
+        return lobbies

@@ -14,6 +14,7 @@ import TestPage from './components/pages/TestPage';
 import Matchmaking from './components/pages/Matchmaking';
 import LeaderboardPage from './components/pages/LeaderboardPage';
 import CreateAccount from './components/pages/CreateAccount';
+import Lobby from './components/pages/Lobby';
 
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
@@ -51,7 +52,7 @@ function App() {
             <CreateAccount viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
          <Route path="/testpage">
-            <TestPage viewer_id={token} setToken={(id) => setToken(id)}/>
+            <Lobby match_id="6073c6e26a3342569d3f81a7" viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
           <Route path="/">
             <Home viewer_id={token} setToken={(id) => setToken(id)}/>
