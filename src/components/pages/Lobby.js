@@ -57,7 +57,7 @@ function Lobby(props) {
                             <h2 style={{color: 'white'}}> Lobby</h2>
                             <h4 style={{color: 'red'}}> Team 1</h4>
                             <TeamTable team={match.teams[0]}/>
-                            <h4 style={{color: 'whte'}}> Match info</h4>
+                            <h4 style={{color: 'white'}}> Match info</h4>
                             <h4 style={{color: 'blue'}}> Team 2</h4>
                             <TeamTable team={match.teams[1]}/>
                         </Col>

@@ -21,7 +21,7 @@ function SearchPage(props) {
                     <ResultsTable />
                   </Col>
                   <Col md={3}>
-                     <FriendBar _id="603c339a5ef99cf0de73b4b8" />
+                     <FriendBar _id={props.viewer_id}/>
                   </Col>
                </Row>
             </Col>

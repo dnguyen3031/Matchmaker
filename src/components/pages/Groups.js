@@ -123,7 +123,7 @@ function Groups(props) {
                      <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
                   </Col>
                   <Col md={3}>
-                     <FriendBar _id="603c339a5ef99cf0de73b4b8" />
+                     <FriendBar _id={props.viewer_id}/>
                   </Col>
                </Row>
                <Row>

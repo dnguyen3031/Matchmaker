@@ -53,6 +53,7 @@ function LoggedInNavbar(props){
                <Nav.Link href="/leaderboard" style={{color: 'white'}}>Leaderboard</Nav.Link>
                <Nav.Link href={profile_url} style={{color: 'white'}}>Profile</Nav.Link>
                <Nav.Link href="/groups" style={{color: 'white'}}>Groups</Nav.Link>
+               <Nav.Link href="/searchpage" style={{color: 'white'}}>Search</Nav.Link>
             </Nav>
    
             <DropdownButton variant="secondary" menuAlign="right" title={user.name} id="dropdown-menu-align-right"> 
@@ -77,8 +78,8 @@ function DefaultNavbar() {
             <Nav className="mr-auto">
                {/* <Nav.Link href="/matchmaking">Find Match</Nav.Link> */}
                <Nav.Link href="/leaderboard" style={{color: 'white'}}>Leaderboard</Nav.Link>
-               <Nav.Link href="/searchpage" style={{color: 'white'}}>Search</Nav.Link>
                <Nav.Link href="/login" style={{color: 'white'}}>Login</Nav.Link>
+               <Nav.Link href="/searchpage" style={{color: 'white'}}>Search</Nav.Link>
             </Nav>
          </Navbar.Collapse>
       </Navbar>
