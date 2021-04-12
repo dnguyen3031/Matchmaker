@@ -4,9 +4,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
-
 function FriendBar(props) {
-   const [openFriends, setOpenFriends] = React.useState(true);
    const [user, setUser] = React.useState({ 
                                  email: "",
                                  friends: {},
@@ -25,21 +23,17 @@ function FriendBar(props) {
    
    async function fetchUser(_id){
       try {
-         // get character at index 's id number
          const response = await axios.get('http://127.0.0.1:5000/users/' + _id);
-         console.log("GETTING THIS INFO FOR THIS ID ", _id);
          return response.data;
       }
       catch (error) {
          console.log(error);
-         console.log("NOPE!!!!");
          return false;
       }
    }
 
    return <div> 
       <Accordion defaultActiveKey="0">
-      {console.log(user.friends)}
          <Card>
             <Accordion.Toggle as={Card.Header} eventKey="0" className="text-center">
                Your Friends
@@ -61,10 +55,14 @@ function FriendsList(props) {
 
    async function getAllFriends() {
       for (var key in props.list) {
-         const response = await fetchUser(key);
-         console.log("RESPONSE: ", response);
-         setFriendList(friendList => [... friendList, response.name]);
-         setResponseList(responseList => [... responseList, response]);
+         if (props.list[key] !== "Deleted") {
+            const response = await fetchUser(key);
+            setFriendList(friendList => [... friendList, response.name]);
+            setResponseList(responseList => [... responseList, response]);
+         } else {
+            console.log(key + " is a deleted friend.");
+         }
+         
       }
    }
 
@@ -72,12 +70,9 @@ function FriendsList(props) {
       getAllFriends();
    }, []);
 
-   console.log("friendsList: ", friendList);
-   console.log("responseList: ", responseList);
    const rows = responseList.map((friend, i) => {
-
       return (
-         <Col>
+         <Col key={i}>
             <ListGroup variant="flush">
                <ListGroup.Item>
                   <Link to={'/profile/' + friend._id} >
@@ -97,44 +92,5 @@ function FriendsList(props) {
    
    }
  }
-
-// function FriendsList(props) {
-   
-//    const [friendList, setFriendList] = React.useState([]);
-
-//    async function getAllFriends() {
-//       for (var key in props.list) {
-//          const response = await props.fetchUser(key);
-//          console.log("RESPONSE: ", response);
-//          setFriendList(friendList => [... friendList, response.name]);
-//       }
-//    }
-
-//    React.useEffect(() => {
-//       getAllFriends();
-//    }, []);
-
-//    const rows = friendList.map((friend, i) => {
-
-//       return (
-//          <Col>
-//             <ListGroup variant="flush">
-//                <ListGroup.Item>
-//                   <Row>
-//                      {friend}
-//                   </Row>
-//                </ListGroup.Item>
-//             </ListGroup>
-//          </Col>
-//       )
-//    })
-
-//    return (
-//       <div>
-//          {rows}
-//       </div>
-//    );
-   
-//    }
 
 export default FriendBar;

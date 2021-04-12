@@ -3,10 +3,49 @@ import CustomNavbar from '../CustomNavbar';
 import React, {useState, useEffect} from 'react';
 import './ProfilePage.css';
 import FriendBar from "../FriendBar";
-import { BsPencil } from "react-icons/bs";
+import {
+   useParams
+ } from "react-router-dom";
 
 function ViewableProfile(props) {
- 
+
+   const [profileID, setProfileID] = React.useState(useParams().id);
+   const [areFriends, setAreFriends] = React.useState(false);
+
+   function addFriendAction() {
+      props.handleSubmit({"friends": {
+         [profileID] : "Standard"
+       }})
+      console.log("Adding this id :" + profileID);
+   }
+
+   function addFriendAction() {
+      props.handleSubmit({"friends": {
+         [profileID] : "Standard"
+       }})
+      console.log("Adding this id :" + profileID);
+   }
+
+   function removeFriendAction() {
+      props.handleSubmit({"friends": {
+         [profileID] : "Deleted"
+       }})
+      console.log("Removing!");
+   }
+
+   function confirmFriends() {
+      for (var key in props.friendsList) {
+         if (key == profileID && props.friendsList[key] !== "Deleted") {
+            console.log(props.viewer_id  + " has already added " + key);
+            setAreFriends(true);
+         }
+      }
+   }
+
+   React.useEffect(() => {
+      confirmFriends();
+   }, []);
+
     return <div>
          <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
          <Container fluid> 
@@ -25,6 +64,11 @@ function ViewableProfile(props) {
                               <div>
                                 {props.user.profile_info.bio} 
                               </div>
+                              {/* <div>Viewer's id: {props.viewer_id}</div>
+                              <div>Token (This profile id): {profileID}</div> */}
+                              <div>{!areFriends && <Button variant="info" onClick={addFriendAction}>Add Friend</Button>}</div>
+                              {' '}
+                              <Button variant="info" onClick={removeFriendAction}>Remove Friend</Button>
                            </Col>
                            <Col xs={4} className="pt-2 bg-dark text-white">
                               <div className="text-center">Contact Info</div>

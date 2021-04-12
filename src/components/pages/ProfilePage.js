@@ -10,29 +10,47 @@ import {
 function ProfilePage(props) {
    const viewer_id = props.viewer_id;
    const id = useParams().id;
-   // console.log(id)
+
    const [user, setUser] = useState({email: "", 
                                  profile_info: {discord: "", profile_pic: "", bio: ""},
                                  games_table: {},
+                                 friends: {},
                                  name: "",
                                  password: "",
                                  _id: ""});
+
+   const [viewUser, setViewUser] = useState({email: "", 
+                              profile_info: {discord: "", profile_pic: "", bio: ""},
+                              games_table: {},
+                              friends: {},
+                              name: "",
+                              password: "",
+                              _id: ""});
    
    useEffect(() => {
       fetchUser(id).then( result => {
          if (result) {
             setUser(result);
-            console.log("got user")
+            console.log("got user");
+         } else {
+            console.log("failed to get user")
+         }
+      });
+      fetchUser(viewer_id).then( result => {
+         if (result) {
+            setViewUser(result);
+            console.log("got viewer");
          } else {
             console.log("failed to get user")
          }
       });
    }, []);
 
+
    if (viewer_id === id && user._id) {
       return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
    } else if (user._id) {
-      return <ViewableProfile user={user} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
+      return <ViewableProfile user={user} friendsList={viewUser.friends} handleSubmit={updateFriends} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
    }
    return <h1>404: Failed to load user</h1>
 
@@ -64,9 +82,34 @@ function ProfilePage(props) {
       });
    }
 
+   function updateFriends(change) { 
+      makePatchCallFriends(change).then( result => {
+         if (result.status === 201) {
+            fetchUser(viewer_id).then( result => {
+               if (result) {
+                  setUser(result);
+                  console.log("updated user's friends");
+               } else {
+                  console.log("failed to update user");
+               }
+            });
+         }
+      });
+   }
    async function makePatchCall(change){
       try {
          const response = await axios.patch('http://localhost:5000/users/' + user._id, change);
+         return response;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
+   }
+
+   async function makePatchCallFriends(change){
+      try {
+         const response = await axios.patch('http://localhost:5000/users/' + viewer_id, change);
          return response;
       }
       catch (error) {
