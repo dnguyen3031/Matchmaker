@@ -18,6 +18,7 @@ import LeaderboardPage from './components/pages/LeaderboardPage';
 import CreateAccount from './components/pages/CreateAccount';
 import Lobby from './components/pages/Lobby';
 import Queue from './components/pages/Queue';
+import SearchPage from './components/pages/SearchPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';  //Need this import for React Bootstrap styling
 
@@ -69,6 +70,9 @@ function App() {
          <Route path="/groupinfo">
             <GroupInfo viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
+         <Route path="/searchpage">
+            <SearchPage viewer_id={token} setToken={(id) => setToken(id)}/>
+          </Route>
           <Route path="/">
             <Home viewer_id={token} setToken={(id) => setToken(id)}/>
           </Route>
