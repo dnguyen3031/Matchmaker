@@ -97,6 +97,20 @@ class User(Model):
             user["_id"] = str(user["_id"])
         return users
 
+class Group(Model):
+    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
+
+    db_client = pymongo.MongoClient(
+        "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
+    # db = client.test
+
+    collection = db_client["groups"]["groups_list"]
+
+    def find_all(self):
+        groups = list(self.collection.find())
+        for group in groups:
+            group["_id"] = str(group["_id"])  # converting ObjectId to str
+        return groups
 
 class Game(Model):
     # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])

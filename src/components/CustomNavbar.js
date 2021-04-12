@@ -52,6 +52,7 @@ function LoggedInNavbar(props){
                <Nav.Link href="/matchmaking" style={{color: 'white'}}>Find Match</Nav.Link>
                <Nav.Link href="/leaderboard" style={{color: 'white'}}>Leaderboard</Nav.Link>
                <Nav.Link href={profile_url} style={{color: 'white'}}>Profile</Nav.Link>
+               <Nav.Link href="/groups" style={{color: 'white'}}>Groups</Nav.Link>
             </Nav>
    
             <DropdownButton variant="secondary" menuAlign="right" title={user.name} id="dropdown-menu-align-right"> 

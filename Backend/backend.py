@@ -142,9 +142,13 @@ def get_users():
 @app.route('/users/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_user(id):
     if request.method == 'GET':
+        search_for_group = request.args.get('group')
         user = User({"_id": id})
         if user.reload():
-            return user
+            if search_for_group:
+                return str(user.get('group'))
+            else:
+                return user
         else:
             return jsonify({"error": "User not found"}), 404
     elif request.method == 'DELETE':  ## still the old version. Turn it into the DB version
@@ -161,8 +165,87 @@ def get_user(id):
         resp = jsonify(newUser), 201
         return resp
 
+@app.route('/groups', methods=['GET', 'POST'])
+def get_groups():
+    if request.method == 'GET':
+        groups = Group().find_all()
+        return {"groups_list": groups}
+    elif request.method == 'POST':
+        groupToAdd = request.get_json()
+        newGroup = Group(groupToAdd)
+        newGroup.save()
+        resp = jsonify(newGroup._id), 201
+        return resp
 
-@app.route('/games', methods=['GET', 'POST'])
+@app.route('/groups/<id>', methods=['GET', 'DELETE', 'PATCH'])
+def get_group(id):
+    if request.method == 'GET':
+        group = Group({"_id": id})
+        if group.reload():
+            return group
+        else:
+            return jsonify({"error": "Group not found"}), 404
+    elif request.method == 'DELETE':  ## still the old version. Turn it into the DB version
+        group = Group({"_id": id})
+        if group.remove():
+            resp = jsonify(), 204
+            return resp
+        return jsonify({"error": "Group not found"}), 404
+    elif request.method == 'PATCH': ## will work for adding users to group, unsure about leaving
+        groupToUpdate = request.get_json()
+        groupToUpdate["_id"] = ObjectId(id)
+        newGroup = Group(groupToUpdate)
+        newGroup.patch()
+        resp = jsonify(newGroup), 201
+        return resp
+
+@app.route('/groups/join-group', methods=['PATCH'])
+def join_group():
+    if request.method == 'PATCH':
+        groupID = request.args.get('group')
+        userID = request.args.get('id')
+        group = Group({"_id": groupID})
+        group.reload()
+        groupUsers = group.get('players')
+        groupUsers.append(userID)
+        groupUsers = list(set(groupUsers))
+        group['players'] = groupUsers
+        group["_id"] = ObjectId(groupID)
+        group.patch()
+
+        user = User({"_id": userID})
+        user.reload()
+        user['group'] = groupID
+        user["_id"] = ObjectId(userID)
+        user.patch()
+
+        resp = jsonify(group), 201
+        return resp
+
+@app.route('/groups/leave-group', methods=['PATCH'])
+def leave_group():
+    if request.method == 'PATCH':
+        groupID = request.args.get('group')
+        userID = request.args.get('id')
+        group = Group({"_id": groupID})
+        group.reload()
+        groupUsers = group.get('players')
+        groupUsers.remove(userID)
+        groupUsers = list(set(groupUsers))
+        group['players'] = groupUsers
+        group["_id"] = ObjectId(groupID)
+        group.patch()
+
+        user = User({"_id": userID})
+        user.reload()
+        user['group'] = None
+        user["_id"] = ObjectId(userID)
+        user.patch()
+
+        resp = jsonify(group), 201
+        return resp
+
+@app.route('/groups', methods=['GET', 'POST'])
 def get_games():
     if request.method == 'GET':
         search_gamename = request.args.get('game_name')

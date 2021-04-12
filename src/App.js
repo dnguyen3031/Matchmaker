@@ -11,6 +11,8 @@ import Home from './components/pages/Home';
 import ProfilePage from './components/pages/ProfilePage';
 import Login from './components/pages/Login';
 import TestPage from './components/pages/TestPage';
+import Groups from './components/pages/Groups';
+import GroupInfo from './components/pages/GroupInfo';
 import Matchmaking from './components/pages/Matchmaking';
 import LeaderboardPage from './components/pages/LeaderboardPage';
 import CreateAccount from './components/pages/CreateAccount';
@@ -60,6 +62,12 @@ function App() {
          </Route>
          <Route path="/queue">
             <Queue viewer_id={token} setToken={(id) => setToken(id)}/>
+          </Route>
+          <Route path="/groups">
+            <Groups viewer_id={token} setToken={(id) => setToken(id)}/>
+         </Route>
+         <Route path="/groupinfo">
+            <GroupInfo viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
           <Route path="/">
             <Home viewer_id={token} setToken={(id) => setToken(id)}/>
