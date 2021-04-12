@@ -76,6 +76,7 @@ function DefaultNavbar() {
             <Nav className="mr-auto">
                {/* <Nav.Link href="/matchmaking">Find Match</Nav.Link> */}
                <Nav.Link href="/leaderboard" style={{color: 'white'}}>Leaderboard</Nav.Link>
+               <Nav.Link href="/searchpage" style={{color: 'white'}}>Search</Nav.Link>
                <Nav.Link href="/login" style={{color: 'white'}}>Login</Nav.Link>
             </Nav>
          </Navbar.Collapse>
