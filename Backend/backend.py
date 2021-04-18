@@ -206,6 +206,14 @@ def join_group():
         userID = request.args.get('id')
         group = Group({"_id": groupID})
         group.reload()
+
+        user = User({"_id": userID})
+        user.reload()
+        
+        if user.get('group') != None:
+            resp = jsonify('You are already in a group!'), 400
+            return resp
+
         groupUsers = group.get('players')
         groupUsers.append(userID)
         groupUsers = list(set(groupUsers))
@@ -213,8 +221,7 @@ def join_group():
         group["_id"] = ObjectId(groupID)
         group.patch()
 
-        user = User({"_id": userID})
-        user.reload()
+        
         user['group'] = groupID
         user["_id"] = ObjectId(userID)
         user.patch()
