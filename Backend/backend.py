@@ -241,7 +241,11 @@ def leave_group():
         groupUsers = list(set(groupUsers))
         group['players'] = groupUsers
         group["_id"] = ObjectId(groupID)
-        group.patch()
+        
+        if len(groupUsers) == 0:
+            group.remove()
+        else:
+            group.patch()
 
         user = User({"_id": userID})
         user.reload()
@@ -249,7 +253,7 @@ def leave_group():
         user["_id"] = ObjectId(userID)
         user.patch()
 
-        resp = jsonify(group), 201
+        resp = jsonify(user), 201
         return resp
 
 
