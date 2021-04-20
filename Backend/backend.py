@@ -171,6 +171,14 @@ def get_groups():
         groups = Group().find_all()
         return {"groups_list": groups}
     elif request.method == 'POST':
+        userID = request.args.get('userID')
+        if userID != None:
+            user = User({"_id": userID})
+            user.reload()
+
+            if user.get('group') != None:
+                resp = jsonify('You are already in a group!'), 400
+                return resp
         groupToAdd = request.get_json()
         newGroup = Group(groupToAdd)
         newGroup.save()
@@ -218,6 +226,7 @@ def join_group():
         groupUsers.append(userID)
         groupUsers = list(set(groupUsers))
         group['players'] = groupUsers
+        group['num_players'] += 1
         group["_id"] = ObjectId(groupID)
         group.patch()
 
@@ -240,9 +249,10 @@ def leave_group():
         groupUsers.remove(userID)
         groupUsers = list(set(groupUsers))
         group['players'] = groupUsers
+        group['num_players'] -= 1
         group["_id"] = ObjectId(groupID)
         
-        if len(groupUsers) == 0:
+        if group['num_players'] == 0:
             group.remove()
         else:
             group.patch()
@@ -381,6 +391,28 @@ def submit_results():
             elo = user.games_table[results['game_name']]['game_score']
             new_elo = calc_elo(int(elo),int(results['opp_elo']), float(results['win']))
             user.games_table[results['game_name']]['game_score'] = new_elo
+            user["_id"] = ObjectId(results['user_id'])
+            user.patch()
+            resp = jsonify(user), 201
+            return resp
+        else:
+            return jsonify({"error": "User not found"}), 404
+
+@app.route('/users/submit-results2', methods=['PATCH'])
+def submit_results2():
+    if request.method == 'PATCH':
+        #THIS ONE IS TO BE USED WHEN MATCHES ARE IMPLEMENTED (USER HAS MATCH INFO IN SELF) which contains 'team_elo', 'opp_elo'
+        results = request.get_json()
+        #print(results)
+        #for key, value in results.items():
+        #    print(key, value)
+        #print(results['user_id'])
+        #print(results.user_id)
+        user = User({"_id": results['user_id']})
+        if user.reload():
+            elo = user.current_match['team_elo']
+            new_elo = calc_elo(int(elo),int(user.current_match['opp_elo']), float(results['win']))
+            user.games_table[results['game_name']]['game_score'] += (new_elo - elo)
             user["_id"] = ObjectId(results['user_id'])
             user.patch()
             resp = jsonify(user), 201

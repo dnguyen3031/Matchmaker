@@ -25,7 +25,7 @@ function Groups(props) {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      var jsonData = { "players": [props.viewer_id] };
+      var jsonData = { "players": [props.viewer_id], "num_players": 1 };
       postGroup(jsonData).then( result => {
          if (result.status == 201) {
             console.log('Created Successfully')
@@ -53,7 +53,7 @@ function Groups(props) {
       try {
          // get character at index 's id number
          console.log(group);
-         const response = await axios.post('http://127.0.0.1:5000/groups', group);
+         const response = await axios.post('http://127.0.0.1:5000/groups?userID='+props.viewer_id, group);
          console.log(response.data);
          var group = { group: response.data };
          response = await axios.patch('http://127.0.0.1:5000/users/' + props.viewer_id, group)
