@@ -7,7 +7,7 @@ import axios from 'axios';
 import "./PageTemplate.css";
 
 function SearchPage(props) {
-   const [searchResults, setSearchResults] = React.useState("");
+   const [searchResults, setSearchResults] = React.useState([]);
                                     
    return <div> 
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
@@ -47,24 +47,24 @@ function SearchPage(props) {
       </Form>
 
       function submitSearch(){
-         console.log("logged:")
-         console.log(searchTerm)
-         makeGetByNameCall(searchTerm).then( result => {
-            if (result.status === 200) {
-               console.log(result.data["users_list"])
-               setSearchResults(result.data["users_list"])
-            }
-            else{
-               console.log('failed to find users')
-               console.log(result)
-            }
-         });
+         if (searchTerm !== ""){
+            makeGetByNameCall(searchTerm).then( result => {
+               if (result.status === 200) {
+                  console.log(result.data["users_list"])
+                  setSearchResults(result.data["users_list"])
+               }
+               else{
+                  console.log('failed to find users')
+                  console.log(result)
+               }
+            });
+         }
       }
 
       async function makeGetByNameCall(name){
          try{
             const response= await axios.get(
-               'http://localhost:5000/users?name='+name)
+               'http://localhost:5000/users?secureName='+name)
             return response;
          }
          catch(error){
@@ -76,16 +76,7 @@ function SearchPage(props) {
 
 
    function ResultsTable(props){
-      {/*depends on searchResults state 
-      
-
-      useEffect(() => {
-         document.title = `You clicked ${count} times`;
-       }); */}
-      
-      
-      {/* function TableBody (props) {
-         const rows = props.searchResults.map((row, index) => {
+         const rows = searchResults.map((row, index) => {
           return (
              <tr key={index}>
                <td>{row.name}</td>
@@ -93,17 +84,15 @@ function SearchPage(props) {
            );
          });
          return (
+            <div>
+               <h2 style={{color: 'black'}}>Results</h2>
              <tbody>
                 {rows}
              </tbody>
+             </div>
          );
          
-      }
-      return <table>
-         <TableBody searchResults={searchResults}/>
-      </table>
-   */}
-   return <h2> test </h2>
-   }  
+   }
 }
+
 export default SearchPage;

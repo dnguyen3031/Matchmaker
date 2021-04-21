@@ -123,11 +123,14 @@ def backend_home():
 def get_users():
     if request.method == 'GET':
         search_username = request.args.get('name')
+        search_username_secure = request.args.get('secureName')
         search_email = request.args.get('email')
         if search_email:
             users = User().find_by_email(search_email)
         elif search_username:
             users = User().find_by_name(search_username)
+        elif search_username_secure:
+            users = User().secure_find_by_name(search_username_secure)
         else:
             users = User().find_all()
         return {"users_list": users}

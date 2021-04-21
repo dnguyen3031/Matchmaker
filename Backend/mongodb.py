@@ -91,6 +91,24 @@ class User(Model):
             user["_id"] = str(user["_id"])
         return users
 
+    def secure_find_by_name(self, name):
+        #does not return password ect. for security reasons
+        cleaned_users = []
+        users = self.find_all()
+        users_copy = users.copy()
+        #need copy for iteration only
+        for user in users_copy:
+            #case insensitive
+            if user["name"].lower() != name.lower():
+                users.remove(user)
+        for user in users:
+            user_copy = {}
+            user_copy["_id"] = str(user["_id"])
+            user_copy["name"] = user["name"]
+            user_copy["profile_info"] = user["profile_info"]
+            cleaned_users.append(user_copy)
+        return cleaned_users
+
     def find_by_email(self, email):
         users = list(self.collection.find({"email": email}))
         for user in users:
