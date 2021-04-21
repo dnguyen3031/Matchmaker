@@ -12,6 +12,8 @@ function Groups(props) {
                         
    const [groupcode, setgroupcode] = useState('');
 
+   const [user, setUser] = useState({group: "", _id: ""});
+
    /*Error Model*/
    const [showError, setErrorShow] = useState(false);
    const handleErrorClose = () => setErrorShow(false);
@@ -22,6 +24,18 @@ function Groups(props) {
    const handleSuccessClose = () => setSuccessShow(false);
    const handleSuccessShow = () => setSuccessShow(true);
 
+   async function fetchUser(id){
+      try {
+         // get character at index 's id number
+         const response = await axios.get('http://127.0.0.1:5000/users/' + props.viewer_id);
+         // console.log(response)
+         return response;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
+   }
 
    const handleSubmit = (e) => {
       e.preventDefault();
