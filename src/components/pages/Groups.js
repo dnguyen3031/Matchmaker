@@ -131,9 +131,44 @@ function Groups(props) {
          return false;
       }
    }
-
-
-   return <div> 
+   if (!user.group) {
+      return <div> 
+         <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+         <Container fluid> 
+            <Row>
+               <Col className="side-col" />
+               <Col xs={8} className="pr-0">
+                  <Row>
+                     <Col>
+                        <FormGroup controlId="username">
+                           <Form.Label>Enter Group Code</Form.Label>
+                           <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
+                        </FormGroup>
+                        <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
+                     </Col>
+                     <Col md={3}>
+                        <FriendBar _id={props.viewer_id}/>
+                     </Col>
+                  </Row>
+                  <Row>
+                     <Col>
+                        OR
+                     </Col>
+                  </Row>
+                  <Row>
+                     <Col>
+                        <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
+                     </Col>
+                  </Row>
+               </Col>
+               <Col className="side-col" />
+            </Row>
+         </Container>
+      </div>;
+   }
+   else
+   {
+      return <div> 
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid> 
          <Row>
@@ -146,28 +181,6 @@ function Groups(props) {
                </Row>
                <Row>
                   <Col>
-                     <FormGroup controlId="username">
-                        <Form.Label>Enter Group Code</Form.Label>
-                        <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
-                     </FormGroup>
-                     <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewer_id}/>
-                  </Col>
-               </Row>
-               <Row>
-                  <Col>
-                     OR
-                  </Col>
-               </Row>
-               <Row>
-                  <Col>
-                     <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
-                  </Col>
-               </Row>
-               <Row>
-                  <Col>
                      <Button variant="primary" onClick = {leaveSubmit}>Leave Group</Button>{' '}
                   </Col>
                </Row>
@@ -175,7 +188,11 @@ function Groups(props) {
             <Col className="side-col" />
          </Row>
       </Container>
-   </div>;
+      </div>;
+   }
  }
- 
+
 export default Groups;
+
+
+
