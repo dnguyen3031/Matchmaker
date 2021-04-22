@@ -308,7 +308,7 @@ def get_discord(id):
     elif request.method == 'PATCH':
         discordToUpdate = request.get_json()
         discordToUpdate["_id"] = ObjectId(id)
-        newDiscord = Game(discordToUpdate)
+        newDiscord = Discord(discordToUpdate)
         newDiscord.patch()
         resp = jsonify(newDiscord), 201
         return resp
@@ -320,10 +320,17 @@ def get_discord(id):
             nextOpen = None
             i = 0
             while not nextOpen:
-                if i >= len(discords.keys()):
-                    nextOpen = "all discords are taken"
-                elif discords[discords.keys()[i]] == "open":
-                    nextOpen = discords.keys()[i]
+                if i >= len(discords):
+                    nextOpen = {"room_name": "all rooms taken"}
+                elif discords[i]["status"] == "open":
+                    nextOpen = discords[i]
                 i += 1
 
-            return {"discords_list": discords}
+            if nextOpen != {"room_name": "all rooms taken"}:
+                # discordToUpdate = nextOpen
+                # discordToUpdate["_id"] = ObjectId(id)
+                nextOpen["status"] = "taken"
+                newDiscord = Discord(nextOpen)
+                newDiscord.patch()
+
+            return {"discords_list": nextOpen["room_name"]}
