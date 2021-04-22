@@ -11,7 +11,11 @@ from mongodb import Game, Lobby
 
 def make_matches(game):
     for lobby in game["queue"]:
+        print("lobby: ")
+        print(lobby)
         matched_lobby = find_suitable(game, lobby)
+        print("matched_lobby: ")
+        print(matched_lobby)
         if matched_lobby is not None:
             merged_lobby = merge_matches(game, lobby, matched_lobby)
             if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
@@ -50,12 +54,12 @@ def find_best_teams(groups):
             temp = largest_group(unused_groups)
             print("temp: ", temp)
             team2["groups"] += [temp]
-            team2["size"] += len(temp["players"])
+            team2["size"] += len(temp["players"].keys())
         else:
             temp = largest_group(unused_groups)
             print("temp: ", temp)
             team1["groups"] += [temp]
-            team1["size"] += len(temp["players"])
+            team1["size"] += len(temp["players"].keys())
     print("team1 ", team1)
     print("team2 ", team2)
     return team1["groups"], team2["groups"]
@@ -64,7 +68,7 @@ def find_best_teams(groups):
 def largest_group(unused_groups):
     largest_group = 0
     for i in range(len(unused_groups)):
-        if len(unused_groups[i]["players"]) > len(unused_groups[largest_group]["players"]):
+        if len(unused_groups[i]["players"].keys()) > len(unused_groups[largest_group]["players"].keys()):
             largest_group = i
     return unused_groups.pop(largest_group)
 
@@ -72,7 +76,7 @@ def largest_group(unused_groups):
 def set_player_lobby(lobby):
     lobby.reload()
     for group in lobby["groups"]:
-        for id in group["players"]:
+        for id in group["players"].keys():
             player = User({"_id": id})
             player.reload()
             player["lobby"] = lobby["_id"]

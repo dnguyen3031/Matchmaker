@@ -205,16 +205,16 @@ def join_group():
         groupID = request.args.get('group')
         userID = request.args.get('id')
         group = Group({"_id": groupID})
+        user = User({"_id": userID})
         group.reload()
+        user.reload()
         groupUsers = group.get('players')
-        groupUsers.append(userID)
-        groupUsers = list(set(groupUsers))
+        groupUsers[userID] = user["name"]
+        # groupUsers = list(set(groupUsers))
         group['players'] = groupUsers
         group["_id"] = ObjectId(groupID)
         group.patch()
 
-        user = User({"_id": userID})
-        user.reload()
         user['group'] = groupID
         user["_id"] = ObjectId(userID)
         user.patch()
@@ -341,9 +341,9 @@ def add_to_queue():
                 "avg_elo": elo,
                 "groups": [
                     {
-                        "players": [
-                            user_id
-                        ]
+                        "players": {
+                            user_id: user["name"]
+                        }
                     }
                 ],
                 "num_players": 1,

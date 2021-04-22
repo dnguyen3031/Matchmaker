@@ -123,11 +123,13 @@ function TeamTable(props)
 function Players(props)
 {
     // console.log(props)
-    const players = props.group.players.map((player) => {
+    const players = Object.keys(props.group.players).map((player, index) => {
+        // console.log("player info")
         // console.log(player)
+        // console.log(name)
         return (
             <tr>
-                <td>{player}</td>
+                <td>{props.group.players[player]}</td>
             </tr>
         );
     })
