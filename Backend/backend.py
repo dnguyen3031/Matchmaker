@@ -8,17 +8,18 @@ from mongodb import *
 from ELO import *
 from bson import ObjectId
 
-
 app = Flask(__name__)
 
 # CORS stands for Cross Origin Requests.
 CORS(app)  # Here we'll allow requests coming from any domain. Not recommended for production environment.
 
-#TODO: start timer_module asynchronously on startup
+
+# TODO: start timer_module asynchronously on startup
 
 @app.route('/')
 def backend_home():
     return 'You have reached the backend'
+
 
 @app.route('/users', methods=['GET', 'POST'])
 def get_users():
@@ -66,6 +67,7 @@ def get_user(id):
         resp = jsonify(newUser), 201
         return resp
 
+
 @app.route('/groups', methods=['GET', 'POST'])
 def get_groups():
     if request.method == 'GET':
@@ -77,6 +79,7 @@ def get_groups():
         newGroup.save()
         resp = jsonify(newGroup._id), 201
         return resp
+
 
 @app.route('/groups/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_group(id):
@@ -92,13 +95,14 @@ def get_group(id):
             resp = jsonify(), 204
             return resp
         return jsonify({"error": "Group not found"}), 404
-    elif request.method == 'PATCH': ## will work for adding users to group, unsure about leaving
+    elif request.method == 'PATCH':  ## will work for adding users to group, unsure about leaving
         groupToUpdate = request.get_json()
         groupToUpdate["_id"] = ObjectId(id)
         newGroup = Group(groupToUpdate)
         newGroup.patch()
         resp = jsonify(newGroup), 201
         return resp
+
 
 @app.route('/groups/join-group', methods=['PATCH'])
 def join_group():
@@ -122,6 +126,7 @@ def join_group():
 
         resp = jsonify(group), 201
         return resp
+
 
 @app.route('/groups/leave-group', methods=['PATCH'])
 def leave_group():
@@ -236,7 +241,7 @@ def add_to_queue():
         # print("\n\ngame dic", game, "\n\n")
         user = User({"_id": user_id})
         if user.reload():
-            elo = user.games_table[game_name]['game_score'] # use . ?
+            elo = user.games_table[game_name]['game_score']  # use . ?
             new_lobby = {
                 "game_id": game["_id"],
                 "avg_elo": elo,
@@ -250,7 +255,7 @@ def add_to_queue():
                 "num_players": 1,
                 "window_size": starting_window_size,
             }
-            resp = game.append_to_queue(game_name, new_lobby) #game name might need to match (line 210)
+            resp = game.append_to_queue(game_name, new_lobby)  # game name might need to match (line 210)
             return jsonify(resp), 201
         else:
             return jsonify({"error": "User not found"}), 404
@@ -259,17 +264,17 @@ def add_to_queue():
 @app.route('/users/submit-results', methods=['PATCH'])
 def submit_results():
     if request.method == 'PATCH':
-        #JSON has user ID, opponents's elo, win/loss, game name
+        # JSON has user ID, opponents's elo, win/loss, game name
         results = request.get_json()
-        #print(results)
-        #for key, value in results.items():
+        # print(results)
+        # for key, value in results.items():
         #    print(key, value)
-        #print(results['user_id'])
-        #print(results.user_id)
+        # print(results['user_id'])
+        # print(results.user_id)
         user = User({"_id": results['user_id']})
         if user.reload():
             elo = user.games_table[results['game_name']]['game_score']
-            new_elo = calc_elo(int(elo),int(results['opp_elo']), float(results['win']))
+            new_elo = calc_elo(int(elo), int(results['opp_elo']), float(results['win']))
             user.games_table[results['game_name']]['game_score'] = new_elo
             user["_id"] = ObjectId(results['user_id'])
             user.patch()
@@ -277,6 +282,7 @@ def submit_results():
             return resp
         else:
             return jsonify({"error": "User not found"}), 404
+
 
 @app.route('/discords', methods=['GET', 'POST'])
 def get_discords():
@@ -313,24 +319,25 @@ def get_discord(id):
         resp = jsonify(newDiscord), 201
         return resp
 
-    @app.route('/discords/next', methods=['GET'])
-    def get_next_discord():
-        if request.method == 'GET':
-            discords = Discord().find_all()
-            nextOpen = None
-            i = 0
-            while not nextOpen:
-                if i >= len(discords):
-                    nextOpen = {"room_name": "all rooms taken"}
-                elif discords[i]["status"] == "open":
-                    nextOpen = discords[i]
-                i += 1
 
-            if nextOpen != {"room_name": "all rooms taken"}:
-                # discordToUpdate = nextOpen
-                # discordToUpdate["_id"] = ObjectId(id)
-                nextOpen["status"] = "taken"
-                newDiscord = Discord(nextOpen)
-                newDiscord.patch()
+@app.route('/discords/next', methods=['GET'])
+def get_next_discord():
+    if request.method == 'GET':
+        discords = Discord().find_all()
+        nextOpen = None
+        i = 0
+        while not nextOpen:
+            if i >= len(discords):
+                nextOpen = {"room_name": "all rooms taken"}
+            elif discords[i]["status"] == "open":
+                nextOpen = discords[i]
+            i += 1
 
-            return {"discords_list": nextOpen["room_name"]}
+        if nextOpen != {"room_name": "all rooms taken"}:
+            # discordToUpdate = nextOpen
+            nextOpen["_id"] = ObjectId(nextOpen["_id"])
+            nextOpen["status"] = "taken"
+            newDiscord = Discord(nextOpen)
+            newDiscord.patch()
+
+        return {"discords_list": nextOpen["room_name"]}
