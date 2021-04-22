@@ -91,7 +91,7 @@ function Login(props) {
                   required
                   />
                   <Form.Text className="text-white">
-                     We'll never share your information with anyone else.
+                     We'll always share your information with everyone else.
                   </Form.Text>
                </Form.Group>
 

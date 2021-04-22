@@ -1,31 +1,31 @@
 import time
 
-from bson import ObjectId
+
 from flask import Flask
 from flask import request
 from flask import jsonify
 from flask_cors import CORS
-from mongodb import User
-from mongodb import Game, Lobby
-import backend
+
+from mongodb import *
+from bson import ObjectId
 
 
 def make_matches(game):
     for lobby in game["queue"]:
-        print("lobby: ")
-        print(lobby)
+        # print("lobby: ")
+        # print(lobby)
         matched_lobby = find_suitable(game, lobby)
-        print("matched_lobby: ")
-        print(matched_lobby)
+        # print("matched_lobby: ")
+        # print(matched_lobby)
         if matched_lobby is not None:
             merged_lobby = merge_matches(game, lobby, matched_lobby)
             if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
                 #send lobby to in progress
-                print("lobby to add")
+                # print("lobby to add")
                 full_lobby = Lobby(merged_lobby)
-                print("full_lobby", full_lobby)
+                # print("full_lobby", full_lobby)
                 assignteams(full_lobby)
-                print("full_lobby", full_lobby)
+                # print("full_lobby", full_lobby)
                 assign_discord(full_lobby)
                 full_lobby.save()
                 set_player_lobby(full_lobby)
@@ -38,38 +38,61 @@ def make_matches(game):
             updated_game.patch()  # create updated game object and update db
 
 
+def get_next_discord():
+    discords = Discord().find_all()
+    nextOpen = None
+    i = 0
+    while not nextOpen:
+        if i >= len(discords):
+            nextOpen = {"room_name": "all rooms taken"}
+        elif discords[i]["status"] == "open":
+            nextOpen = discords[i]
+        i += 1
+
+    if nextOpen != {"room_name": "all rooms taken"}:
+        # discordToUpdate = nextOpen
+        nextOpen["_id"] = ObjectId(nextOpen["_id"])
+        nextOpen["status"] = "taken"
+        newDiscord = Discord(nextOpen)
+        newDiscord.patch()
+
+    return {"room_name": nextOpen["room_name"]}
+
+
 def assign_discord(full_lobby):
     print("assiging discord")
-    full_lobby["discord"] = backend.get_next_discord()["room_name"]
+    discord = get_next_discord()
+    print(discord)
+    full_lobby["discord"] = discord["room_name"]
     print("discord: ", full_lobby["discord"])
 
 
 def assignteams(full_lobby):
-    print("assiging teams")
+    # print("assiging teams")
     game = Game({"_id": full_lobby["game_id"]})
     game.reload()
     team1, team2 = find_best_teams(full_lobby["groups"])
     full_lobby["teams"] = [team1, team2]
-    print("teams", team1, " ", team2)
+    # print("teams", team1, " ", team2)
 
 
 def find_best_teams(groups):
     team1, team2 = {"size": 0, "groups": []}, {"size": 0, "groups": []}
     unused_groups = [] + groups
-    print("unused_groups ", unused_groups)
+    # print("unused_groups ", unused_groups)
     for i in range(len(groups)):
         if team1["size"] > team2["size"]:
             temp = largest_group(unused_groups)
-            print("temp: ", temp)
+            # print("temp: ", temp)
             team2["groups"] += [temp]
             team2["size"] += len(temp["players"].keys())
         else:
             temp = largest_group(unused_groups)
-            print("temp: ", temp)
+            # print("temp: ", temp)
             team1["groups"] += [temp]
             team1["size"] += len(temp["players"].keys())
-    print("team1 ", team1)
-    print("team2 ", team2)
+    # print("team1 ", team1)
+    # print("team2 ", team2)
     return team1["groups"], team2["groups"]
 
 

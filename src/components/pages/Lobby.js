@@ -30,9 +30,9 @@ function Lobby(props) {
         getMatch(match_id).then( result => {
             if (result) {
                 setMatch(result);
-                console.log("updated user")
+                console.log("got match")
             } else {
-                console.log("failed to update user")    
+                console.log("failed to get match")    
             }
         });
     }
@@ -62,6 +62,7 @@ function Lobby(props) {
                               <Col>
                                  <h2 style={{color: 'white'}}> Lobby</h2>
                                  <h4 style={{color: 'white'}}> Match info</h4>
+                                 <h6 style={{color: 'black'}}> Discord: {match.discord}</h6>
                               </Col>
                               <Col>
                                  <h4 style={{color: 'blue'}}> Team 2</h4>
