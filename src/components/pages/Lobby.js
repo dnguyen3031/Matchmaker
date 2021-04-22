@@ -54,12 +54,20 @@ function Lobby(props) {
                     <Col xs={8} className="pr-0 main-col">
                     <Row>
                         <Col>
-                            <h2 style={{color: 'white'}}> Lobby</h2>
-                            <h4 style={{color: 'red'}}> Team 1</h4>
-                            <TeamTable team={match.teams[0]}/>
-                            <h4 style={{color: 'white'}}> Match info</h4>
-                            <h4 style={{color: 'blue'}}> Team 2</h4>
-                            <TeamTable team={match.teams[1]}/>
+                           <Row>
+                              <Col>
+                                 <h4 style={{color: 'red'}}> Team 1</h4>
+                                 <TeamTable team={match.teams[0]}/>
+                              </Col>
+                              <Col>
+                                 <h2 style={{color: 'white'}}> Lobby</h2>
+                                 <h4 style={{color: 'white'}}> Match info</h4>
+                              </Col>
+                              <Col>
+                                 <h4 style={{color: 'blue'}}> Team 2</h4>
+                                 <TeamTable team={match.teams[1]}/>
+                              </Col>
+                           </Row>
                         </Col>
                         <Col md={3}>
                             <FriendBar _id={props.viewer_id}/>
