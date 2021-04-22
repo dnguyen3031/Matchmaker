@@ -7,6 +7,7 @@ from flask import jsonify
 from flask_cors import CORS
 from mongodb import User
 from mongodb import Game, Lobby
+import backend
 
 
 def make_matches(game):
@@ -25,6 +26,7 @@ def make_matches(game):
                 print("full_lobby", full_lobby)
                 assignteams(full_lobby)
                 print("full_lobby", full_lobby)
+                assign_discord(full_lobby)
                 full_lobby.save()
                 set_player_lobby(full_lobby)
 
@@ -34,6 +36,12 @@ def make_matches(game):
             updated_game = Game(game)  # create updated game
             updated_game["_id"] = ObjectId(game["_id"])  # mongoDB doesn't like string IDs
             updated_game.patch()  # create updated game object and update db
+
+
+def assign_discord(full_lobby):
+    print("assiging discord")
+    full_lobby["discord"] = backend.get_next_discord()["room_name"]
+    print("discord: ", full_lobby["discord"])
 
 
 def assignteams(full_lobby):

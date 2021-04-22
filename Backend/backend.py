@@ -340,4 +340,4 @@ def get_next_discord():
             newDiscord = Discord(nextOpen)
             newDiscord.patch()
 
-        return {"discords_list": nextOpen["room_name"]}
+        return {"room_name": nextOpen["room_name"]}
