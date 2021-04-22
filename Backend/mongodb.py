@@ -162,3 +162,19 @@ class Lobby(Model):
         for lobby in lobbies:
             lobby["_id"] = str(lobby["_id"])  # converting ObjectId to str
         return lobbies
+
+
+class Discord(Model):
+    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
+
+    db_client = pymongo.MongoClient(
+        "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
+    # db = client.test
+
+    collection = db_client["discords"]["discords_list"]
+
+    def find_all(self):
+        discords = list(self.collection.find())
+        for discord in discords:
+            discord["_id"] = str(discord["_id"])  # converting ObjectId to str
+        return discords

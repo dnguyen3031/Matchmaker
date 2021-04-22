@@ -4,7 +4,7 @@ from flask import jsonify
 from flask_cors import CORS
 import random
 import string
-from mongodb import Game, User, Lobby, Group
+from mongodb import *
 from ELO import *
 from bson import ObjectId
 
@@ -13,105 +13,6 @@ app = Flask(__name__)
 
 # CORS stands for Cross Origin Requests.
 CORS(app)  # Here we'll allow requests coming from any domain. Not recommended for production environment.
-
-
-# users = {
-#     'users_list': [
-#         {
-#             "_id": "6024098ac9b27e9f9995df97",
-#             "bio": "the template for a user",
-#             "contact_info": {
-#                 "discord": "template#1234",
-#                 "email": "template@gmail.com"
-#             },
-#             "games_table": {
-#                 "Krunker": {
-#                     "game_score": "420",
-#                     "time_played": "2.4"
-#                 },
-#                 "Minecraft": {
-#                     "game_score": "69",
-#                     "time_played": "128.2"
-#                 }
-#             },
-#             "name": "Template",
-#             "password": "no security"
-#         }
-#     ]
-# }
-#
-# games = {
-#     "games_list": [
-#         {
-#             "_id": "60240d8261cfcfb0e9a958cb",
-#             "categories": [
-#                 "FPS",
-#                 "Free",
-#                 "Browser Game"
-#             ],
-#             "queue": = [
-#             "lobby1203": {
-#                   "avg_elo": 1243
-#                   "window_size": 30
-#                   "num_players": 2
-#                   "groups":[
-#                       "group1": {
-#                           "players": [
-#                               12341234124
-#                           ]
-#                       },
-#                       "group2": {
-#                           "players": [
-#                               51613467671
-#                           ]
-#                       }
-#                    ]
-#             },
-#             "lobby2252": {
-#                   "avg_elo": 861
-#                   "window_size": 240
-#                   "num_players": 1
-#                   "groups":[
-#                       "group1": {
-#                           "players": [
-#                               12341234124
-#                           ]
-#                       }
-#                    ]
-#             }
-#             ]
-#             "game_modes": {
-#                 "Capture_The_Flag": {
-#                     "relevant_stats": [
-#                         "Score",
-#                         "Kills",
-#                         "Deaths",
-#                         "Win/Loss/Draw",
-#                         "Caps"
-#                     ]
-#                 },
-#                 "Free_For_All": {
-#                     "relevant_stats": [
-#                         "Kills",
-#                         "Deaths",
-#                         "Win/Loss/Draw",
-#                         "Score"
-#                     ]
-#                 },
-#                 "Team_Deathmatch": {
-#                     "relevant_stats": [
-#                         "Kills",
-#                         "Deaths",
-#                         "Win/Loss/Draw",
-#                         "Score"
-#                     ]
-#                 }
-#             },
-#             "game_name": "Krunker",
-#             "run_difficulty": "3"
-#         }
-#     ]
-# }
 
 #TODO: start timer_module asynchronously on startup
 
@@ -377,5 +278,52 @@ def submit_results():
         else:
             return jsonify({"error": "User not found"}), 404
 
+@app.route('/discords', methods=['GET', 'POST'])
+def get_discords():
+    if request.method == 'GET':
+        discords = Discord().find_all()
+        return {"discords_list": discords}
+    elif request.method == 'POST':
+        discordToAdd = request.get_json()
+        newDiscord = Discord(discordToAdd)
+        newDiscord.save()
+        resp = jsonify(newDiscord), 201
+        return resp
 
 
+@app.route('/discords/<id>', methods=['GET', 'DELETE', 'PATCH'])
+def get_discord(id):
+    if request.method == 'GET':
+        discord = Discord({"_id": id})
+        if discord.reload():
+            return discord
+        else:
+            return jsonify({"error": "Discord not found"}), 404
+    elif request.method == 'DELETE':  ## still the old version. Turn it into the DB version
+        discord = Discord({"_id": id})
+        if discord.remove():
+            resp = jsonify(), 204
+            return resp
+        return jsonify({"error": "Discord not found"}), 404
+    elif request.method == 'PATCH':
+        discordToUpdate = request.get_json()
+        discordToUpdate["_id"] = ObjectId(id)
+        newDiscord = Game(discordToUpdate)
+        newDiscord.patch()
+        resp = jsonify(newDiscord), 201
+        return resp
+
+    @app.route('/discords/next', methods=['GET'])
+    def get_next_discord():
+        if request.method == 'GET':
+            discords = Discord().find_all()
+            nextOpen = None
+            i = 0
+            while not nextOpen:
+                if i >= len(discords.keys()):
+                    nextOpen = "all discords are taken"
+                elif discords[discords.keys()[i]] == "open":
+                    nextOpen = discords.keys()[i]
+                i += 1
+
+            return {"discords_list": discords}
