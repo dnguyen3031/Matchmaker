@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Container, Row, Col, Form, FormControl, FormGroup, Modal}
 from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
@@ -36,6 +36,17 @@ function Groups(props) {
          return false;
       }
    }
+
+   useEffect(() => {
+      fetchUser(props.viewer_id).then( result => {
+         if (result) {
+            setUser(result.data);
+            console.log("got user")
+         } else {
+            console.log("failed to get user")
+         }
+      });
+   }, []);
 
    const handleSubmit = (e) => {
       e.preventDefault();
@@ -128,6 +139,11 @@ function Groups(props) {
          <Row>
             <Col className="side-col" />
             <Col xs={8} className="pr-0">
+            <Row>
+                  <Col>
+                  <Form.Label>Group Code: {user.group}</Form.Label>
+                  </Col>
+               </Row>
                <Row>
                   <Col>
                      <FormGroup controlId="username">
