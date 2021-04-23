@@ -19,7 +19,8 @@ function Matchmaking(props) {
                               name: "",
                               password: "",
                               _id: "",
-                              lobby: null});
+                              lobby: null,
+                              in_queue: false});
 
    useEffect(() => {
       fetchUser(props.viewer_id).then( result => {
@@ -31,8 +32,10 @@ function Matchmaking(props) {
          }
       });
    }, []);
-
-   if (viewUser.lobby === null) {
+   // console.log(viewUser.data)
+   // console.log(viewUser.data.lobby)
+   // console.log(viewUser.data.in_queue)
+   if (viewUser.data === undefined || viewUser.data.in_queue === false) {
       return <div> 
          <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
          <Container fluid> 
@@ -60,7 +63,7 @@ function Matchmaking(props) {
          </Container>
       </div>;
    }
-   return <Queue viewer_id={props.viewer_id} setToken={props.setToken}/>
+   return <Queue viewer_id={props.viewer_id} setToken={props.setToken} match_id={viewUser.data.lobby}/>
 
    async function fetchUser(id){
       try {
@@ -79,6 +82,7 @@ function Matchmaking(props) {
       makePatchCall().then( result => {
          if (result.status === 201) {
             console.log('Added Successfully')
+            window.location.reload(false);
          }
          else{
             console.log('failed to add to queue')

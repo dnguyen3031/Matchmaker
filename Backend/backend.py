@@ -255,6 +255,9 @@ def add_to_queue():
                 "num_players": 1,
                 "window_size": starting_window_size,
             }
+            user["in_queue"] = True
+            user["_id"] = ObjectId(user["_id"])
+            user.patch()
             resp = game.append_to_queue(game_name, new_lobby)  # game name might need to match (line 210)
             return jsonify(resp), 201
         else:
