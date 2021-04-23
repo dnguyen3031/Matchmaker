@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
+import { Link } from "react-router-dom";
 import CustomNavbar from '../CustomNavbar';
-import { useParams } from 'react-router-dom';
 import FriendBar from "../FriendBar";
 import { Row, Col, Container, Form, Button } from "react-bootstrap";
 import axios from 'axios';
@@ -51,7 +51,14 @@ function SearchPage(props) {
             makeGetByNameCall(searchTerm).then( result => {
                if (result.status === 200) {
                   console.log(result.data["users_list"])
-                  setSearchResults(result.data["users_list"])
+                  console.log('sr detek: '+result.data["users_list"].length)
+                  if (result.data["users_list"].length === 0){
+                     console.log('setting noResults')
+                     setSearchResults(["noResults"])
+                  }
+                  else{
+                     setSearchResults(result.data["users_list"])
+                  }
                }
                else{
                   console.log('failed to find users')
@@ -76,22 +83,48 @@ function SearchPage(props) {
 
 
    function ResultsTable(props){
-         const rows = searchResults.map((row, index) => {
-          return (
-             <tr key={index}>
-               <td>{row.name}</td>
-             </tr>
+      console.log('sr: '+searchResults)
+      if (searchResults.length === 0){
+         console.log('empty')
+         return null
+      }
+      if (searchResults == 'noResults'){
+         console.log('detected \'noresults\'')
+         return (
+            <div>
+               <table>
+               <tbody>
+                  <tr>
+                     <th style={{color: 'black'}}>No Results</th>
+                  </tr>
+               </tbody>
+             </table>
+            </div>
+         );
+      }
+      const rows = searchResults.map((user, index) => {
+         return (
+            <tr key={index}>
+               <td>
+               <Link to={'/profile/'+user._id} >
+                  {user.name}
+               </Link>
+               </td>
+            </tr>
            );
          });
          return (
             <div>
-               <h2 style={{color: 'black'}}>Results</h2>
-             <tbody>
-                {rows}
-             </tbody>
-             </div>
+               <table>
+               <tbody>
+                  <tr>
+                     <th style={{color: 'black'}}>Results</th>
+                  </tr>
+                  {rows}
+               </tbody>
+             </table>
+            </div>
          );
-         
    }
 }
 
