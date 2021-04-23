@@ -12,6 +12,9 @@ function Lobby(props) {
 
     const [refreshInterval, setRefreshInterval] = useState(2);
 
+    const [winningTeam, setWinningTeam] = useState('Draw');
+    const [disabled, setDisabled] = useState(false);
+
     async function getMatch(match_id) {
         // console.log(match_id)
         try {
@@ -43,6 +46,11 @@ function Lobby(props) {
             return () => clearInterval(interval);
         }
     }, [refreshInterval]);
+
+    function sendWinningTeam() {
+       console.log(winningTeam);                  // send to backend which team was selected
+       setDisabled(true); // Disable the radio buttons 
+    }
     // console.log(match)
     // console.log(match_id)
     if (match) {
@@ -87,12 +95,42 @@ function Lobby(props) {
             <Col xs={8} className="pr-0 main-col">
                <Row>
                   <Col>
-                        <h2 style={{color: 'white'}}> Lobby</h2>
-                        <h4 style={{color: 'red'}}> Team 1</h4>
-                        <h4 style={{color: 'whte'}}> Match info</h4>
-                        <h4 style={{color: 'blue'}}> Team 2</h4>
+                     <Row>
+                        <Col>
+                           <h4 style={{color: 'red'}}> Team 1</h4>
+                        </Col>
+                        <Col>
+                           <h2 style={{color: 'white'}}> Lobby</h2>
+                           <h4 style={{color: 'white'}}> Match info</h4>
+                           <h6 style={{color: 'black'}}> Discord:</h6>
+                        </Col>
+                        <Col>
+                           <h4 style={{color: 'blue'}}> Team 2</h4>
+                        </Col>
+                     </Row>
+                     <Row>
+                        <Col />
+                        <Col md={5}>
+                           <Row>
+                              Which team won?
+                           </Row>
+                           <Row>
+                              <div className="form-check">
+                                 <input className="form-check-input" type="radio" onChange={() => setWinningTeam("Team A")} name="choseWinningTeam" disabled={disabled}/>
+                                 <label className="form-check-label" for="teamA">Team A</label>
+                              </div>
+                              <div className="form-check">
+                                 <input className="form-check-input" type="radio" onChange={() => setWinningTeam("Team B")} name="choseWinningTeam" disabled={disabled}/>
+                                 <label className="form-check-label" for="teamB">Team B</label>
+                              </div>
+                           </Row>
+                           <Row>
+                              <Button variant="secondary" onClick={sendWinningTeam}>Submit</Button>
+                           </Row>
+                        </Col>
+                        <Col />
+                     </Row>
                   </Col>
-
                   <Col md={3}>
                      <FriendBar _id={props.viewer_id}/>
                   </Col>
