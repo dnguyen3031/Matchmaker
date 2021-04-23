@@ -22,14 +22,18 @@ function FriendBar(props) {
          if (result) {
             setUser(result);
          }
-      });
-      console.log(user._id)
+      });      
+   }, []);
+
+   React.useEffect(() => {
       fetchGroup(user.group).then( result => {
          if (result) {
             setGroup(result);
          }
-      });
+      });      
    }, []);
+
+   
    
    async function fetchUser(_id){
       try {
@@ -76,7 +80,9 @@ function FriendBar(props) {
                Group Code: {"\n"}
                {user.group} {"\n"}
                Group members
-               <FriendsList array={usergroup.players}></FriendsList>
+               {/*
+               <li>{usergroup.players}</li>
+               */}
             </Card.Body>
          </Accordion.Collapse>
          </Card>
