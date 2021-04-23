@@ -58,12 +58,12 @@ function App() {
          <Route path="/testpage">
             <TestPage viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
-         <Route path="/lobby">
+         {/* <Route path="/lobby">
             <Lobby match_id="6081ba45ffaca832f8f2282b" viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
          <Route path="/queue">
             <Queue viewer_id={token} setToken={(id) => setToken(id)}/>
-          </Route>
+          </Route> */}
           <Route path="/groups">
             <Groups viewer_id={token} setToken={(id) => setToken(id)}/>
          </Route>
