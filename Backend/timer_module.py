@@ -7,6 +7,7 @@ from flask_cors import CORS
 
 from mongodb import *
 from bson import ObjectId
+from ELO import *
 
 
 def make_matches(game):
@@ -27,6 +28,7 @@ def make_matches(game):
                 # print("full_lobby", full_lobby)
                 assign_discord(full_lobby)
                 add_team_info(full_lobby)
+                full_lobby["time_elapsed"] = 0
                 full_lobby.save()
                 set_player_lobby(full_lobby)
 
@@ -53,12 +55,12 @@ def get_adv_elo(team, game_id):
 
 
 def add_team_info(full_lobby):
-    team_info = {"team-1": {"votes": 0},
-                 "team-2": {"votes": 0}}
-    team_info["team-1"]["adv_elo"] = get_adv_elo(full_lobby["teams"][0], full_lobby["game_id"])
-    team_info["team-2"]["adv_elo"] = get_adv_elo(full_lobby["teams"][1], full_lobby["game_id"])
+    num_teams = len(full_lobby["teams"])
+    team_info = []
+    for i in range(num_teams):
+        team_info += [{"votes": [0]*num_teams}]
+        team_info[i]["adv_elo"] = get_adv_elo(full_lobby["teams"][i], full_lobby["game_id"])
     full_lobby["team_info"] = team_info
-    full_lobby["total_votes"] = 0
 
 
 def get_next_discord():
@@ -203,11 +205,98 @@ def expand_window(game):
     updated_game.patch()  # create updated game object and update db
 
 
+def increment_time_elpased(lobbies):
+    for lobby in lobbies:
+        lobby["time-elapsed"] += 5
+
+
+def team_won(lobby):
+    num_teams = len(lobby["teams"])
+    is_over = True
+    for i in range(num_teams):
+        got_votes = False
+        for place in lobby["team_info"][i]["votes"]:
+            if place > lobby["num_players"]/num_teams:
+                got_votes = True
+        if not got_votes:
+            is_over = False
+
+    return is_over
+
+
+def is_over(lobby):
+    return team_won(lobby) or lobby['time_elapsed'] > 86400  # one day = 86400
+
+
+def free_discord(room_name):
+    discord = Discord().find_by_name(room_name)[0]
+    discord.reload()
+    discord["_id"] = ObjectId(discord["_id"])
+    discord["status"] = "open"
+    discord.patch()
+
+
+def assign_team_elo(team, team_info, oppenent_info, game_name):
+    win = team_info["votes"].index(max(team_info["votes"])) - oppenent_info["votes"].index(max(oppenent_info["votes"]))
+    if win > 0:
+        win = 1
+    elif win < 0:
+        win = 0
+    else:
+        win = 0.5
+
+    elo_change = calc_elo(int(team_info["adv_elo"]), int(oppenent_info["adv_elo"]), float(win))
+    for group in team:
+        for player_id in group["players"].keys():
+            user = User({"_id": player_id})
+            user.reload()
+            user["_id"] = ObjectId(user["_id"])
+            user["games_table"][game_name]["game_score"] += elo_change
+            user.patch()
+
+
+def compare_other_teams(team, team_info, teams_info, game_name):
+    for opponent_info in teams_info:
+        assign_team_elo(team, team_info, opponent_info, game_name)
+
+
+def assign_elos(lobby):
+    game = Game({"_id": lobby["game_id"]})
+    game.reload()
+    for i in range(len(lobby["teams"])):
+        compare_other_teams(lobby["teams"][i], lobby["team_info"][i], lobby["team_info"], game["game_name"])
+
+
+def unqueue_players(groups):
+    for group in groups:
+        for player_id in group["players"].keys():
+            user = User({"_id": player_id})
+            user.reload()
+            user["_id"] = ObjectId(user["_id"])
+            user["in_queue"] = False
+            user.patch()
+
+
+def terminate_lobby(lobby):
+    free_discord(lobby["discord"])
+    assign_elos(lobby)
+    unqueue_players(lobby["groups"])
+
+
+def check_for_end_match(lobbies):
+    for lobby in lobbies:
+        if is_over(lobby):
+            terminate_lobby(lobby)
+
+
 if __name__ == '__main__':
     while True:
         games = Game().find_all()
+        lobbies = Lobby().find_all()
         for game in games:
             make_matches(game)
             expand_window(game)
 
+        increment_time_elpased(lobbies)
+        check_for_end_match(lobbies)
         time.sleep(5)
