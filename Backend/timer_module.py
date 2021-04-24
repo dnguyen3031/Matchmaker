@@ -46,7 +46,7 @@ def get_adv_elo(team, game_id):
     game = Game({"_id": game_id})
     game.reload()
     for group in team:
-        for player in group:
+        for player in group["players"].keys():
             players += 1
             user = User({"_id": player})
             user.reload()
@@ -207,7 +207,11 @@ def expand_window(game):
 
 def increment_time_elpased(lobbies):
     for lobby in lobbies:
-        lobby["time-elapsed"] += 5
+        lob = Lobby({"_id": lobby["_id"]})
+        lob.reload()
+        lob["_id"] = ObjectId(lob["_id"])
+        lob["time_elapsed"] += 5
+        lob.patch()
 
 
 def team_won(lobby):
@@ -220,7 +224,7 @@ def team_won(lobby):
                 got_votes = True
         if not got_votes:
             is_over = False
-
+    # print(is_over)
     return is_over
 
 
@@ -229,7 +233,8 @@ def is_over(lobby):
 
 
 def free_discord(room_name):
-    discord = Discord().find_by_name(room_name)[0]
+    dis = Discord().find_by_name(room_name)[0]
+    discord = Discord({"_id": dis["_id"]})
     discord.reload()
     discord["_id"] = ObjectId(discord["_id"])
     discord["status"] = "open"
@@ -245,7 +250,7 @@ def assign_team_elo(team, team_info, oppenent_info, game_name):
     else:
         win = 0.5
 
-    elo_change = calc_elo(int(team_info["adv_elo"]), int(oppenent_info["adv_elo"]), float(win))
+    elo_change = int(team_info["adv_elo"])-calc_elo(int(team_info["adv_elo"]), int(oppenent_info["adv_elo"]), float(win))
     for group in team:
         for player_id in group["players"].keys():
             user = User({"_id": player_id})
@@ -274,6 +279,7 @@ def unqueue_players(groups):
             user.reload()
             user["_id"] = ObjectId(user["_id"])
             user["in_queue"] = False
+            user["lobby"] = None
             user.patch()
 
 
@@ -281,6 +287,8 @@ def terminate_lobby(lobby):
     free_discord(lobby["discord"])
     assign_elos(lobby)
     unqueue_players(lobby["groups"])
+    lob = Lobby({"_id": lobby["_id"]})
+    lob.remove()
 
 
 def check_for_end_match(lobbies):
