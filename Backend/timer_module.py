@@ -56,6 +56,7 @@ def add_team_info(full_lobby):
     team_info = {"team-1": {"votes": 0},
                  "team-2": {"votes": 0}}
     team_info["team-1"]["adv_elo"] = get_adv_elo(full_lobby["teams"][0], full_lobby["game_id"])
+    team_info["team-2"]["adv_elo"] = get_adv_elo(full_lobby["teams"][1], full_lobby["game_id"])
     full_lobby["team_info"] = team_info
     full_lobby["total_votes"] = 0
 
