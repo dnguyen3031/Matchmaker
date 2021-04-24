@@ -264,27 +264,27 @@ def add_to_queue():
             return jsonify({"error": "User not found"}), 404
 
 
-@app.route('/users/submit-results', methods=['PATCH'])
-def submit_results():
-    if request.method == 'PATCH':
-        # JSON has user ID, opponents's elo, win/loss, game name
-        results = request.get_json()
-        # print(results)
-        # for key, value in results.items():
-        #    print(key, value)
-        # print(results['user_id'])
-        # print(results.user_id)
-        user = User({"_id": results['user_id']})
-        if user.reload():
-            elo = user.games_table[results['game_name']]['game_score']
-            new_elo = calc_elo(int(elo), int(results['opp_elo']), float(results['win']))
-            user.games_table[results['game_name']]['game_score'] = new_elo
-            user["_id"] = ObjectId(results['user_id'])
-            user.patch()
-            resp = jsonify(user), 201
-            return resp
-        else:
-            return jsonify({"error": "User not found"}), 404
+# @app.route('/users/submit-results', methods=['PATCH'])
+# def submit_results():
+#     if request.method == 'PATCH':
+#         # JSON has user ID, opponents's elo, win/loss, game name
+#         results = request.get_json()
+#         # print(results)
+#         # for key, value in results.items():
+#         #    print(key, value)
+#         # print(results['user_id'])
+#         # print(results.user_id)
+#         user = User({"_id": results['user_id']})
+#         if user.reload():
+#             elo = user.games_table[results['game_name']]['game_score']
+#             new_elo = calc_elo(int(elo), int(results['opp_elo']), float(results['win']))
+#             user.games_table[results['game_name']]['game_score'] = new_elo
+#             user["_id"] = ObjectId(results['user_id'])
+#             user.patch()
+#             resp = jsonify(user), 201
+#             return resp
+#         else:
+#             return jsonify({"error": "User not found"}), 404
 
 
 @app.route('/discords', methods=['GET', 'POST'])
@@ -344,3 +344,22 @@ def get_next_discord():
             newDiscord.patch()
 
         return {"room_name": nextOpen["room_name"]}
+
+
+@app.route('/users/submit-results/<id>', methods=['PATCH'])
+def submit_results(id):
+    if request.method == 'PATCH':
+        results = request.get_json()
+        # should be formatted like:
+        # {
+        #     "win": "team 1"
+        # }
+        lobby = Lobby({"_id": id})
+        if not lobby.reload():
+            return jsonify({"error": "Lobby not found"}), 404
+        # lobby["_id"] = ObjectId(id)
+        lobby["team_info"][results["win"]]["votes"] += 1
+        lobby["total_votes"] += 1
+        # game = Game({"_id": lobby["game_id"]})
+        # game.reload()
+        # if lobby["total_votes"] >= 0.8*game["num_players"]:
