@@ -67,8 +67,8 @@ function Lobby(props) {
                         <Col>
                            <h6 style={{color: 'black'}}> Discord: {match.discord}</h6>
                            {console.dir(match)}
-                           <TeamBuilder teams={match["teams"]}></TeamBuilder>
-                           <Row>
+                           <TeamBuilder match_id={match_id} teams={match["teams"]}></TeamBuilder>
+                           {/* <Row>
                               <Col>
                                  <h4 style={{color: 'red'}}> Team 1</h4>
                                  <TeamTable team={match.teams[0]}/>
@@ -82,7 +82,7 @@ function Lobby(props) {
                                  <h4 style={{color: 'blue'}}> Team 2</h4>
                                  <TeamTable team={match.teams[1]}/>
                               </Col>
-                           </Row>
+                           </Row> */}
                         </Col>
                         <Col md={3}>
                             <FriendBar _id={props.viewer_id}/>
@@ -151,21 +151,13 @@ function Lobby(props) {
 
 function TeamTable(props)
 {
-    // console.log(props)
-    // console.log(props.teams)
-    // console.log(props.teams[0])
-    // console.log(props.team)
-    // console.log(Object.props)
-    // console.log(Object.props.team)
     const rows = props.team.map((group) => {
-        // console.log(group)
         return (
             <tr>
                 <Players group={group}/>
             </tr>
         );
     })
-    // console.log(rows)
     return (
         <tbody>
             {rows}
@@ -175,11 +167,7 @@ function TeamTable(props)
 
 function Players(props)
 {
-    // console.log(props)
     const players = Object.keys(props.group.players).map((player, index) => {
-        // console.log("player info")
-        // console.log(player)
-        // console.log(name)
         return (
             <tr>
                 <td>{props.group.players[player]}</td>

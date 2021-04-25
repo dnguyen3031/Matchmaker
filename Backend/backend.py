@@ -355,8 +355,10 @@ def submit_results(id):
             return jsonify({"error": "Lobby not found"}), 404
         lobby["_id"] = ObjectId(id)
         ranking = results["ranking"]
+        print(len(ranking))
         for i in range(len(ranking)):
             lobby["team_info"][i]["votes"][ranking[i] - 1] += 1
+            print("AT INDEX " + i)
         lobby["total_votes"] += 1
         lobby.patch()
 
