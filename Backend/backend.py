@@ -244,27 +244,27 @@ def leave_group():
         userID = request.args.get('id')
         group = Group({"_id": groupID})
         group.reload()
-        groupUsers = group.get('players')
+        user = User({"_id": userID})
+        user.reload()
 
-        print(groupUsers)
+        poppedValue = group['players'].pop(str(userID))
+        if poppedValue != user.get('name'):
+            resp = jsonify(poppedValue), 400
+            return resp
 
-        groupUsers.pop(str(userID))
-        group['players'] = groupUsers
         group['num_players'] -= 1
         group["_id"] = ObjectId(groupID)
         
         if group['num_players'] == 0:
             group.remove()
         else:
-            group.patch()
+            group.save()
 
-        user = User({"_id": userID})
-        user.reload()
         user['group'] = None
         user["_id"] = ObjectId(userID)
         user.patch()
 
-        resp = jsonify(user), 201
+        resp = jsonify(group), 201
         return resp
 
 
