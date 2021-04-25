@@ -224,7 +224,6 @@ def join_group():
 
         groupPlayers = group.get('players')
         groupPlayers[userID] = user.get('name')
-        groupPlayers = list(set(groupPlayers))
         group['players'] = groupPlayers
         group['num_players'] += 1
         group["_id"] = ObjectId(groupID)
@@ -246,8 +245,10 @@ def leave_group():
         group = Group({"_id": groupID})
         group.reload()
         groupUsers = group.get('players')
-        groupUsers.pop(userID)
-        groupUsers = list(set(groupUsers))
+
+        print(groupUsers)
+
+        groupUsers.pop(str(userID))
         group['players'] = groupUsers
         group['num_players'] -= 1
         group["_id"] = ObjectId(groupID)

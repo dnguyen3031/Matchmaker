@@ -12,7 +12,7 @@ function Groups(props) {
                         
    const [groupcode, setgroupcode] = useState('');
 
-   const [user, setUser] = useState({group: "", _id: ""});
+   const [user, setUser] = useState({group: "", _id: "", name: ""});
 
    /*Error Model*/
    const [showError, setErrorShow] = useState(false);
@@ -50,7 +50,9 @@ function Groups(props) {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      var jsonData = { "players": [props.viewer_id], "num_players": 1 };
+      var playerdict = {};
+      playerdict[props.viewer_id] = user.name;
+      var jsonData = {"players": playerdict, "num_players": 1 };
       postGroup(jsonData).then( result => {
          if (result.status == 201) {
             console.log('Created Successfully')
@@ -180,8 +182,12 @@ function Groups(props) {
                   </Col>
                </Row>
                <Row>
+                  
                   <Col>
                      <Button variant="primary" onClick = {leaveSubmit}>Leave Group</Button>{' '}
+                  </Col>
+                  <Col md={3}>
+                        <FriendBar _id={props.viewer_id}/>
                   </Col>
                </Row>
             </Col>
