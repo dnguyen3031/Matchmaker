@@ -28,7 +28,7 @@ def make_matches(game):
                 # print("full_lobby", full_lobby)
                 assign_discord(full_lobby)
                 add_team_info(full_lobby)
-                full_lobby["time_elapsed"] = 0
+                init_misc(full_lobby)
                 full_lobby.save()
                 set_player_lobby(full_lobby)
 
@@ -38,6 +38,12 @@ def make_matches(game):
             updated_game = Game(game)  # create updated game
             updated_game["_id"] = ObjectId(game["_id"])  # mongoDB doesn't like string IDs
             updated_game.patch()  # create updated game object and update db
+
+
+def init_misc(full_lobby):
+    full_lobby["time_elapsed"] = 0
+    full_lobby["total_votes"] = 0
+    full_lobby["time_left"] = 86400
 
 
 def get_adv_elo(team, game_id):
@@ -205,12 +211,12 @@ def expand_window(game):
     updated_game.patch()  # create updated game object and update db
 
 
-def increment_time_elpased(lobbies):
+def increment_time_elpased(lobbies, clock_delay):
     for lobby in lobbies:
         lob = Lobby({"_id": lobby["_id"]})
         lob.reload()
         lob["_id"] = ObjectId(lob["_id"])
-        lob["time_elapsed"] += 5
+        lob["time_elapsed"] += clock_delay
         lob.patch()
 
 
@@ -228,8 +234,15 @@ def team_won(lobby):
     return is_over
 
 
-def is_over(lobby):
-    return team_won(lobby) or lobby['time_elapsed'] > 86400  # one day = 86400
+def is_over(lob):
+    game = Game({"_id": lob["game_id"]})
+    game.reload()
+    lobby = Lobby({"_id": lob["_id"]})
+    lobby.reload()
+    lobby["_id"] = ObjectId(lobby["_id"])
+    lobby["time_left"] = 86400 * 0.0001 ** (lobby["total_votes"] / lobby["num_players"]) + game["avg_length"] - lobby["time_elapsed"]
+    lobby.patch()
+    return team_won(lobby) or 0 > lobby["time_left"]  # one day = 86400
 
 
 def free_discord(room_name):
@@ -298,6 +311,7 @@ def check_for_end_match(lobbies):
 
 
 if __name__ == '__main__':
+    clock_delay = 5
     while True:
         games = Game().find_all()
         lobbies = Lobby().find_all()
@@ -305,6 +319,6 @@ if __name__ == '__main__':
             make_matches(game)
             expand_window(game)
 
-        increment_time_elpased(lobbies)
+        increment_time_elpased(lobbies, clock_delay)
         check_for_end_match(lobbies)
-        time.sleep(5)
+        time.sleep(clock_delay)
