@@ -77,10 +77,10 @@ def get_groups():
         groups = Group().find_all()
         return {"groups_list": groups}
     elif request.method == 'POST':
-        groupToAdd = request.get_json()
-        newGroup = Group(groupToAdd)
-        newGroup.save()
-        resp = jsonify(newGroup._id), 201
+        group_to_add = request.get_json()
+        new_group = Group(group_to_add)
+        new_group.save()
+        resp = jsonify(new_group._id), 201
         return resp
 
 
@@ -236,30 +236,35 @@ def add_to_queue():
     if request.method == 'PATCH':
         starting_window_size = 50
         game_name = request.args.get('game_name')
-        user_id = request.args.get('id')
         search_game = Game().find_by_name(game_name)[0]
         game = Game({"_id": search_game["_id"]})
         game.reload()
         # print("game_name", game_name)
         # print("\n\ngame dic", game, "\n\n")
+        user_id = request.args.get('id')
         user = User({"_id": user_id})
         if user.reload():
             elo = user.games_table[game_name]['game_score']  # use . ?
+            print("getting queued")
+            current_group = None
+            if (user.group is None):
+                group_to_add = {"players": {user_id: user["name"]}, "num_players": 1}
+                current_group = Group(group_to_add)
+                current_group.save()
+                user["group"] = current_group._id
+            else:
+                current_group = Group({"_id": user.group})
+                current_group.reload()
             new_lobby = {
-                "game_id": game["_id"],
-                "avg_elo": elo,
-                "groups": [
-                    {
-                        "players": {
-                            user_id: user["name"]
-                        }
-                    }
-                ],
-                "num_players": 1,
-                "window_size": starting_window_size,
+            "game_id": game["_id"],
+            "avg_elo": elo,
+            "groups": [current_group],
+            "num_players": current_group.num_players,
+            "window_size": starting_window_size,
             }
+            print(new_lobby)
             user["in_queue"] = True
-            user["_id"] = ObjectId(user["_id"])
+            user["_id"] = ObjectId(user_id)
             user.patch()
             resp = game.append_to_queue(game_name, new_lobby)  # game name might need to match (line 210)
             return jsonify(resp), 201
