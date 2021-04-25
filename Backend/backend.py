@@ -222,10 +222,10 @@ def join_group():
             resp = jsonify('You are already in a group!'), 400
             return resp
 
-        groupUsers = group.get('players')
-        groupUsers.append(userID)
-        groupUsers = list(set(groupUsers))
-        group['players'] = groupUsers
+        groupPlayers = group.get('players')
+        groupPlayers[userID] = user.get('name')
+        groupPlayers = list(set(groupPlayers))
+        group['players'] = groupPlayers
         group['num_players'] += 1
         group["_id"] = ObjectId(groupID)
         group.patch()
@@ -246,7 +246,7 @@ def leave_group():
         group = Group({"_id": groupID})
         group.reload()
         groupUsers = group.get('players')
-        groupUsers.remove(userID)
+        groupUsers.pop(userID)
         groupUsers = list(set(groupUsers))
         group['players'] = groupUsers
         group['num_players'] -= 1
