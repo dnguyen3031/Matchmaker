@@ -358,7 +358,6 @@ def submit_results(id):
         print(len(ranking))
         for i in range(len(ranking)):
             lobby["team_info"][i]["votes"][ranking[i] - 1] += 1
-            print("AT INDEX " + i)
         lobby["total_votes"] += 1
         lobby.patch()
 
