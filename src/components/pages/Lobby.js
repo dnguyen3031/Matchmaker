@@ -35,9 +35,9 @@ function Lobby(props) {
         getMatch(match_id).then( result => {
             if (result) {
                 setMatch(result);
-                console.log("updated user")
+                console.log("got match")
             } else {
-                console.log("failed to update user")    
+                console.log("failed to get match")    
             }
         });
     }
@@ -68,6 +68,21 @@ function Lobby(props) {
                            <h6 style={{color: 'black'}}> Discord: {match.discord}</h6>
                            {console.dir(match)}
                            <TeamBuilder teams={match["teams"]}></TeamBuilder>
+                           <Row>
+                              <Col>
+                                 <h4 style={{color: 'red'}}> Team 1</h4>
+                                 <TeamTable team={match.teams[0]}/>
+                              </Col>
+                              <Col>
+                                 <h2 style={{color: 'white'}}> Lobby</h2>
+                                 <h4 style={{color: 'white'}}> Match info</h4>
+                                 <h6 style={{color: 'black'}}> Discord: {match.discord}</h6>
+                              </Col>
+                              <Col>
+                                 <h4 style={{color: 'blue'}}> Team 2</h4>
+                                 <TeamTable team={match.teams[1]}/>
+                              </Col>
+                           </Row>
                         </Col>
                         <Col md={3}>
                             <FriendBar _id={props.viewer_id}/>
