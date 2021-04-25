@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import CustomNavbar from '../CustomNavbar';
-import { Col, Row, Button, Container, Form } from 'react-bootstrap';
+import { Col, Row, Button, Container, Form, TabContainer } from 'react-bootstrap';
 import axios from 'axios';
 import './PageTemplate.css';
 
@@ -8,6 +8,17 @@ function TeamBuilder(props) {
     const id = props.viewer_id
     const [match_id, setMatch_id] = useState(null);
     const [teams, setTeams] = useState(props.teams);
+
+    console.dir(teams);
+
+    teams.map((team) => {
+       console.log(JSON.stringify(team));
+       team.map((group) => {
+          console.log("GROUP:" + JSON.stringify(group["players"]));
+          
+       })
+       
+    })
 
 
    //  for (let key in teams[0]["players"]) {

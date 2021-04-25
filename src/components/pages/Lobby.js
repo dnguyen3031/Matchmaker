@@ -9,7 +9,7 @@ import TeamBuilder from "./TeamBuilder";
 function Lobby(props) {
     const id = props.viewer_id
     //const match_id = props.match_id
-    const match_id = "6084a9a5bb840881f1cf6374"
+    const match_id = props.match_id;
     const [match, setMatch] = useState(props.match);
 
     const [refreshInterval, setRefreshInterval] = useState(2);
