@@ -31,6 +31,7 @@ def make_matches(game):
                 init_misc(full_lobby)
                 full_lobby.save()
                 set_player_lobby(full_lobby)
+                remove_groups(full_lobby)
 
             else:
                 # num players too small, sent back to queue
@@ -38,6 +39,13 @@ def make_matches(game):
             updated_game = Game(game)  # create updated game
             updated_game["_id"] = ObjectId(game["_id"])  # mongoDB doesn't like string IDs
             updated_game.patch()  # create updated game object and update db
+
+
+def remove_groups(full_lobby):
+    temp = Lobby({"_id": full_lobby["_id"]})
+    temp["_id"] = ObjectId(temp["_id"])
+    temp["groups"] = {}
+    temp.delete_field()
 
 
 def init_misc(full_lobby):
@@ -140,7 +148,6 @@ def set_player_lobby(lobby):
     for group in lobby["groups"]:
         for id in group["players"].keys():
             player = User({"_id": id})
-            player.reload()
             player["lobby"] = lobby["_id"]
             player["_id"] = ObjectId(id)
             player.patch()
@@ -217,7 +224,7 @@ def increment_time_elpased(lobbies, clock_delay):
         lob.reload()
         lob["_id"] = ObjectId(lob["_id"])
         lob["time_elapsed"] += clock_delay
-        lob.patch()
+        lob.save()
 
 
 def team_won(lobby):
@@ -241,14 +248,13 @@ def is_over(lob):
     lobby.reload()
     lobby["_id"] = ObjectId(lobby["_id"])
     lobby["time_left"] = 86400 * 0.0001 ** (lobby["total_votes"] / lobby["num_players"]) + game["avg_length"] - lobby["time_elapsed"]
-    lobby.patch()
+    lobby.save()
     return team_won(lobby) or 0 > lobby["time_left"]  # one day = 86400
 
 
 def free_discord(room_name):
     dis = Discord().find_by_name(room_name)[0]
     discord = Discord({"_id": dis["_id"]})
-    discord.reload()
     discord["_id"] = ObjectId(discord["_id"])
     discord["status"] = "open"
     discord.patch()
@@ -270,7 +276,7 @@ def assign_team_elo(team, team_info, oppenent_info, game_name):
             user.reload()
             user["_id"] = ObjectId(user["_id"])
             user["games_table"][game_name]["game_score"] += elo_change
-            user.patch()
+            user.save()
 
 
 def compare_other_teams(team, team_info, teams_info, game_name):
@@ -285,21 +291,21 @@ def assign_elos(lobby):
         compare_other_teams(lobby["teams"][i], lobby["team_info"][i], lobby["team_info"], game["game_name"])
 
 
-def unqueue_players(groups):
-    for group in groups:
-        for player_id in group["players"].keys():
-            user = User({"_id": player_id})
-            user.reload()
-            user["_id"] = ObjectId(user["_id"])
-            user["in_queue"] = False
-            user["lobby"] = None
-            user.patch()
+def unqueue_players(teams):
+    for team in teams:
+        for group in team:
+            for player_id in group["players"].keys():
+                user = User({"_id": player_id})
+                user["_id"] = ObjectId(user["_id"])
+                user["in_queue"] = False
+                user["lobby"] = None
+                user.patch()
 
 
 def terminate_lobby(lobby):
     free_discord(lobby["discord"])
     assign_elos(lobby)
-    unqueue_players(lobby["groups"])
+    unqueue_players(lobby["teams"])
     lob = Lobby({"_id": lobby["_id"]})
     lob.remove()
 
