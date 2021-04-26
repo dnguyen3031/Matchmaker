@@ -121,9 +121,9 @@ function FriendBar(props) {
             <Col key={i}>
                <ListGroup variant="flush">
                   <ListGroup.Item>
-                     <Link onClick={() => {window.location.href='/profile/' + friend._id}}>
+                     <h10 onClick={() => {window.location.href='/profile/' + friend._id}}>
                         {friend.name}
-                     </Link>
+                     </h10>
                   </ListGroup.Item>
                </ListGroup>
             </Col>
