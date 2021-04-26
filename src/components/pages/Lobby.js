@@ -4,13 +4,18 @@ import { Col, Row, Button, Container, Form } from 'react-bootstrap';
 import axios from 'axios';
 import './PageTemplate.css';
 import FriendBar from "../FriendBar";
+import TeamBuilder from "./TeamBuilder";
 
 function Lobby(props) {
     const id = props.viewer_id
-    const match_id = props.match_id
+    //const match_id = props.match_id
+    const match_id = props.match_id;
     const [match, setMatch] = useState(props.match);
 
     const [refreshInterval, setRefreshInterval] = useState(2);
+
+    const [winningTeam, setWinningTeam] = useState('Draw');
+    const [disabled, setDisabled] = useState(false);
 
     async function getMatch(match_id) {
         // console.log(match_id)
@@ -43,8 +48,14 @@ function Lobby(props) {
             return () => clearInterval(interval);
         }
     }, [refreshInterval]);
+
+    function sendWinningTeam() {
+       console.log(winningTeam);                  // send to backend which team was selected
+       setDisabled(true); // Disable the radio buttons 
+    }
     // console.log(match)
     // console.log(match_id)
+
     if (match) {
         return <div> 
             <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
@@ -54,7 +65,10 @@ function Lobby(props) {
                     <Col xs={8} className="pr-0 main-col">
                     <Row>
                         <Col>
-                           <Row>
+                           <h6 style={{color: 'black'}}> Discord: {match.discord}</h6>
+                           {console.dir(match)}
+                           <TeamBuilder match_id={match_id} teams={match["teams"]}></TeamBuilder>
+                           {/* <Row>
                               <Col>
                                  <h4 style={{color: 'red'}}> Team 1</h4>
                                  <TeamTable team={match.teams[0]}/>
@@ -68,7 +82,7 @@ function Lobby(props) {
                                  <h4 style={{color: 'blue'}}> Team 2</h4>
                                  <TeamTable team={match.teams[1]}/>
                               </Col>
-                           </Row>
+                           </Row> */}
                         </Col>
                         <Col md={3}>
                             <FriendBar _id={props.viewer_id}/>
@@ -88,12 +102,42 @@ function Lobby(props) {
             <Col xs={8} className="pr-0 main-col">
                <Row>
                   <Col>
-                        <h2 style={{color: 'white'}}> Lobby</h2>
-                        <h4 style={{color: 'red'}}> Team 1</h4>
-                        <h4 style={{color: 'whte'}}> Match info</h4>
-                        <h4 style={{color: 'blue'}}> Team 2</h4>
+                     <Row>
+                        <Col>
+                           <h4 style={{color: 'red'}}> Team 1</h4>
+                        </Col>
+                        <Col>
+                           <h2 style={{color: 'white'}}> Lobby</h2>
+                           <h4 style={{color: 'white'}}> Match info</h4>
+                           <h6 style={{color: 'black'}}> Discord:</h6>
+                        </Col>
+                        <Col>
+                           <h4 style={{color: 'blue'}}> Team 2</h4>
+                        </Col>
+                     </Row>
+                     <Row>
+                        <Col />
+                        <Col md={5}>
+                           <Row>
+                              Which team won?
+                           </Row>
+                           <Row>
+                              <div className="form-check">
+                                 <input className="form-check-input" type="radio" onChange={() => setWinningTeam("Team A")} name="choseWinningTeam" disabled={disabled}/>
+                                 <label className="form-check-label" for="teamA">Team A</label>
+                              </div>
+                              <div className="form-check">
+                                 <input className="form-check-input" type="radio" onChange={() => setWinningTeam("Team B")} name="choseWinningTeam" disabled={disabled}/>
+                                 <label className="form-check-label" for="teamB">Team B</label>
+                              </div>
+                           </Row>
+                           <Row>
+                              <Button variant="secondary" onClick={sendWinningTeam}>Submit</Button>
+                           </Row>
+                        </Col>
+                        <Col />
+                     </Row>
                   </Col>
-
                   <Col md={3}>
                      <FriendBar _id={props.viewer_id}/>
                   </Col>
@@ -107,21 +151,13 @@ function Lobby(props) {
 
 function TeamTable(props)
 {
-    // console.log(props)
-    // console.log(props.teams)
-    // console.log(props.teams[0])
-    // console.log(props.team)
-    // console.log(Object.props)
-    // console.log(Object.props.team)
     const rows = props.team.map((group) => {
-        // console.log(group)
         return (
             <tr>
                 <Players group={group}/>
             </tr>
         );
     })
-    // console.log(rows)
     return (
         <tbody>
             {rows}
@@ -131,11 +167,7 @@ function TeamTable(props)
 
 function Players(props)
 {
-    // console.log(props)
     const players = Object.keys(props.group.players).map((player, index) => {
-        // console.log("player info")
-        // console.log(player)
-        // console.log(name)
         return (
             <tr>
                 <td>{props.group.players[player]}</td>

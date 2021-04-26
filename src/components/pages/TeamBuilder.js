@@ -11,6 +11,12 @@ function TeamBuilder(props) {
     const [scores, setScores] = useState([1, 1]);
     const [disabled, setDisabled] = useState(false);
    //  console.dir(teams);
+    
+    const options = props.teams.map((team, index) => {
+       return (
+          <option value={index + 1}>{index + 1}</option>
+       )
+    })
 
     function scoreATeam(index, place) {  // Helper function that is passed down to each select menu
       scores[index] = place;
@@ -41,7 +47,7 @@ function TeamBuilder(props) {
        return (
           <div>
          <Col>
-            <TeamTable team={team} index={index} scoreATeam={scoreATeam} scores={scores} disabled={disabled}/>
+            <TeamTable team={team} options={options} index={index} scoreATeam={scoreATeam} scores={scores} disabled={disabled}/>
          </Col>
        </div>
        )
@@ -66,10 +72,9 @@ function TeamTable(props)
     return (
         <div>
            <select disabled={props.disabled} onChange={(e) => props.scoreATeam(props.index, e.target.value)}>
-              <option value={1}>1st</option>
-              <option value={2}>2nd</option>
-              <option value={3}>3rd</option>
-              <option value={4}>4th</option>
+              {props.options}
+              {/* <option value={1}>1st</option>
+              <option value={2}>2nd</option> */}
            </select>
 
         <h3>Team {props.index}</h3>
