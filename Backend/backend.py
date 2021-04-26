@@ -77,10 +77,18 @@ def get_groups():
         groups = Group().find_all()
         return {"groups_list": groups}
     elif request.method == 'POST':
-        group_to_add = request.get_json()
-        new_group = Group(group_to_add)
-        new_group.save()
-        resp = jsonify(new_group._id), 201
+        userID = request.args.get('userID')
+        if userID != None:
+            user = User({"_id": userID})
+            user.reload()
+
+            if user.get('group') != None:
+                resp = jsonify('You are already in a group!'), 400
+                return resp
+        groupToAdd = request.get_json()
+        newGroup = Group(groupToAdd)
+        newGroup.save()
+        resp = jsonify(newGroup._id), 201
         return resp
 
 
@@ -113,16 +121,23 @@ def join_group():
         groupID = request.args.get('group')
         userID = request.args.get('id')
         group = Group({"_id": groupID})
-        user = User({"_id": userID})
         group.reload()
+
+        user = User({"_id": userID})
         user.reload()
-        groupUsers = group.get('players')
-        groupUsers[userID] = user["name"]
-        # groupUsers = list(set(groupUsers))
-        group['players'] = groupUsers
+        
+        if user.get('group') != None:
+            resp = jsonify('You are already in a group!'), 400
+            return resp
+
+        groupPlayers = group.get('players')
+        groupPlayers[userID] = user.get('name')
+        group['players'] = groupPlayers
+        group['num_players'] += 1
         group["_id"] = ObjectId(groupID)
         group.patch()
 
+        
         user['group'] = groupID
         user["_id"] = ObjectId(userID)
         user.patch()
@@ -138,15 +153,22 @@ def leave_group():
         userID = request.args.get('id')
         group = Group({"_id": groupID})
         group.reload()
-        groupUsers = group.get('players')
-        groupUsers.remove(userID)
-        groupUsers = list(set(groupUsers))
-        group['players'] = groupUsers
-        group["_id"] = ObjectId(groupID)
-        group.patch()
-
         user = User({"_id": userID})
         user.reload()
+
+        poppedValue = group['players'].pop(str(userID))
+        if poppedValue != user.get('name'):
+            resp = jsonify(poppedValue), 400
+            return resp
+
+        group['num_players'] -= 1
+        group["_id"] = ObjectId(groupID)
+        
+        if group['num_players'] == 0:
+            group.remove()
+        else:
+            group.save()
+
         user['group'] = None
         user["_id"] = ObjectId(userID)
         user.patch()
@@ -306,6 +328,28 @@ def get_discords():
         newDiscord.save()
         resp = jsonify(newDiscord), 201
         return resp
+
+@app.route('/users/submit-results2', methods=['PATCH'])
+def submit_results2():
+    if request.method == 'PATCH':
+        #THIS ONE IS TO BE USED WHEN MATCHES ARE IMPLEMENTED (USER HAS MATCH INFO IN SELF) which contains 'team_elo', 'opp_elo'
+        results = request.get_json()
+        #print(results)
+        #for key, value in results.items():
+        #    print(key, value)
+        #print(results['user_id'])
+        #print(results.user_id)
+        user = User({"_id": results['user_id']})
+        if user.reload():
+            elo = user.current_match['team_elo']
+            new_elo = calc_elo(int(elo),int(user.current_match['opp_elo']), float(results['win']))
+            user.games_table[results['game_name']]['game_score'] += (new_elo - elo)
+            user["_id"] = ObjectId(results['user_id'])
+            user.patch()
+            resp = jsonify(user), 201
+            return resp
+        else:
+            return jsonify({"error": "User not found"}), 404
 
 
 @app.route('/discords/<id>', methods=['GET', 'DELETE', 'PATCH'])

@@ -1,26 +1,38 @@
 import React from 'react';
-import { Button, Card, Col, Row, Accordion, ListGroup } from "react-bootstrap";
+import { Button, Card, Col, Row, Accordion, ListGroup} from "react-bootstrap";
 import Collapse from 'react-bootstrap/Collapse';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 function FriendBar(props) {
-   const [user, setUser] = React.useState({ 
+   const [user, setUser] = React.useState({
+                                 _id: "", 
                                  email: "",
+                                 group: "",
                                  friends: {},
                                  games_table: {}, 
                                  name: "",
                                  password: "",
                                  profile_info: {bio: "", discord: "", profile_pic: "", steam_friend_code: "", steam_name: ""}});
 
+   const [usergroup, setGroup] = React.useState({_id: "", num_players: "", players: {}});
+
    React.useEffect(() => {
       fetchUser(props._id).then( result => {
          if (result) {
             setUser(result);
          }
-      });
+      });      
    }, []);
-   
+
+   React.useEffect(() => {
+      fetchGroup(user.group).then( result => {
+         if (result) {
+            setGroup(result);
+         }
+      });      
+   }, []);
+      
    async function fetchUser(_id){
       try {
          const response = await axios.get('http://127.0.0.1:5000/users/' + _id);
@@ -32,7 +44,18 @@ function FriendBar(props) {
       }
    }
 
-   return <div> 
+   async function fetchGroup(_id){
+      try {
+         const response = await axios.get('http://127.0.0.1:5000/groups/' + _id);
+         return response.data;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
+   }
+
+   return <div style={{ fontSize: 14 }}> 
       <Accordion defaultActiveKey="0">
          <Card>
             <Accordion.Toggle as={Card.Header} eventKey="0" className="text-center">
@@ -41,6 +64,23 @@ function FriendBar(props) {
          <Accordion.Collapse eventKey="0">
             <Card.Body className="pl-0">
                <FriendsList list={user.friends}></FriendsList>
+            </Card.Body>
+         </Accordion.Collapse>
+         </Card>
+      </Accordion>
+      <Accordion defaultActiveKey="0">
+         <Card>
+            <Accordion.Toggle as={Card.Header} eventKey="0" className="text-center">
+               Your Group
+            </Accordion.Toggle>
+         <Accordion.Collapse eventKey="0">
+            <Card.Body className="pl-0">
+               Group Code: {"\n"}
+               {user.group} {"\n"}
+               Group members
+               {/*
+               <li>{usergroup.players}</li>
+               */}
             </Card.Body>
          </Accordion.Collapse>
          </Card>

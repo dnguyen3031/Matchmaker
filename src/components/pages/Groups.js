@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Container, Row, Col, Form, FormControl, FormGroup, Modal}
 from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
@@ -12,6 +12,8 @@ function Groups(props) {
                         
    const [groupcode, setgroupcode] = useState('');
 
+   const [user, setUser] = useState({group: "", _id: "", name: ""});
+
    /*Error Model*/
    const [showError, setErrorShow] = useState(false);
    const handleErrorClose = () => setErrorShow(false);
@@ -22,10 +24,35 @@ function Groups(props) {
    const handleSuccessClose = () => setSuccessShow(false);
    const handleSuccessShow = () => setSuccessShow(true);
 
+   async function fetchUser(id){
+      try {
+         // get character at index 's id number
+         const response = await axios.get('http://127.0.0.1:5000/users/' + props.viewer_id);
+         // console.log(response)
+         return response;
+      }
+      catch (error) {
+         console.log(error);
+         return false;
+      }
+   }
+
+   useEffect(() => {
+      fetchUser(props.viewer_id).then( result => {
+         if (result) {
+            setUser(result.data);
+            console.log("got user")
+         } else {
+            console.log("failed to get user")
+         }
+      });
+   }, []);
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      var jsonData = { "players": [props.viewer_id] };
+      var playerdict = {};
+      playerdict[props.viewer_id] = user.name;
+      var jsonData = {"players": playerdict, "num_players": 1 };
       postGroup(jsonData).then( result => {
          if (result.status == 201) {
             console.log('Created Successfully')
@@ -53,7 +80,7 @@ function Groups(props) {
       try {
          // get character at index 's id number
          console.log(group);
-         const response = await axios.post('http://127.0.0.1:5000/groups', group);
+         const response = await axios.post('http://127.0.0.1:5000/groups?userID='+props.viewer_id, group);
          console.log(response.data);
          var group = { group: response.data };
          response = await axios.patch('http://127.0.0.1:5000/users/' + props.viewer_id, group)
@@ -106,46 +133,72 @@ function Groups(props) {
          return false;
       }
    }
-
-
-   return <div> 
+   if (!user.group) {
+      return <div> 
+         <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+         <Container fluid> 
+            <Row>
+               <Col className="side-col" />
+               <Col xs={8} className="pr-0">
+                  <Row>
+                     <Col>
+                        <FormGroup controlId="username">
+                           <Form.Label>Enter Group Code</Form.Label>
+                           <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
+                        </FormGroup>
+                        <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
+                     </Col>
+                     <Col md={3}>
+                        <FriendBar _id={props.viewer_id}/>
+                     </Col>
+                  </Row>
+                  <Row>
+                     <Col>
+                        OR
+                     </Col>
+                  </Row>
+                  <Row>
+                     <Col>
+                        <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
+                     </Col>
+                  </Row>
+               </Col>
+               <Col className="side-col" />
+            </Row>
+         </Container>
+      </div>;
+   }
+   else
+   {
+      return <div> 
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid> 
          <Row>
             <Col className="side-col" />
             <Col xs={8} className="pr-0">
-               <Row>
+            <Row>
                   <Col>
-                     <FormGroup controlId="username">
-                        <Form.Label>Enter Group Code</Form.Label>
-                        <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
-                     </FormGroup>
-                     <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewer_id}/>
+                  <Form.Label>Group Code: {user.group}</Form.Label>
                   </Col>
                </Row>
                <Row>
-                  <Col>
-                     OR
-                  </Col>
-               </Row>
-               <Row>
-                  <Col>
-                     <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
-                  </Col>
-               </Row>
-               <Row>
+                  
                   <Col>
                      <Button variant="primary" onClick = {leaveSubmit}>Leave Group</Button>{' '}
+                  </Col>
+                  <Col md={3}>
+                        <FriendBar _id={props.viewer_id}/>
                   </Col>
                </Row>
             </Col>
             <Col className="side-col" />
          </Row>
       </Container>
-   </div>;
+      </div>;
+   }
  }
- 
+
 export default Groups;
+
+
+

@@ -69,6 +69,7 @@ function ProfilePage(props) {
       }
    }
 
+   /**/
    function updateUser(change) { 
       makePatchCall(change).then( result => {
          if (result.status === 201) {
