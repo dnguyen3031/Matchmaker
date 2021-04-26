@@ -398,20 +398,19 @@ def get_next_discord():
         return {"room_name": nextOpen["room_name"]}
 
 
-@app.route('/users/submit-results/<id>', methods=['PATCH'])
+@app.route('/lobbies/submit-results/<id>', methods=['PATCH'])
 def submit_results(id):
     if request.method == 'PATCH':
         results = request.get_json()
-        # should be formatted like:
-        # {
-        #     "win": "team 1"
-        # }
         lobby = Lobby({"_id": id})
         if not lobby.reload():
             return jsonify({"error": "Lobby not found"}), 404
-        # lobby["_id"] = ObjectId(id)
-        lobby["team_info"][results["win"]]["votes"] += 1
+        lobby["_id"] = ObjectId(id)
+        ranking = results["ranking"]
+        for i in range(len(ranking)):
+            lobby["team_info"][i]["votes"][ranking[i] - 1] += 1
         lobby["total_votes"] += 1
-        # game = Game({"_id": lobby["game_id"]})
-        # game.reload()
-        # if lobby["total_votes"] >= 0.8*game["num_players"]:
+        lobby.patch()
+
+        resp = jsonify(lobby), 200
+        return resp

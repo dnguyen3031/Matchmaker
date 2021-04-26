@@ -47,7 +47,7 @@ function Matchmaking(props) {
                         <Dropdown>
                         </Dropdown>
                         <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-                           <Dropdown.Item onClick={addToQueue}>Krunker</Dropdown.Item>
+                           <Dropdown.Item onClick={addToQueue}>Krunker - Hardpoint</Dropdown.Item>
                            <Dropdown.Item href="#/action-2">Minecraft</Dropdown.Item>
                            <Dropdown.Item href="#/action-3">idk</Dropdown.Item>
                         </DropdownButton>
@@ -92,9 +92,7 @@ function Matchmaking(props) {
 
    async function makePatchCall(){
       try{
-         const response= await axios.patch(
-            'http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker - Hardpoint&id='
-            +props.viewer_id)
+         const response= await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker - Hardpoint&id='+props.viewer_id)
          return response;
       }
       catch(error){

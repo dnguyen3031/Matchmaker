@@ -196,3 +196,9 @@ class Discord(Model):
         for discord in discords:
             discord["_id"] = str(discord["_id"])  # converting ObjectId to str
         return discords
+
+    def find_by_name(self, room_name):
+        discords = list(self.collection.find({"room_name": room_name}))
+        for discord in discords:
+            discord["_id"] = str(discord["_id"])
+        return discords
