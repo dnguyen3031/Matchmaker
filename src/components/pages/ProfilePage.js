@@ -10,6 +10,7 @@ import {
 function ProfilePage(props) {
    const viewer_id = props.viewer_id;
    const id = useParams().id;
+   // console.log(id)
 
    const [user, setUser] = useState({email: "", 
                                  profile_info: {discord: "", profile_pic: "", bio: ""},

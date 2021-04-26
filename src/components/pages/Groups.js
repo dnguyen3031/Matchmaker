@@ -60,6 +60,7 @@ function Groups(props) {
          else{
             console.log('failed to create group')
          }
+         window.location.reload(false);
       });
    }
 
@@ -72,6 +73,7 @@ function Groups(props) {
          else{
             console.log('failed to add to group')
          }
+         window.location.reload(false);
       });
    }
 
@@ -114,6 +116,7 @@ function Groups(props) {
          else{
             console.log('failed to leave group')
          }
+         window.location.reload(false);
       });
    }
 

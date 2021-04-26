@@ -21,17 +21,18 @@ function FriendBar(props) {
       fetchUser(props._id).then( result => {
          if (result) {
             setUser(result);
+            fetchGroup(result.group).then( result => {
+               if (result) {
+                  setGroup(result);
+               }
+            });  
          }
-      });      
+      });         
    }, []);
 
-   React.useEffect(() => {
-      fetchGroup(user.group).then( result => {
-         if (result) {
-            setGroup(result);
-         }
-      });      
-   }, []);
+   // React.useEffect(() => {
+          
+   // }, []);
       
    async function fetchUser(_id){
       try {
@@ -55,6 +56,10 @@ function FriendBar(props) {
       }
    }
 
+   // console.log("user.friends")
+   // console.log(user.friends)
+   // console.log("usergroup.players")
+   // console.log(usergroup.players)
    return <div style={{ fontSize: 14 }}> 
       <Accordion defaultActiveKey="0">
          <Card>
@@ -78,6 +83,7 @@ function FriendBar(props) {
                Group Code: {"\n"}
                {user.group} {"\n"}
                Group members
+               <FriendsList list={usergroup.players}></FriendsList>
                {/*
                <li>{usergroup.players}</li>
                */}
@@ -88,49 +94,49 @@ function FriendBar(props) {
              
    </div>;
 
-function FriendsList(props) {
-   
-   const [friendList, setFriendList] = React.useState([]);
-   const [responseList, setResponseList] = React.useState([]);
+   function FriendsList(props) {
+      
+      const [friendList, setFriendList] = React.useState([]);
+      const [responseList, setResponseList] = React.useState([]);
 
-   async function getAllFriends() {
-      for (var key in props.list) {
-         if (props.list[key] !== "Deleted") {
-            const response = await fetchUser(key);
-            setFriendList(friendList => [... friendList, response.name]);
-            setResponseList(responseList => [... responseList, response]);
-         } else {
-            console.log(key + " is a deleted friend.");
+      async function getAllFriends() {
+         for (var key in props.list) {
+            if (props.list[key] !== "Deleted") {
+               const response = await fetchUser(key);
+               setFriendList(friendList => [... friendList, response.name]);
+               setResponseList(responseList => [... responseList, response]);
+            } else {
+               console.log(key + " is a deleted friend.");
+            }
+            
          }
-         
       }
-   }
 
-   React.useEffect(() => {
-      getAllFriends();
-   }, []);
+      React.useEffect(() => {
+         getAllFriends();
+      }, []);
 
-   const rows = responseList.map((friend, i) => {
+      const rows = responseList.map((friend, i) => {
+         return (
+            <Col key={i}>
+               <ListGroup variant="flush">
+                  <ListGroup.Item>
+                     <Link onClick={() => {window.location.href='/profile/' + friend._id}}>
+                        {friend.name}
+                     </Link>
+                  </ListGroup.Item>
+               </ListGroup>
+            </Col>
+         )
+      })
+
       return (
-         <Col key={i}>
-            <ListGroup variant="flush">
-               <ListGroup.Item>
-                  <Link to={'/profile/' + friend._id} >
-                     {friend.name}
-                  </Link>
-               </ListGroup.Item>
-            </ListGroup>
-         </Col>
-      )
-   })
-
-   return (
-      <div>
-         {rows}
-      </div>
-   );
-   
+         <div>
+            {rows}
+         </div>
+      );
+      
    }
- }
+}
 
 export default FriendBar;
