@@ -7,4 +7,4 @@ install:
 # safelist
 branches:
   only:
-  - Sprint4-Development
+  - Sprint5-Development
