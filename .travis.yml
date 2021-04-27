@@ -1,5 +1,7 @@
 language: node_js
 # command to install dependencies
+node_js:
+  - 12
 install:
   - npm install
 # safelist
