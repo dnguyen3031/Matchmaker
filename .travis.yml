@@ -1,10 +1,10 @@
-language: python
+language: node_js
 # command to install dependencies
-script:
- - cd Backend
 install:
-  - pip install -r requirements.txt
+  - npm install
 # safelist
+script: 
+ -npm run build
 branches:
   only:
   - Sprint5-Development
