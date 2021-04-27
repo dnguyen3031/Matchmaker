@@ -1,5 +1,20 @@
-# Matchmaker
-CSC 308-309, Team A's Project
+# Matchmaker Platform
+
+For user install:
+
+## Getting Started for Developers 
+
+### Clone the repository
+ git clone https://github.com/dnguyen3031/Matchmaker.git
+
+
+#### Run the frontend
+1. npm start 
+ (if its your first time, you might need to run 
+npm install
+)
+
+For Future Collaborators:
 
 Style Guide for JavaScript: https://google.github.io/styleguide/jsguide.html
 
