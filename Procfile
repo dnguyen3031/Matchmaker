@@ -1,1 +1,1 @@
-web:  start-backend.bat
+web: gunicorn backend::app
