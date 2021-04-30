@@ -1,12 +1,12 @@
-language: python
+language: node_js
 
-before_install:
- - cd Backend
+node_js:
+ - 12
 
 install:
- - pip install -r requirements.txt
+ - npm install
   
 script:
- - echo ""
- # - pytest
+ - npm run build
+ # - npm test
  
