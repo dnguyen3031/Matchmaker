@@ -1,57 +1,111 @@
 import time
 
-from flask import Flask
-from flask import request
-from flask import jsonify
-from flask_cors import CORS
-
 from mongodb import *
 from bson import ObjectId
 from ELO import *
 
 
-def make_matches(game):
-    for lobby in game["queue"]:
-        # print("lobby: ")
-        # print(lobby)
-        matched_lobby = find_suitable(game, lobby)
-        # print("matched_lobby: ")
-        # print(matched_lobby)
-        if matched_lobby is not None:
-            merged_lobby = merge_matches(game, lobby, matched_lobby)
-            if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
-                # send lobby to in progress
-                # print("lobby to add")
-                full_lobby = Lobby(merged_lobby)
-                # print("full_lobby", full_lobby)
-                assignteams(full_lobby)
-                # print("full_lobby", full_lobby)
-                assign_discord(full_lobby)
-                add_team_info(full_lobby)
-                init_misc(full_lobby)
-                full_lobby.save()
-                set_player_lobby(full_lobby)
-                remove_groups(full_lobby)
+def within_range(lobby, o_lobby):
+    higher_lobby = o_lobby
+    lower_lobby = lobby
+    if lobby["avg_elo"] > o_lobby["avg_elo"]:
+        higher_lobby = lobby
+        lower_lobby = o_lobby
 
-            else:
-                # num players too small, sent back to queue
-                game["queue"].append(merged_lobby)
-            updated_game = Game(game)  # create updated game
-            updated_game["_id"] = ObjectId(game["_id"])  # mongoDB doesn't like string IDs
-            updated_game.patch()  # create updated game object and update db
+    l_lobby_upper_bound = lower_lobby["avg_elo"] + lower_lobby["window_size"]
+    h_lobby_lower_bound = higher_lobby["avg_elo"] - higher_lobby["window_size"]
+
+    if l_lobby_upper_bound >= higher_lobby["avg_elo"] and h_lobby_lower_bound <= lower_lobby["avg_elo"]:
+        return True
+    return False
 
 
-def remove_groups(full_lobby):
-    temp = Lobby({"_id": full_lobby["_id"]})
-    temp["_id"] = ObjectId(temp["_id"])
-    temp["groups"] = {}
-    temp.delete_field()
+def check_sizes(lobby, o_lobby, num_players_needed):
+    # 1 means >  (lobby too big)
+    # 0 means =  (lobby just right)
+    # -1 means < (lobby too small)
+    if lobby["num_players"] + o_lobby["num_players"] > num_players_needed:
+        return 1
+    if lobby["num_players"] + o_lobby["num_players"] == num_players_needed:
+        return 0
+    return -1
 
 
-def init_misc(full_lobby):
-    full_lobby["time_elapsed"] = 0
-    full_lobby["total_votes"] = 0
-    full_lobby["time_left"] = 86400
+def find_suitable(game, lobby):
+    for o_lobby in game["queue"]:
+        if o_lobby != lobby:
+            if within_range(lobby, o_lobby) and not (check_sizes(lobby, o_lobby, game["num_players"]) == 1):
+                return o_lobby
+    return None
+
+
+def merge_matches(game, lobby, matched_lobby):
+    # TODO: record avg elo for each groop for team-making purposes
+    merged_elo = (lobby["avg_elo"] * lobby["num_players"] + matched_lobby["avg_elo"] * matched_lobby["num_players"]) / (
+            lobby["num_players"] + matched_lobby["num_players"])
+    merged_groups = lobby["groups"] + matched_lobby["groups"]
+    merged_num_players = lobby["num_players"] + matched_lobby["num_players"]
+    larger_window_size = max(lobby["window_size"], matched_lobby["window_size"])
+    merged_lobby = {
+        "avg_elo": merged_elo,
+        "game_id": lobby["game_id"],
+        "groups": merged_groups,
+        "num_players": merged_num_players,
+        "window_size": larger_window_size,
+    }
+    game["queue"].remove(lobby)
+    game["queue"].remove(matched_lobby)
+    return merged_lobby
+
+
+def largest_group(unused_groups):
+    largest_group = 0
+    for i in range(len(unused_groups)):
+        if len(unused_groups[i]["players"].keys()) > len(unused_groups[largest_group]["players"].keys()):
+            largest_group = i
+    return unused_groups.pop(largest_group)
+
+
+def find_best_teams(groups):
+    team1, team2 = {"size": 0, "groups": []}, {"size": 0, "groups": []}
+    unused_groups = [] + groups
+    for i in range(len(groups)):
+        if team1["size"] > team2["size"]:
+            temp = largest_group(unused_groups)
+            team2["groups"] += [temp]
+            team2["size"] += len(temp["players"].keys())
+        else:
+            temp = largest_group(unused_groups)
+            team1["groups"] += [temp]
+            team1["size"] += len(temp["players"].keys())
+    return team1["groups"], team2["groups"]
+
+
+def assignteams(full_lobby):
+    game = Game({"_id": full_lobby["game_id"]})
+    game.reload()
+    team1, team2 = find_best_teams(full_lobby["groups"])
+    full_lobby["teams"] = [team1, team2]
+
+
+def get_next_discord():
+    discords = Discord().find_all()
+    next_open = None
+    i = 0
+    while not next_open:
+        if i >= len(discords):
+            next_open = {"room_name": "all rooms taken"}
+        elif discords[i]["status"] == "open":
+            next_open = discords[i]
+        i += 1
+
+    if next_open != {"room_name": "all rooms taken"}:
+        next_open["_id"] = ObjectId(next_open["_id"])
+        next_open["status"] = "taken"
+        new_discord = Discord(next_open)
+        new_discord.patch()
+
+    return {"room_name": next_open["room_name"]}
 
 
 def get_adv_elo(team, game_id):
@@ -77,70 +131,13 @@ def add_team_info(full_lobby):
     full_lobby["team_info"] = team_info
 
 
-def get_next_discord():
-    discords = Discord().find_all()
-    nextOpen = None
-    i = 0
-    while not nextOpen:
-        if i >= len(discords):
-            nextOpen = {"room_name": "all rooms taken"}
-        elif discords[i]["status"] == "open":
-            nextOpen = discords[i]
-        i += 1
-
-    if nextOpen != {"room_name": "all rooms taken"}:
-        # discordToUpdate = nextOpen
-        nextOpen["_id"] = ObjectId(nextOpen["_id"])
-        nextOpen["status"] = "taken"
-        newDiscord = Discord(nextOpen)
-        newDiscord.patch()
-
-    return {"room_name": nextOpen["room_name"]}
-
-
-def assign_discord(full_lobby):
-    # print("assiging discord")
-    # discord =
-    # print(discord)
+def init_full_lobby(full_lobby):
+    assignteams(full_lobby)
     full_lobby["discord"] = get_next_discord()["room_name"]
-    # print("discord: ", full_lobby["discord"])
-
-
-def assignteams(full_lobby):
-    # print("assiging teams")
-    game = Game({"_id": full_lobby["game_id"]})
-    game.reload()
-    team1, team2 = find_best_teams(full_lobby["groups"])
-    full_lobby["teams"] = [team1, team2]
-    # print("teams", team1, " ", team2)
-
-
-def find_best_teams(groups):
-    team1, team2 = {"size": 0, "groups": []}, {"size": 0, "groups": []}
-    unused_groups = [] + groups
-    # print("unused_groups ", unused_groups)
-    for i in range(len(groups)):
-        if team1["size"] > team2["size"]:
-            temp = largest_group(unused_groups)
-            # print("temp: ", temp)
-            team2["groups"] += [temp]
-            team2["size"] += len(temp["players"].keys())
-        else:
-            temp = largest_group(unused_groups)
-            # print("temp: ", temp)
-            team1["groups"] += [temp]
-            team1["size"] += len(temp["players"].keys())
-    # print("team1 ", team1)
-    # print("team2 ", team2)
-    return team1["groups"], team2["groups"]
-
-
-def largest_group(unused_groups):
-    largest_group = 0
-    for i in range(len(unused_groups)):
-        if len(unused_groups[i]["players"].keys()) > len(unused_groups[largest_group]["players"].keys()):
-            largest_group = i
-    return unused_groups.pop(largest_group)
+    add_team_info(full_lobby)
+    full_lobby["time_elapsed"] = 0
+    full_lobby["total_votes"] = 0
+    full_lobby["time_left"] = 86400
 
 
 def set_player_lobby(lobby):
@@ -153,64 +150,34 @@ def set_player_lobby(lobby):
             player.patch()
 
 
-def merge_matches(game, lobby, matched_lobby):
-    # takes the two lobbies, removes them from game and returns a merged lobby
-    # TODO: record avg elo for each groop for team-making purposes
-    merged_elo = (lobby["avg_elo"] * lobby["num_players"] + matched_lobby["avg_elo"] * matched_lobby["num_players"]) / (
-            lobby["num_players"] + matched_lobby["num_players"])
-    merged_groups = lobby["groups"] + matched_lobby["groups"]
-    merged_num_players = lobby["num_players"] + matched_lobby["num_players"]
-    larger_window_size = max(lobby["window_size"], matched_lobby["window_size"])
-    merged_lobby = {
-        "avg_elo": merged_elo,
-        "game_id": lobby["game_id"],
-        "groups": merged_groups,
-        "num_players": merged_num_players,
-        "window_size": larger_window_size,
-    }
-    game["queue"].remove(lobby)
-    game["queue"].remove(matched_lobby)
-    return merged_lobby
+def remove_groups(full_lobby):
+    temp = Lobby({"_id": full_lobby["_id"]})
+    temp["_id"] = ObjectId(temp["_id"])
+    temp["groups"] = {}
+    temp.delete_field()
 
 
-def find_suitable(game, lobby):
-    for o_lobby in game["queue"]:
-        if o_lobby != lobby:
-            if within_range(lobby, o_lobby) and not (check_sizes(lobby, o_lobby, game["num_players"]) == 1):
-                return o_lobby
-    return None
-
-
-def check_sizes(lobby, o_lobby, num_players_needed):
-    # 1 means >  (lobby too big)
-    # 0 means =  (lobby just right)
-    # -1 means < (lobby too small)
-    if lobby["num_players"] + o_lobby["num_players"] > num_players_needed:
-        return 1
-    if lobby["num_players"] + o_lobby["num_players"] == num_players_needed:
-        return 0
-    return -1
-
-
-def within_range(lobby, o_lobby):
-    higher_lobby = o_lobby
-    lower_lobby = lobby
-    if lobby["avg_elo"] > o_lobby["avg_elo"]:
-        higher_lobby = lobby
-        lower_lobby = o_lobby
-
-    l_lobby_upper_bound = lower_lobby["avg_elo"] + lower_lobby["window_size"]
-    h_lobby_lower_bound = higher_lobby["avg_elo"] - higher_lobby["window_size"]
-
-    if l_lobby_upper_bound >= higher_lobby["avg_elo"] and h_lobby_lower_bound <= lower_lobby["avg_elo"]:
-        return True
-    return False
+def make_matches(game):
+    for lobby in game["queue"]:
+        matched_lobby = find_suitable(game, lobby)
+        if matched_lobby is not None:
+            merged_lobby = merge_matches(game, lobby, matched_lobby)
+            if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
+                full_lobby = Lobby(merged_lobby)
+                init_full_lobby(full_lobby)
+                full_lobby.save()
+                set_player_lobby(full_lobby)
+                remove_groups(full_lobby)
+            else:
+                game["queue"].append(merged_lobby)
+            updated_game = Game(game)
+            updated_game["_id"] = ObjectId(game["_id"])
+            updated_game.patch()
 
 
 def expand_window(game):
     window_increment = 10
     print("expanding")
-    # print(game)
     for lobby in game["queue"]:
         lobby["window_size"] += window_increment  # use dot operator?
     updated_game = Game(game)  # create updated game
@@ -237,7 +204,6 @@ def team_won(lobby):
                 got_votes = True
         if not got_votes:
             is_over = False
-    # print(is_over)
     return is_over
 
 

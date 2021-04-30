@@ -31,9 +31,6 @@ class Model(dict):
         else:
             old_entry = self.collection.find_one({"_id": ObjectId(self._id)})
             self.merge_dict(self, old_entry)
-            # for field in old_entry.keys():
-            #     if field not in self:
-            #         self.update({field: old_entry[field]})
             self.collection.update(
                 {"_id": ObjectId(self._id)}, self)
         self._id = str(self._id)
@@ -71,18 +68,15 @@ class Model(dict):
 
 
 class User(Model):
-    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
-
     db_client = pymongo.MongoClient(
         "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
-    # db = client.test
 
     collection = db_client["users"]["users_list"]
 
     def find_all(self):
         users = list(self.collection.find())
         for user in users:
-            user["_id"] = str(user["_id"])  # converting ObjectId to str
+            user["_id"] = str(user["_id"])
         return users
 
     def find_by_name(self, name):
@@ -92,20 +86,15 @@ class User(Model):
         return users
 
     def secure_find_by_name(self, name):
-        #does not return password ect. for security reasons
+        # does not return password ect. for security reasons
         cleaned_users = []
         users = self.find_all()
         users_copy = users.copy()
-        #need copy for iteration only
         for user in users_copy:
-            #case insensitive
             if user["name"].lower() != name.lower():
                 users.remove(user)
         for user in users:
-            user_copy = {}
-            user_copy["_id"] = str(user["_id"])
-            user_copy["name"] = user["name"]
-            user_copy["profile_info"] = user["profile_info"]
+            user_copy = {"_id": str(user["_id"]), "name": user["name"], "profile_info": user["profile_info"]}
             cleaned_users.append(user_copy)
         return cleaned_users
 
@@ -115,34 +104,30 @@ class User(Model):
             user["_id"] = str(user["_id"])
         return users
 
-class Group(Model):
-    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
 
+class Group(Model):
     db_client = pymongo.MongoClient(
         "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
-    # db = client.test
 
     collection = db_client["groups"]["groups_list"]
 
     def find_all(self):
         groups = list(self.collection.find())
         for group in groups:
-            group["_id"] = str(group["_id"])  # converting ObjectId to str
+            group["_id"] = str(group["_id"])
         return groups
 
-class Game(Model):
-    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
 
+class Game(Model):
     db_client = pymongo.MongoClient(
         "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
-    # db = client.test
 
     collection = db_client["games"]["games_list"]
 
     def find_all(self):
         games = list(self.collection.find())
         for game in games:
-            game["_id"] = str(game["_id"])  # converting ObjectId to str
+            game["_id"] = str(game["_id"])
         return games
 
     def find_by_name(self, game_name):
@@ -154,47 +139,40 @@ class Game(Model):
     def append_to_queue(self, game_name, new_lobby):
         self.collection.update(
             {"game_name": game_name},
-            { '$push': {'queue': new_lobby}}
+            {'$push': {'queue': new_lobby}}
         )
         return new_lobby
 
-    #currnetly never called
     def update_window_size(self, game_name, queue):
         self.collection.update(
             {"game_name": game_name},
-            {'$set': {'queue': queue }}
+            {'$set': {'queue': queue}}
         )
 
 
 class Lobby(Model):
-    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
-
     db_client = pymongo.MongoClient(
         "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
-    # db = client.test
 
     collection = db_client["lobbies"]["lobbies_list"]
 
     def find_all(self):
         lobbies = list(self.collection.find())
         for lobby in lobbies:
-            lobby["_id"] = str(lobby["_id"])  # converting ObjectId to str
+            lobby["_id"] = str(lobby["_id"])
         return lobbies
 
 
 class Discord(Model):
-    # db_client = pymongo.MongoClient(host=['mongodb+srv://match-maker-db.62sjf.mongodb.net/Match-Maker-DB'])
-
     db_client = pymongo.MongoClient(
         "mongodb+srv://Chris:MakeAMatch@match-maker-db.62sjf.mongodb.net/Match-Maker-DB?retryWrites=true&w=majority")
-    # db = client.test
 
     collection = db_client["discords"]["discords_list"]
 
     def find_all(self):
         discords = list(self.collection.find())
         for discord in discords:
-            discord["_id"] = str(discord["_id"])  # converting ObjectId to str
+            discord["_id"] = str(discord["_id"])
         return discords
 
     def find_by_name(self, room_name):
