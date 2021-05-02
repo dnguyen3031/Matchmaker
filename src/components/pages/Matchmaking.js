@@ -1,15 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {
-   Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink, Alert, Modal, Dropdown, DropdownButton
- } from 'react-bootstrap';
+import {Button, Col, Container, Dropdown, DropdownButton, Row} from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
 import FriendBar from "../FriendBar";
 import Queue from './Queue';
-
-function getNumGames() {
-   return 3;
-}
 
 function Matchmaking(props) {
    const [viewUser, setViewUser] = useState({email: "", 
@@ -22,20 +16,51 @@ function Matchmaking(props) {
                               lobby: null,
                               in_queue: false});
 
+
    useEffect(() => {
+      async function fetchUser(id){
+         try {
+            // get character at index 's id number
+            return await axios.get('http://127.0.0.1:5000/users/' + id);
+         }
+         catch (error) {
+            console.log(error);
+            return false;
+         }
+      }
+      
       fetchUser(props.viewer_id).then( result => {
          if (result) {
             setViewUser(result);
             console.log("got viewer");
-         } else {
+         } else
             console.log("failed to get user")
-         }
       });
-   }, []);
-   // console.log(viewUser.data)
-   // console.log(viewUser.data.lobby)
-   // console.log(viewUser.data.in_queue)
-   if (viewUser.data === undefined || viewUser.data.in_queue === false) {
+   }, [props.viewer_id]);
+
+
+   async function makePatchCall(){
+      try{
+         return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker - Hardpoint&id=' + props.viewer_id);
+      }
+      catch(error){
+         console.log(error)
+         return false
+      }
+   }
+
+   function addToQueue() {
+      makePatchCall().then( result => {
+         if (result.status === 201) {
+            console.log('Added Successfully')
+            window.location.reload(false);
+         } else
+            console.log('failed to add to queue')
+      });
+   }
+
+
+   if (viewUser.data === undefined || viewUser.data.in_queue === false)
       return <div> 
          <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
          <Container fluid> 
@@ -62,44 +87,8 @@ function Matchmaking(props) {
             </Row>
          </Container>
       </div>;
-   }
+
    return <Queue viewer_id={props.viewer_id} setToken={props.setToken} match_id={viewUser.data.lobby}/>
-
-   async function fetchUser(id){
-      try {
-         // get character at index 's id number
-         const response = await axios.get('http://127.0.0.1:5000/users/' + id);
-         // console.log(response)
-         return response;
-      }
-      catch (error) {
-         console.log(error);
-         return false;
-      }
-   }
-
-   function addToQueue() { 
-      makePatchCall().then( result => {
-         if (result.status === 201) {
-            console.log('Added Successfully')
-            window.location.reload(false);
-         }
-         else{
-            console.log('failed to add to queue')
-         }
-      });
-   }
-
-   async function makePatchCall(){
-      try{
-         const response= await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker - Hardpoint&id='+props.viewer_id)
-         return response;
-      }
-      catch(error){
-         console.log(error)
-         return false
-      }
-   }
 }
  
 export default Matchmaking;

@@ -1,9 +1,6 @@
 import React from 'react';
 import CustomNavbar from '../CustomNavbar';
-import { useParams } from 'react-router-dom';
-import FriendBar from "../FriendBar";
 import { Row, Col, Container, Form, Button } from "react-bootstrap";
-import axios from 'axios';
 import "./PageTemplate.css";
 
 function TestPage(props) {
@@ -21,7 +18,7 @@ function TestPage(props) {
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" placeholder="Enter email" />
                         <Form.Text className="text-muted">
-                           We'll never share your email with anyone else.
+                           We'll always share your email with everyone else.
                         </Form.Text>
                      </Form.Group>
 

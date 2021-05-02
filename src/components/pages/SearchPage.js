@@ -1,50 +1,29 @@
-import React, {useEffect} from 'react';
-import { Link } from "react-router-dom";
+import React from 'react';
+import {Link} from "react-router-dom";
 import CustomNavbar from '../CustomNavbar';
 import FriendBar from "../FriendBar";
-import { Row, Col, Container, Form, Button } from "react-bootstrap";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import axios from 'axios';
 import "./PageTemplate.css";
 
 function SearchPage(props) {
    const [searchResults, setSearchResults] = React.useState([]);
-                                    
-   return <div> 
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-      <Container fluid> 
-         <Row>
-            <Col className="side-col" />
-            <Col xs={8} className="pr-0">
-               <Row>
-                  <Col>
-                    <SearchBar/>
-                    <ResultsTable />
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewer_id}/>
-                  </Col>
-               </Row>
-            </Col>
-            <Col className="side-col" />
-         </Row>
-      </Container>
-   </div>;
 
-   function SearchBar(props){
+
+   function SearchBar(){
       const [searchTerm, setSearchTerm] = React.useState("");
 
-      return <Form>
-      <Form.Group controlId="searchForm">
-         <Form.Label>Search term</Form.Label>
-         <Form.Control type="username" placeholder="Enter username"
-         value={searchTerm} 
-         onChange={e => setSearchTerm(e.target.value)} />
-      </Form.Group>
-      <Button variant="primary" type="button" onClick ={submitSearch}>
-         {/* TODO: change to Submit type button*/}
-         Submit
-      </Button>
-      </Form>
+
+      async function makeGetByNameCall(name){
+         try{
+            return await axios.get(
+                  'http://localhost:5000/users?secureName=' + name);
+         }
+         catch(error){
+            console.log(error)
+            return false
+         }
+      }
 
       function submitSearch(){
          if (searchTerm !== ""){
@@ -68,64 +47,75 @@ function SearchPage(props) {
          }
       }
 
-      async function makeGetByNameCall(name){
-         try{
-            const response= await axios.get(
-               'http://localhost:5000/users?secureName='+name)
-            return response;
-         }
-         catch(error){
-            console.log(error)
-            return false
-         }
-      }
+
+      return <Form>
+         <Form.Group controlId="searchForm">
+            <Form.Label>Search term</Form.Label>
+            <Form.Control type="username" placeholder="Enter username"
+                          value={searchTerm}
+                          onChange={e => setSearchTerm(e.target.value)} />
+         </Form.Group>
+         <Button variant="primary" type="button" onClick ={submitSearch}>
+            {/* TODO: change to Submit type button*/}
+            Submit
+         </Button>
+      </Form>
    }
 
 
-   function ResultsTable(props){
+   function ResultsTable(){
       console.log('sr: '+searchResults)
       if (searchResults.length === 0){
          console.log('empty')
          return null
       }
-      if (searchResults == 'noResults'){
-         console.log('detected \'noresults\'')
-         return (
-            <div>
-               <table>
-               <tbody>
-                  <tr>
-                     <th style={{color: 'black'}}>No Results</th>
-                  </tr>
-               </tbody>
-             </table>
-            </div>
-         );
-      }
+
       const rows = searchResults.map((user, index) => {
          return (
             <tr key={index}>
                <td>
-               <Link to={'/profile/'+user._id} >
-                  {user.name}
-               </Link>
+                  <Link to={'/profile/'+user._id} >
+                     {user.name}
+                  </Link>
                </td>
             </tr>
-           );
-         });
-         return (
-            <div>
-               <table>
+         );
+      });
+      return (
+         <div>
+            <table>
                <tbody>
-                  <tr>
-                     <th style={{color: 'black'}}>Results</th>
-                  </tr>
+               <tr>
+                  <th style={{color: 'black'}}>Results</th>
+               </tr>
                   {rows}
                </tbody>
-             </table>
-            </div>
-         );
+            </table>
+         </div>
+      );
    }
+
+
+   return <div> 
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+      <Container fluid> 
+         <Row>
+            <Col className="side-col" />
+            <Col xs={8} className="pr-0">
+               <Row>
+                  <Col>
+                    <SearchBar/>
+                    <ResultsTable />
+                  </Col>
+                  <Col md={3}>
+                     <FriendBar _id={props.viewer_id}/>
+                  </Col>
+               </Row>
+            </Col>
+            <Col className="side-col" />
+         </Row>
+      </Container>
+   </div>;
 }
 
 export default SearchPage;
