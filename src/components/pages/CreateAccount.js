@@ -14,11 +14,6 @@ function CreateAccount(props) {
    const bcrypt = require('bcryptjs');
    const saltRounds = 9;
    
-   const [email, setEmail] = useState('');
-   const [username, setusername] = useState('');
-   const [password, setpassword] = useState('');
-   const [confirmPassword, setconfirmPassword] = useState('');
-
    /*Error Model*/
    const [showError, setErrorShow] = useState(false);
    const handleErrorClose = () => setErrorShow(false);
@@ -60,53 +55,64 @@ function CreateAccount(props) {
       }
    }
 
-   const handleSubmit = (e) => {
-      e.preventDefault();
-      var jsonData = { "name": username, "email": email, "password": password, "friends": {}, "games_table": {}, "profile_info": {
-          "bio": "This user has no bio",
-          "discord": "",
-          "profile_pic": "DefaultProfilePic.jpg",
-          "steam_friend_code": "",
-          "steam_name": ""
-      }};
-      fetchUser(email).then( result => {
-         console.log(result);
-         if (password.localeCompare(confirmPassword) === 0 && result === 0)
-         {
-            postUser(hashPassword(jsonData));
-            history.push("/home");
-            handleSuccessShow();
-         } else {
-            console.log("Invalid Password Matching\n");
-            handleErrorShow();
-         }
-      });
-   }
-
    function CreateAccountForm(props){
+      const [email, setEmail] = useState('');
+      const [username, setUsername] = useState('');
+      const [password, setPassword] = useState('');
+      const [confirmPassword, setconfirmPassword] = useState('');
+
+      const handleSubmit = (e) => {
+         e.preventDefault();
+         var jsonData = { "name": username, "email": email, "password": password,
+          "friends": {},"games_table": {}, "profile_info": {
+             "bio": "This user has no bio",
+             "discord": "",
+             "profile_pic": "DefaultProfilePic.jpg",
+             "steam_friend_code": "",
+             "steam_name": ""
+         }};
+         fetchUser(email).then( result => {
+            console.log(result);
+            if (password.localeCompare(confirmPassword) === 0 && result === 0)
+            {
+               postUser(hashPassword(jsonData));
+               history.push("/home");
+               handleSuccessShow();
+            } else {
+               console.log("Invalid Password Matching\n");
+               handleErrorShow();
+            }
+         });
+      }
+
       return <Form className="text-white">
       <Row>
          <Form.Label>Create an Account</Form.Label>
       </Row>
       <Row>
          <Col>
-            <FormGroup controlId="username">
+            <Form.Group controlId="username">
                <Form.Label>Username</Form.Label>
-               <FormControl type="text" placeholder="username" value = {username} onChange={(e) => setusername(e.target.value)}/>
-            </FormGroup>
+               <Form.Control type="text" placeholder="username"
+                value = {username}
+                onChange={e => setUsername(e.target.value)}/>
+            </Form.Group>
          </Col>
          <Col>
-            <FormGroup controlId="email">
+            <Form.Group controlId="email">
                <Form.Label>Email</Form.Label>
-               <FormControl type="text" placeholder="email@address.com" value = {email} onChange={(e) => setEmail(e.target.value)}/>
-            </FormGroup>
+               <Form.Control type="text" placeholder="email@address.com" 
+                value = {email}
+                onChange={(e) => setEmail(e.target.value)}/>
+            </Form.Group>
          </Col>
       </Row>
       <Row>
          <Col>
             <FormGroup controlId="password">
                <Form.Label>Password</Form.Label>
-               <FormControl placeholder="password" type="password" value = {password} onChange={(e) => setpassword(e.target.value)}/>
+               <FormControl placeholder="password" type="password" value = {password}
+                onChange={(e) => setPassword(e.target.value)}/>
                <Form.Text id="passwordHelpBlock">
                   Your password must be 8-20 characters long, contain letters and numbers, and
                   must not contain spaces, special characters, or emoji.
@@ -116,7 +122,9 @@ function CreateAccount(props) {
          <Col>
             <FormGroup controlId="confirmedPassword">
                <Form.Label>Confirm Password</Form.Label>
-               <FormControl placeholder="password" type="password" value = {confirmPassword} onChange={(e) => setconfirmPassword(e.target.value)}/>
+               <FormControl placeholder="password" type="password" 
+                value = {confirmPassword}
+                onChange={(e) => setconfirmPassword(e.target.value)}/>
             </FormGroup>
          </Col>
       </Row>
@@ -143,7 +151,8 @@ function CreateAccount(props) {
             <Modal.Header closeButton>
                <Modal.Title>Error!</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Your password and confirm password fields do not match or your email has already been used!</Modal.Body>
+            <Modal.Body>Your password and confirm password fields do not match
+                or your email has already been used!</Modal.Body>
          </Modal>
 
          <Modal show={showSucess} onHide={handleSuccessClose}>
