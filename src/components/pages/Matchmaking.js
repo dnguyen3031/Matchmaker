@@ -39,9 +39,9 @@ function Matchmaking(props) {
    }, [props.viewer_id]);
 
 
-   async function makePatchCall(){
+   async function makePatchCall(game_name){
       try{
-         return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker - Hardpoint&id=' + props.viewer_id);
+         return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + game_name + '&id=' + props.viewer_id);
       }
       catch(error){
          console.log(error)
@@ -49,8 +49,8 @@ function Matchmaking(props) {
       }
    }
 
-   function addToQueue() {
-      makePatchCall().then( result => {
+   function addToQueue(game_name) {
+      makePatchCall(game_name).then( result => {
          if (result.status === 201) {
             console.log('Added Successfully')
             window.location.reload(false);
@@ -72,9 +72,9 @@ function Matchmaking(props) {
                         <Dropdown>
                         </Dropdown>
                         <DropdownButton id="dropdown-basic-button" title="Select Game">
-                           <Dropdown.Item onClick={addToQueue}>Krunker - Hardpoint</Dropdown.Item>
+                           <Dropdown.Item onClick={() => addToQueue("Krunker - Hardpoint")}>Krunker - Hardpoint</Dropdown.Item>
+                           <Dropdown.Item onClick={() => addToQueue("Skribbl.io")}>Skribbl.io</Dropdown.Item>
                         </DropdownButton>
-                        {/*<Button variant="outline-primary">Add New Game</Button>{' '}*/}
                      </Col>
                      <Col md={3}>
                         <FriendBar _id={props.viewer_id} />
