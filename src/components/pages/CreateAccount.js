@@ -83,7 +83,7 @@ function CreateAccount(props) {
       });
    }
 
-   function createAccountForm(props){
+   function CreateAccountForm(props){
       return <Form className="text-white">
       <Row>
          <Form.Label>Create an Account</Form.Label>
@@ -132,7 +132,7 @@ function CreateAccount(props) {
             <Col xs={8} className="main-col">
                <Row>
                   <Col>
-                     <createAccountForm />
+                     <CreateAccountForm />
                   </Col>
                </Row>
             </Col>
