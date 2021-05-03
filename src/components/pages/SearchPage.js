@@ -33,7 +33,7 @@ function SearchPage(props) {
                   console.log('sr detek: '+result.data["users_list"].length)
                   if (result.data["users_list"].length === 0){
                      console.log('setting noResults')
-                     setSearchResults([])
+                     setSearchResults("noResults")
                   }
                   else{
                      setSearchResults(result.data["users_list"])
@@ -67,9 +67,22 @@ function SearchPage(props) {
       console.log('sr: '+searchResults)
       if (searchResults.length === 0){
          console.log('empty')
-         return <h6>
-            No Results
-         </h6>
+         return null
+      }
+
+      if (searchResults === 'noResults'){
+         console.log('detected \'noresults\'')
+         return (
+               <div>
+                  <table>
+                     <tbody>
+                     <tr>
+                        <th style={{color: 'black'}}>No Results</th>
+                     </tr>
+                     </tbody>
+                  </table>
+               </div>
+         );
       }
 
       const rows = searchResults.map((user, index) => {
