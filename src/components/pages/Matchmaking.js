@@ -71,12 +71,10 @@ function Matchmaking(props) {
                      <Col>
                         <Dropdown>
                         </Dropdown>
-                        <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+                        <DropdownButton id="dropdown-basic-button" title="Select Game">
                            <Dropdown.Item onClick={addToQueue}>Krunker - Hardpoint</Dropdown.Item>
-                           <Dropdown.Item href="#/action-2">Minecraft</Dropdown.Item>
-                           <Dropdown.Item href="#/action-3">idk</Dropdown.Item>
                         </DropdownButton>
-                        <Button variant="outline-primary">Add New Game</Button>{' '}
+                        {/*<Button variant="outline-primary">Add New Game</Button>{' '}*/}
                      </Col>
                      <Col md={3}>
                         <FriendBar _id={props.viewer_id} />

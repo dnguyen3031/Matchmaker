@@ -37,9 +37,6 @@ function App() {
                   <Route path="/matchmaking">
                      <Matchmaking viewer_id={token} setToken={(id) => setToken(id)}/>
                   </Route>
-                  <Route path="/leaderboard">
-                     <LeaderboardPage viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
                   <Route path="/profile/:id">
                      <ProfilePage viewer_id={token} setToken={(id) => setToken(id)}/>
                   </Route>

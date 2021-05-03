@@ -39,14 +39,11 @@ function LoggedInNavbar(props) {
          <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
                <Nav.Link href="/matchmaking" style={{color: 'white'}}>Find Match</Nav.Link>
-               <Nav.Link href="/leaderboard" style={{color: 'white'}}>Leaderboard</Nav.Link>
                <Nav.Link href={profile_url} style={{color: 'white'}}>Profile</Nav.Link>
                <Nav.Link href="/groups" style={{color: 'white'}}>Groups</Nav.Link>
                <Nav.Link href="/searchpage" style={{color: 'white'}}>Search</Nav.Link>
             </Nav>
             <DropdownButton variant="secondary" menuAlign="right" title={user.name} id="dropdown-menu-align-right">
-               <Dropdown.Item eventKey="1">Account Settings</Dropdown.Item>
-               <Dropdown.Divider />
                <Dropdown.Item eventKey="3" onClick={() => props.setToken(null)}>Logout</Dropdown.Item>
             </DropdownButton>
          </Navbar.Collapse>
@@ -61,7 +58,6 @@ function DefaultNavbar() {
          <Navbar.Toggle aria-controls="basic-navbar-nav" />
          <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-               <Nav.Link href="/leaderboard" style={{color: 'white'}}>Leaderboard</Nav.Link>
                <Nav.Link href="/login" style={{color: 'white'}}>Login</Nav.Link>
                <Nav.Link href="/searchpage" style={{color: 'white'}}>Search</Nav.Link>
             </Nav>
