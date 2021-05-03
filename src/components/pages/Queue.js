@@ -2,11 +2,12 @@ import React from 'react';
 import CustomNavbar from '../CustomNavbar';
 import { Col, Row, Container} from 'react-bootstrap';
 import './PageTemplate.css';
-import FriendBar from "../FriendBar"
+import FriendBar from "../FriendBar";
+import Lobby from './Lobby'
 
-function Home(props) {
-   if (props.viewer_id != null)
-      window.location.href='/matchmaking'
+function Queue(props) {
+   if (props.match_id)
+      return <Lobby match_id={props.match_id} viewer_id={props.viewer_id} setToken={props.setToken}/>
 
    return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
@@ -16,9 +17,8 @@ function Home(props) {
             <Col xs={8} className="pr-0 main-col">
                <Row>
                   <Col>
-                     <h2 style={{color: 'white'}} onClick={() => {window.location.href='/login'}}>
-                        Please Login to Start Matchmaking
-                     </h2>
+                     <h2 style={{color: 'white'}}> finding match...</h2>
+                     <h3 style={{color: 'white'}}> please wait</h3>
                   </Col>
                   <Col md={3}>
                      <FriendBar _id={props.viewer_id}/>
@@ -31,4 +31,4 @@ function Home(props) {
    </div>;
 }
 
-export default Home;
+export default Queue;

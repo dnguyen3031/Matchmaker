@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import {
-   Button, Container, Row, Col, Form, FormControl, FormGroup, Nav, Navbar, NavItem, NavLink, Alert, Modal
- } from 'react-bootstrap';
+   Button, Container, Row, Col, Form, FormControl, FormGroup, Modal
+} from 'react-bootstrap';
 import axios from 'axios';
-import bcryptjs from 'bcryptjs';
 import { useHistory } from "react-router-dom";
 import "./PageTemplate.css";
 import CustomNavbar from '../CustomNavbar';
-import FriendBar from "../FriendBar";
 
 
 function CreateAccount(props) {
@@ -31,34 +29,6 @@ function CreateAccount(props) {
    const handleSuccessClose = () => setSuccessShow(false);
    const handleSuccessShow = () => setSuccessShow(true);
 
-   const handleSubmit = (e) => {
-      e.preventDefault();
-      var jsonData = { "name": username, "email": email, "password": password, "friends": {}, "games_table": {}, "profile_info": {
-          "bio": "This user has no bio",
-          "discord": "",
-          "profile_pic": "DefaultProfilePic.jpg",
-          "steam_friend_code": "",
-          "steam_name": ""
-      } };
-      fetchUser(email).then( result => {
-         console.log(result);
-         if (password.localeCompare(confirmPassword) == 0 && result == 0)
-         {
-            postUser(hashPassword(jsonData));
-            history.push("/home");
-            handleSuccessShow();
-         } else {
-            console.log("Invalid Password Matching\n");
-            handleErrorShow();
-         }
-      });
-   }
-
-   function hashPassword(jsonData) {
-      jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
-      return jsonData
-   }
-
    async function fetchUser(email){
       try {
          // get character at index 's id number
@@ -72,6 +42,11 @@ function CreateAccount(props) {
       }
    }
 
+   function hashPassword(jsonData) {
+      jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
+      return jsonData
+   }
+
    async function postUser(account) {
       try {
          // get character at index 's id number
@@ -83,6 +58,29 @@ function CreateAccount(props) {
          console.log(error);
          return false;
       }
+   }
+
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      var jsonData = { "name": username, "email": email, "password": password, "friends": {}, "games_table": {}, "profile_info": {
+          "bio": "This user has no bio",
+          "discord": "",
+          "profile_pic": "DefaultProfilePic.jpg",
+          "steam_friend_code": "",
+          "steam_name": ""
+      }};
+      fetchUser(email).then( result => {
+         console.log(result);
+         if (password.localeCompare(confirmPassword) === 0 && result === 0)
+         {
+            postUser(hashPassword(jsonData));
+            history.push("/home");
+            handleSuccessShow();
+         } else {
+            console.log("Invalid Password Matching\n");
+            handleErrorShow();
+         }
+      });
    }
 
    return <div> 
@@ -130,8 +128,7 @@ function CreateAccount(props) {
                               </Col>
                            </Row>
                            <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
-                  </Form>
-                  
+                     </Form>
                   </Col>
                </Row>
             </Col>
@@ -139,17 +136,17 @@ function CreateAccount(props) {
          </Row>
 
          <Modal show={showError} onHide={handleErrorClose}>
-         <Modal.Header closeButton>
-          <Modal.Title>Error!</Modal.Title>
-         </Modal.Header>
-         <Modal.Body>Your password and confirm password fields do not match or your email has already been used!</Modal.Body>
+            <Modal.Header closeButton>
+               <Modal.Title>Error!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Your password and confirm password fields do not match or your email has already been used!</Modal.Body>
          </Modal>
 
          <Modal show={showSucess} onHide={handleSuccessClose}>
-         <Modal.Header closeButton>
-          <Modal.Title>Success!</Modal.Title>
-         </Modal.Header>
-         <Modal.Body>You have sucessfully created your account!</Modal.Body>
+            <Modal.Header closeButton>
+               <Modal.Title>Success!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>You have sucessfully created your account!</Modal.Body>
          </Modal>
       </Container>
    </div>;

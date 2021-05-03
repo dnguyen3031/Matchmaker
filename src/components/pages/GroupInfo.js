@@ -1,19 +1,20 @@
 import React from 'react';
 import CustomNavbar from '../CustomNavbar';
-import { Row, Col, Container } from "react-bootstrap";
 import FriendBar from "../FriendBar";
+import { Row, Col, Container } from "react-bootstrap";
+import "./PageTemplate.css";
 
-function LeaderboardPage(props) {
-   return <div> 
+function TestPage(props) {
+   return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid>
          <Row>
             <Col className="side-col" />
-            <Col xs={8} className="main-col pr-0">
+            <Col xs={8} className="pr-0">
                <Row>
-                  <Col>Leaderboard</Col>
+                  <Col>GROUP INFO</Col>
                   <Col md={3}>
-                     <FriendBar _id={props.viewer_id} />
+                     <FriendBar _id="603c339a5ef99cf0de73b4b8" />
                   </Col>
                </Row>
             </Col>
@@ -21,6 +22,6 @@ function LeaderboardPage(props) {
          </Row>
       </Container>
    </div>;
-}
+ }
  
-export default LeaderboardPage;
+export default TestPage;
