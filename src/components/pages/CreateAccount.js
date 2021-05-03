@@ -83,6 +83,47 @@ function CreateAccount(props) {
       });
    }
 
+   function createAccountForm(props){
+      return <Form className="text-white">
+      <Row>
+         <Form.Label>Create an Account</Form.Label>
+      </Row>
+      <Row>
+         <Col>
+            <FormGroup controlId="username">
+               <Form.Label>Username</Form.Label>
+               <FormControl type="text" placeholder="username" value = {username} onChange={(e) => setusername(e.target.value)}/>
+            </FormGroup>
+         </Col>
+         <Col>
+            <FormGroup controlId="email">
+               <Form.Label>Email</Form.Label>
+               <FormControl type="text" placeholder="email@address.com" value = {email} onChange={(e) => setEmail(e.target.value)}/>
+            </FormGroup>
+         </Col>
+      </Row>
+      <Row>
+         <Col>
+            <FormGroup controlId="password">
+               <Form.Label>Password</Form.Label>
+               <FormControl placeholder="password" type="password" value = {password} onChange={(e) => setpassword(e.target.value)}/>
+               <Form.Text id="passwordHelpBlock">
+                  Your password must be 8-20 characters long, contain letters and numbers, and
+                  must not contain spaces, special characters, or emoji.
+               </Form.Text>
+            </FormGroup>
+         </Col>
+         <Col>
+            <FormGroup controlId="confirmedPassword">
+               <Form.Label>Confirm Password</Form.Label>
+               <FormControl placeholder="password" type="password" value = {confirmPassword} onChange={(e) => setconfirmPassword(e.target.value)}/>
+            </FormGroup>
+         </Col>
+      </Row>
+      <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
+   </Form> 
+   }
+
    return <div> 
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid> 
@@ -91,44 +132,7 @@ function CreateAccount(props) {
             <Col xs={8} className="main-col">
                <Row>
                   <Col>
-                     <Form className="text-white">
-                        <Row>
-                           <Form.Label>Create an Account</Form.Label>
-                           </Row>
-                           <Row>
-                              <Col>
-                                 <FormGroup controlId="username">
-                                    <Form.Label>Username</Form.Label>
-                                    <FormControl type="text" placeholder="username" value = {username} onChange={(e) => setusername(e.target.value)}/>
-                                 </FormGroup>
-                              </Col>
-                              <Col>
-                                 <FormGroup controlId="email">
-                                    <Form.Label>Email</Form.Label>
-                                    <FormControl type="text" placeholder="email@address.com" value = {email} onChange={(e) => setEmail(e.target.value)}/>
-                                 </FormGroup>
-                              </Col>
-                           </Row>
-                           <Row>
-                              <Col>
-                                 <FormGroup controlId="password">
-                                    <Form.Label>Password</Form.Label>
-                                    <FormControl placeholder="password" type="password" value = {password} onChange={(e) => setpassword(e.target.value)}/>
-                                    <Form.Text id="passwordHelpBlock">
-                                       Your password must be 8-20 characters long, contain letters and numbers, and
-                                       must not contain spaces, special characters, or emoji.
-                                    </Form.Text>
-                                 </FormGroup>
-                              </Col>
-                              <Col>
-                                 <FormGroup controlId="confirmedPassword">
-                                    <Form.Label>Confirm Password</Form.Label>
-                                    <FormControl placeholder="password" type="password" value = {confirmPassword} onChange={(e) => setconfirmPassword(e.target.value)}/>
-                                 </FormGroup>
-                              </Col>
-                           </Row>
-                           <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
-                     </Form>
+                     <createAccountForm />
                   </Col>
                </Row>
             </Col>
