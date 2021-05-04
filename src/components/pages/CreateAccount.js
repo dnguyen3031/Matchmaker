@@ -61,16 +61,34 @@ function CreateAccount(props) {
       const [password, setPassword] = useState('');
       const [confirmPassword, setconfirmPassword] = useState('');
 
+      function makeJson(){
+         return { 
+            "name": username, 
+            "email": email, 
+            "password": password,
+            "friends": {},
+            "games_table": {
+               "Krunker - Hardpoint": {
+                  "game_score": 1000,
+                  "time_played": 0
+               }
+            },
+            "group": null,
+            "in_queue": false,
+            "lobby": null,
+            "profile_info": {
+               "bio": "This user has no bio",
+               "discord": "",
+               "profile_pic": "DefaultProfilePic.jpg",
+               "steam_friend_code": "",
+               "steam_name": ""
+            }
+         };
+      }
+
       const handleSubmit = (e) => {
          e.preventDefault();
-         var jsonData = { "name": username, "email": email, "password": password,
-          "friends": {},"games_table": {}, "profile_info": {
-             "bio": "This user has no bio",
-             "discord": "",
-             "profile_pic": "DefaultProfilePic.jpg",
-             "steam_friend_code": "",
-             "steam_name": ""
-         }};
+         var jsonData = makeJson();
          fetchUser(email).then( result => {
             console.log(result);
             if (password.localeCompare(confirmPassword) === 0 && result === 0)
