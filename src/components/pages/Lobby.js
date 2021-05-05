@@ -21,7 +21,7 @@ function Lobby(props) {
         // console.log(match_id)
         try {
            // get character at index 's id number
-           const response = await axios.get('http://127.0.0.1:5000/lobbies/' + match_id);
+           const response = await axios.get('https://matchmaker-backend01.herokuapp.com/lobbies/' + match_id);
            return response.data;
         }
         catch (error) {

@@ -68,7 +68,7 @@ function Matchmaking(props) {
    async function fetchUser(id){
       try {
          // get character at index 's id number
-         const response = await axios.get('http://127.0.0.1:5000/users/' + id);
+         const response = await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + id);
          // console.log(response)
          return response;
       }
@@ -92,7 +92,7 @@ function Matchmaking(props) {
 
    async function makePatchCall(){
       try{
-         const response= await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker - Hardpoint&id='+props.viewer_id)
+         const response= await axios.patch('https://matchmaker-backend01.herokuapp.com/add-to-queue?game_name=Krunker - Hardpoint&id='+props.viewer_id)
          return response;
       }
       catch(error){

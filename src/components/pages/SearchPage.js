@@ -71,7 +71,7 @@ function SearchPage(props) {
       async function makeGetByNameCall(name){
          try{
             const response= await axios.get(
-               'http://localhost:5000/users?secureName='+name)
+               'https://matchmaker-backend01.herokuapp.com/users?secureName='+name)
             return response;
          }
          catch(error){

@@ -66,7 +66,7 @@ function Login(props) {
   async function fetchUser(name){
     try {
        // get user matching inputted email
-       const response = await axios.get('http://localhost:5000/users?email=' + name);
+       const response = await axios.get('https://matchmaker-backend01.herokuapp.com/users?email=' + name);
        return response.data;
     }
     catch (error) {

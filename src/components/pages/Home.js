@@ -123,7 +123,7 @@ function Home(props) {
 
    async function makePatchCall(packet){
       try{
-         const response= await axios.patch('http://localhost:5000/users/submit-results', packet)
+         const response= await axios.patch('https://matchmaker-backend01.herokuapp.com/users/submit-results', packet)
          return response;
       }
       catch(error){

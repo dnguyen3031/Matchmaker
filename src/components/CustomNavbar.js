@@ -21,7 +21,7 @@ function LoggedInNavbar(props){
    async function fetchUser(id){
       try {
          // get character at index 's id number
-         const response = await axios.get('http://127.0.0.1:5000/users/' + id);
+         const response = await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + id);
          return response;
       }
       catch (error) {
