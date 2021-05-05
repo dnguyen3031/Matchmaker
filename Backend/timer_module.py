@@ -30,17 +30,45 @@ def check_sizes(lobby, o_lobby, num_players_needed):
         return 0
     return -1
 
+def fill_remaining_spaces(space, groups, team):
+    pass
+
+
+def check_groups_splittable(groups, num_teams, num_players):
+    """returns true if the groups can be split into the given number of teams, false otherwise"""
+    teams_remaining = num_teams
+    teams = {}
+    current_team_space = num_players
+    current_team = 0
+
+    teams[0] = []
+    teams[0].append(groups[0])
+    current_team_space -= groups[0]
+    if fill_remaining_spaces(current_team_space, groups, teams[0]) == False:
+        return 3
+
+def get_group_sizes(lobby, o_lobby):
+    """returns a sorted list of of ints corresponding to the group sizes of each group in both lobbies"""
+    group_sizes = []
+    for group in lobby:
+        group_sizes.append(group["num_players"])
+    for group in o_lobby:
+        group_sizes.append(group["num_players"])
+    group_sizes.sort(reverse=True)
+    return group_sizes
 
 def find_suitable(game, lobby):
     for o_lobby in game["queue"]:
         if o_lobby != lobby:
-            if within_range(lobby, o_lobby) and not (check_sizes(lobby, o_lobby, game["num_players"]) == 1):
+            if within_range(lobby, o_lobby) \
+                    and not (check_sizes(lobby, o_lobby, game["num_players"]) == 1) \
+                    and check_groups_splittable(get_group_sizes(lobby, o_lobby), game["num_teams"], game["num_players"]):
                 return o_lobby
     return None
 
 
 def merge_matches(game, lobby, matched_lobby):
-    # TODO: record avg elo for each groop for team-making purposes
+    # TODO: record avg elo for each group for team-making purposes
     merged_elo = (lobby["avg_elo"] * lobby["num_players"] + matched_lobby["avg_elo"] * matched_lobby["num_players"]) / (
             lobby["num_players"] + matched_lobby["num_players"])
     merged_groups = lobby["groups"] + matched_lobby["groups"]
@@ -81,7 +109,7 @@ def find_best_teams(groups):
     return team1["groups"], team2["groups"]
 
 
-def assignteams(full_lobby):
+def assign_teams(full_lobby):
     game = Game({"_id": full_lobby["game_id"]})
     game.reload()
     team1, team2 = find_best_teams(full_lobby["groups"])
@@ -132,7 +160,7 @@ def add_team_info(full_lobby):
 
 
 def init_full_lobby(full_lobby):
-    assignteams(full_lobby)
+    assign_teams(full_lobby)
     full_lobby["discord"] = get_next_discord()["room_name"]
     add_team_info(full_lobby)
     full_lobby["time_elapsed"] = 0
