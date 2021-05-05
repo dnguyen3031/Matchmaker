@@ -1,1 +1,1 @@
-web: gunicorn backend:app
+web: gunicorn timer_module:app
