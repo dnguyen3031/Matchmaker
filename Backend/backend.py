@@ -5,13 +5,15 @@ from flask_cors import CORS
 from mongodb import *
 from ELO import *
 from bson import ObjectId
+import timer_module
+import threading
 
 app = Flask(__name__)
 
 CORS(app)
 
+threading.Thread(target=timer_module.main).start()
 
-# TODO: start timer_module asynchronously on startup
 
 @app.route('/')
 def backend_home():
