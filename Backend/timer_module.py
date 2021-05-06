@@ -1,24 +1,9 @@
 import time
 
+from suitable_lobby import find_suitable
 from mongodb import *
 from bson import ObjectId
 from ELO import *
-
-
-def within_range(lobby, o_lobby):
-    higher_lobby = o_lobby
-    lower_lobby = lobby
-    if lobby["avg_elo"] > o_lobby["avg_elo"]:
-        higher_lobby = lobby
-        lower_lobby = o_lobby
-
-    l_lobby_upper_bound = lower_lobby["avg_elo"] + lower_lobby["window_size"]
-    h_lobby_lower_bound = higher_lobby["avg_elo"] - higher_lobby["window_size"]
-
-    if l_lobby_upper_bound >= higher_lobby["avg_elo"] and h_lobby_lower_bound <= lower_lobby["avg_elo"]:
-        return True
-    return False
-
 
 def check_sizes(lobby, o_lobby, num_players_needed):
     # 1 means >  (lobby too big)
@@ -29,42 +14,6 @@ def check_sizes(lobby, o_lobby, num_players_needed):
     if lobby["num_players"] + o_lobby["num_players"] == num_players_needed:
         return 0
     return -1
-
-def fill_remaining_spaces(space, groups, team):
-    pass
-
-
-def check_groups_splittable(groups, num_teams, num_players):
-    """returns true if the groups can be split into the given number of teams, false otherwise"""
-    teams_remaining = num_teams
-    teams = {}
-    current_team_space = num_players
-    current_team = 0
-
-    teams[0] = []
-    teams[0].append(groups[0])
-    current_team_space -= groups[0]
-    if fill_remaining_spaces(current_team_space, groups, teams[0]) == False:
-        return 3
-
-def get_group_sizes(lobby, o_lobby):
-    """returns a sorted list of of ints corresponding to the group sizes of each group in both lobbies"""
-    group_sizes = []
-    for group in lobby:
-        group_sizes.append(group["num_players"])
-    for group in o_lobby:
-        group_sizes.append(group["num_players"])
-    group_sizes.sort(reverse=True)
-    return group_sizes
-
-def find_suitable(game, lobby):
-    for o_lobby in game["queue"]:
-        if o_lobby != lobby:
-            if within_range(lobby, o_lobby) \
-                    and not (check_sizes(lobby, o_lobby, game["num_players"]) == 1) \
-                    and check_groups_splittable(get_group_sizes(lobby, o_lobby), game["num_teams"], game["num_players"]):
-                return o_lobby
-    return None
 
 
 def merge_matches(game, lobby, matched_lobby):
