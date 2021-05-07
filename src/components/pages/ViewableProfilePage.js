@@ -78,7 +78,11 @@ function ViewableProfile(props) {
                            <Card.Body>
                               <Card.Title>{props.user.name}</Card.Title>
                               <Card.Text class="text-white">{props.user.profile_info.bio}</Card.Text>
+                              {!areFriends && <Button variant="info" onClick={addFriendAction}>Add Friend</Button>}
+                              {' '}
+                              <Button variant="info" onClick={removeFriendAction}>Remove Friend</Button>
                            </Card.Body>
+
                         </Card>
                      </Col>
                      <Col></Col>
