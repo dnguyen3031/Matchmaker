@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Button, Col, Row} from 'react-bootstrap';
+import { Alert, Card, Container, Button, Col, Row} from 'react-bootstrap';
+import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios';
 import './PageTemplate.css';
 
@@ -8,7 +9,7 @@ function Players(props)
    const players = Object.keys(props.group.players).map((player, index) => {
       return (
             <div>
-               <div>{props.group.players[player]}</div>
+               <ListGroup.Item variant="dark">{props.group.players[player]}</ListGroup.Item>
             </div>
       );
    })
@@ -24,20 +25,22 @@ function TeamTable(props)
    const rows = props.team.map((group) => {
       return (
             <div>
-               <Players group={group}/>
+               <ListGroup>
+                  <Players group={group}/>
+               </ListGroup>
             </div>
       );
    })
 
    return (
          <div>
-            <select disabled={props.disabled} onChange={(e) => props.scoreATeam(props.index, e.target.value)}>
+            <select class="mb-3 bg-white" disabled={props.disabled} onChange={(e) => props.scoreATeam(props.index, e.target.value)}>
                {props.options}
-               {/* <option value={1}>1st</option>
-              <option value={2}>2nd</option> */}
             </select>
-            <h3>Team {props.index}</h3>
-            {rows}
+            <Card bg="dark" text="white">
+               <Card.Header>Team {props.index + 1}</Card.Header>
+               {rows}
+            </Card>
          </div>
    );
 }
@@ -58,7 +61,7 @@ function TeamBuilder(props) {
       scores[index] = place;
    }
 
-   const rows = teams.map((team, index) => {
+   const allTeams = teams.map((team, index) => {
       return (
             <div>
                <Col>
@@ -91,8 +94,23 @@ function TeamBuilder(props) {
 
 
    return <div>
-      <Row>{rows}</Row>
-      <Button variant="secondary" onClick={pressedSubmit}>Submit</Button>
+      <Container>
+      <Alert className="mt-3" variant="success">Please join Discord {props.discord}</Alert>
+      <Row className="justify-content-md-center mb-3">
+         <Card className="text-center" bg="dark" text="white" style={{width: '18rem'}}>
+                  <Card.Body>
+                     <Card.Text className="text-white">Discord {props.discord}</Card.Text>
+                     <Card.Text className="text-white">Krunker Hardpoint</Card.Text>
+                  </Card.Body>
+               </Card>
+      </Row>
+         <Row className="justify-content-md-center">
+            {allTeams}
+         </Row>
+         <Row className="justify-content-md-center mt-3">
+            <Button variant="secondary" onClick={pressedSubmit}>Submit</Button>
+         </Row>
+      </Container>
    </div>;
 }
 

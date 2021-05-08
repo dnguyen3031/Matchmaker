@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import CustomNavbar from '../CustomNavbar';
-import { Col, Row, Button, Container, Form } from 'react-bootstrap';
+import { Card, Col, Row, Button, Container, Form } from 'react-bootstrap';
 import axios from 'axios';
 import './PageTemplate.css';
 import FriendBar from "../FriendBar";
@@ -61,9 +61,8 @@ function Lobby(props) {
                <Col xs={8} className="pr-0 main-col">
                   <Row>
                      <Col>
-                        <h6 style={{color: 'black'}}> Discord: {match.discord}</h6>
                         {console.dir(match)}
-                        <TeamBuilder match_id={match_id} teams={match["teams"]}></TeamBuilder>
+                        <TeamBuilder match_id={match_id} teams={match["teams"]} discord={match.discord}></TeamBuilder>
                      </Col>
                      <Col md={3}>
                         <FriendBar _id={props.viewer_id}/>
