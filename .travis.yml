@@ -5,6 +5,9 @@ node_js:
 
 install:
   - npm install
+  - npm add --dev eslint-config-standard
+  - npm add --dev eslint-plugin-node eslint-plugin-react
+  - npm add --dev eslint-plugin-promise
 
 script:
   - npm run lint
