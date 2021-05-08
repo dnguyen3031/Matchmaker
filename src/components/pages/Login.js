@@ -79,7 +79,7 @@ function Login (props) {
                   required
                 />
                 <Form.Text className="text-white">
-                  W&apos;ll always share your information with everyone else.
+                  We&apos;ll always share your information with everyone else.
                 </Form.Text>
               </Form.Group>
               <Form.Group controlId="formBasicPassword">
