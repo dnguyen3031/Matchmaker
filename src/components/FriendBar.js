@@ -47,7 +47,7 @@ function FriendBar (props) {
       }
     }
 
-    fetchUser(this.props._id).then((result) => {
+    fetchUser(props._id).then((result) => {
       if (result) {
         setUser(result)
         fetchGroup(result.group).then((result) => {
@@ -57,7 +57,7 @@ function FriendBar (props) {
         })
       }
     })
-  }, [this.props._id])
+  }, [props._id])
 
   function FriendsList (props) {
     const [, setFriendList] = React.useState([])
@@ -65,8 +65,8 @@ function FriendBar (props) {
 
     React.useEffect(() => {
       async function getAllFriends () {
-        for (const key in this.props.list) {
-          if (this.props.list[key] !== 'Deleted') {
+        for (const key in props.list) {
+          if (props.list[key] !== 'Deleted') {
             const response = await fetchUser(key)
             setFriendList((friendList) => [...friendList, response.name])
             setResponseList((responseList) => [...responseList, response])
@@ -77,7 +77,7 @@ function FriendBar (props) {
       }
 
       getAllFriends()
-    }, [this.props.list])
+    }, [props.list])
 
     const rows = responseList.map((friend, i) => {
       return (

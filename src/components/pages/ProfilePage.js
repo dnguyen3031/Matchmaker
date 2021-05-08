@@ -6,7 +6,7 @@ import ViewableProfile from './ViewableProfilePage'
 import { useParams } from 'react-router-dom'
 
 function ProfilePage (props) {
-  const viewerId = this.props.viewer_id
+  const viewerId = props.viewer_id
   const id = useParams().id
   const [user, setUser] = useState({
     email: '',
@@ -51,6 +51,7 @@ function ProfilePage (props) {
       const games = await getGame(key)
       const game = games.games_list[0]
       updatedUser.games_table[key]._id = game._id
+      // ToDo: change to switch case
       if (updatedUser.games_table[key].game_score < game.ranking_levels[0]) {
         updatedUser.games_table[key].Rank = 'Iron'
       } else if (
@@ -174,8 +175,8 @@ function ProfilePage (props) {
       <EditableProfile
         user={user}
         handleSubmit={updateUser}
-        setToken={(id) => this.props.setToken(id)}
-        viewerId={this.props.viewerId}
+        setToken={(id) => props.setToken(id)}
+        viewerId={props.viewerId}
       />
     )
   } else if (user._id) {
@@ -184,8 +185,8 @@ function ProfilePage (props) {
         user={user}
         friendsList={viewUser.friends}
         handleSubmit={updateFriends}
-        setToken={(id) => this.props.setToken(id)}
-        viewerId={this.props.viewerId}
+        setToken={(id) => props.setToken(id)}
+        viewerId={props.viewerId}
       />
     )
   }

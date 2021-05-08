@@ -35,7 +35,7 @@ function Matchmaking (props) {
       }
     }
 
-    fetchUser(this.props.viewer_id).then((result) => {
+    fetchUser(props.viewer_id).then((result) => {
       if (result) {
         setViewUser(result)
         console.log('got viewer')
@@ -43,7 +43,7 @@ function Matchmaking (props) {
         console.log('failed to get user')
       }
     })
-  }, [this.props.viewer_id])
+  }, [props.viewer_id])
 
   async function makePatchCall (gameName) {
     try {
@@ -51,7 +51,7 @@ function Matchmaking (props) {
         'http://localhost:5000/matchmaking/add-to-queue?game_name=' +
           gameName +
           '&id=' +
-          this.props.viewer_id
+          props.viewer_id
       )
     } catch (error) {
       console.log(error)
@@ -74,8 +74,8 @@ function Matchmaking (props) {
     return (
       <div>
         <CustomNavbar
-          setToken={(id) => this.props.setToken(id)}
-          viewer_id={this.props.viewer_id}
+          setToken={(id) => props.setToken(id)}
+          viewer_id={props.viewer_id}
         />
         <Container fluid>
           <Row>
@@ -99,7 +99,7 @@ function Matchmaking (props) {
                   </DropdownButton>
                 </Col>
                 <Col md={3}>
-                  <FriendBar _id={this.props.viewer_id} />
+                  <FriendBar _id={props.viewer_id} />
                 </Col>
               </Row>
             </Col>
@@ -112,8 +112,8 @@ function Matchmaking (props) {
 
   return (
     <Queue
-      viewer_id={this.props.viewer_id}
-      setToken={this.props.setToken}
+      viewer_id={props.viewer_id}
+      setToken={props.setToken}
       match_id={viewUser.data.lobby}
     />
   )

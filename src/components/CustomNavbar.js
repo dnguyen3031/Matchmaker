@@ -22,7 +22,7 @@ function LoggedInNavbar (props) {
   }
 
   useEffect(() => {
-    fetchUser(this.props.viewer_id).then((result) => {
+    fetchUser(props.viewer_id).then((result) => {
       if (result) {
         setUser(result.data)
         console.log('got user')
@@ -30,9 +30,9 @@ function LoggedInNavbar (props) {
         console.log('failed to get user')
       }
     })
-  }, [this.props.viewer_id])
+  }, [props.viewer_id])
 
-  const profileUrl = '/profile/' + this.props.viewer_id
+  const profileUrl = '/profile/' + props.viewer_id
 
   return (
     <div>
@@ -60,7 +60,7 @@ function LoggedInNavbar (props) {
             title={user.name}
             id="dropdown-menu-align-right"
           >
-            <Dropdown.Item eventKey="3" onClick={() => this.props.setToken(null)}>
+            <Dropdown.Item eventKey="3" onClick={() => props.setToken(null)}>
               Logout
             </Dropdown.Item>
           </DropdownButton>
@@ -93,7 +93,7 @@ function DefaultNavbar () {
 
 function CustomNavbar (props) {
   if (props.viewer_id) {
-    return LoggedInNavbar(props)
+    return new LoggedInNavbar(props)
   }
 
   return DefaultNavbar()

@@ -7,8 +7,8 @@ function TestPage (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => this.props.setToken(id)}
-        viewer_id={this.props.viewer_id}
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -37,7 +37,7 @@ function TestPage (props) {
                   </Button>
                 </Form>
               </Col>
-              <Col md={3}></Col>
+              <Col md={3}/>
             </Row>
           </Col>
           <Col className="side-col" />

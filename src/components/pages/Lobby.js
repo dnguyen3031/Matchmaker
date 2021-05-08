@@ -7,8 +7,8 @@ import FriendBar from '../FriendBar'
 import TeamBuilder from './TeamBuilder'
 
 function Lobby (props) {
-  const matchId = this.props.matchId
-  const [match, setMatch] = useState(this.props.match)
+  const matchId = props.matchId
+  const [match, setMatch] = useState(props.match)
 
   const [refreshInterval] = useState(2)
 
@@ -42,7 +42,7 @@ function Lobby (props) {
     }
 
     if (refreshInterval && refreshInterval > 0) {
-      const interval = setInterval(fetchMatch(matchId), refreshInterval)
+      const interval = setInterval(() => fetchMatch(matchId), refreshInterval)
       return () => clearInterval(interval)
     }
   }, [matchId, refreshInterval])
@@ -56,8 +56,8 @@ function Lobby (props) {
     return (
       <div>
         <CustomNavbar
-          setToken={(id) => this.props.setToken(id)}
-          viewer_id={this.props.viewer_id}
+          setToken={(id) => props.setToken(id)}
+          viewer_id={props.viewer_id}
         />
         <Container fluid>
           <Row>
@@ -66,14 +66,14 @@ function Lobby (props) {
               <Row>
                 <Col>
                   <h6 style={{ color: 'black' }}> Discord: {match.discord}</h6>
-                  {console.dir(match)}
+                  {() => console.dir(match)}
                   <TeamBuilder
                     matchId={matchId}
                     teams={match.teams}
-                  ></TeamBuilder>
+                  />
                 </Col>
                 <Col md={3}>
-                  <FriendBar _id={this.props.viewer_id} />
+                  <FriendBar _id={props.viewer_id} />
                 </Col>
               </Row>
             </Col>
@@ -87,8 +87,8 @@ function Lobby (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => this.props.setToken(id)}
-        viewer_id={this.props.viewer_id}
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -149,7 +149,7 @@ function Lobby (props) {
                 </Row>
               </Col>
               <Col md={3}>
-                <FriendBar _id={this.props.viewer_id} />
+                <FriendBar _id={props.viewer_id} />
               </Col>
             </Row>
           </Col>

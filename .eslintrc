@@ -4,5 +4,8 @@
     "browser": true,
     "jest": true
   },
-  "plugins": ["react"]
+  "plugins": ["react"],
+  "rules": {
+    "react/prop-types": "off"
+  }
 }

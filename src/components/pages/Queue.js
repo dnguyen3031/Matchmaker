@@ -6,12 +6,12 @@ import FriendBar from '../FriendBar'
 import Lobby from './Lobby'
 
 function Queue (props) {
-  if (this.props.match_id) {
+  if (props.match_id) {
     return (
       <Lobby
-        match_id={this.props.match_id}
-        viewer_id={this.props.viewer_id}
-        setToken={this.props.setToken}
+        match_id={props.match_id}
+        viewer_id={props.viewer_id}
+        setToken={props.setToken}
       />
     )
   }
@@ -19,8 +19,8 @@ function Queue (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => this.props.setToken(id)}
-        viewer_id={this.props.viewer_id}
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -32,7 +32,7 @@ function Queue (props) {
                 <h3 style={{ color: 'white' }}> please wait</h3>
               </Col>
               <Col md={3}>
-                <FriendBar _id={this.props.viewer_id} />
+                <FriendBar _id={props.viewer_id} />
               </Col>
             </Row>
           </Col>

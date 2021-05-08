@@ -22,12 +22,12 @@ function Groups (props) {
     try {
       // get character at index 's id number
       const currGroup = await axios.get(
-        'http://localhost:5000/users/' + this.props.viewer_id + '?group=true'
+        'http://localhost:5000/users/' + props.viewer_id + '?group=true'
       )
       console.log(currGroup)
       let response = await axios.patch(
         'http://localhost:5000/groups/leave-group?id=' +
-          this.props.viewer_id +
+          props.viewer_id +
           '&group=' +
           currGroup.data
       )
@@ -60,7 +60,7 @@ function Groups (props) {
       try {
         // get character at index 's id number
         return await axios.get(
-          'http://127.0.0.1:5000/users/' + this.props.viewer_id
+          'http://127.0.0.1:5000/users/' + props.viewer_id
         )
       } catch (error) {
         console.log(error)
@@ -68,7 +68,7 @@ function Groups (props) {
       }
     }
 
-    fetchUser(this.props.viewer_id).then((result) => {
+    fetchUser(props.viewer_id).then((result) => {
       if (result) {
         setUser(result.data)
         console.log('got user')
@@ -76,7 +76,7 @@ function Groups (props) {
         console.log('failed to get user')
       }
     })
-  }, [this.props.viewer_id])
+  }, [props.viewer_id])
 
   async function makePatchCall (groupcode) {
     try {
@@ -84,7 +84,7 @@ function Groups (props) {
       console.log(groupcode)
       const response = await axios.patch(
         'http://localhost:5000/groups/join-group?id=' +
-          this.props.viewer_id +
+          props.viewer_id +
           '&group=' +
           groupcode
       )
@@ -113,13 +113,13 @@ function Groups (props) {
       // get character at index 's id number
       console.log(group)
       let response = await axios.post(
-        'http://127.0.0.1:5000/groups?userID=' + this.props.viewer_id,
+        'http://127.0.0.1:5000/groups?userID=' + props.viewer_id,
         group
       )
       console.log(response.data)
       group = { group: response.data }
       response = await axios.patch(
-        'http://127.0.0.1:5000/users/' + this.props.viewer_id,
+        'http://127.0.0.1:5000/users/' + props.viewer_id,
         group
       )
       return response.data
@@ -132,7 +132,7 @@ function Groups (props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     const playerdict = {}
-    playerdict[this.props.viewer_id] = user.name
+    playerdict[props.viewer_id] = user.name
     const jsonData = { players: playerdict, num_players: 1 }
     postGroup(jsonData).then((result) => {
       if (result.status === 201) {
@@ -149,8 +149,8 @@ function Groups (props) {
     return (
       <div>
         <CustomNavbar
-          setToken={(id) => this.props.setToken(id)}
-          viewer_id={this.props.viewer_id}
+          setToken={(id) => props.setToken(id)}
+          viewer_id={props.viewer_id}
         />
         <Container fluid>
           <Row>
@@ -172,7 +172,7 @@ function Groups (props) {
                   </Button>{' '}
                 </Col>
                 <Col md={3}>
-                  <FriendBar _id={this.props.viewer_id} />
+                  <FriendBar _id={props.viewer_id} />
                 </Col>
               </Row>
               <Row>
@@ -196,8 +196,8 @@ function Groups (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => this.props.setToken(id)}
-        viewer_id={this.props.viewer_id}
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -215,7 +215,7 @@ function Groups (props) {
                 </Button>{' '}
               </Col>
               <Col md={3}>
-                <FriendBar _id={this.props.viewer_id} />
+                <FriendBar _id={props.viewer_id} />
               </Col>
             </Row>
           </Col>

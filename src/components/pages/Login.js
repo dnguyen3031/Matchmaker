@@ -33,7 +33,7 @@ function Login (props) {
   }
 
   function handleSuccess (id) {
-    this.props.setToken(id)
+    props.setToken(id)
     console.log('login sucessful of')
     console.log(id)
   }
@@ -61,8 +61,8 @@ function Login (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => this.props.setToken(id)}
-        viewer_id={this.props.viewer_id}
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
       />
       <Container fluid>
         <Row>
