@@ -28,7 +28,7 @@ function Matchmaking (props) {
     async function fetchUser (id) {
       try {
         // get character at index 's id number
-        return await axios.get('http://127.0.0.1:5000/users/' + id)
+        return await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + id)
       } catch (error) {
         console.log(error)
         return false
@@ -48,7 +48,7 @@ function Matchmaking (props) {
   async function makePatchCall (gameName) {
     try {
       return await axios.patch(
-        'http://localhost:5000/matchmaking/add-to-queue?game_name=' +
+        'https://matchmaker-backend01.herokuapp.com/matchmaking/add-to-queue?game_name=' +
           gameName +
           '&id=' +
           props.viewer_id

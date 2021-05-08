@@ -22,18 +22,18 @@ function Groups (props) {
     try {
       // get character at index 's id number
       const currGroup = await axios.get(
-        'http://localhost:5000/users/' + props.viewer_id + '?group=true'
+        'https://matchmaker-backend01.herokuapp.com/users/' + props.viewer_id + '?group=true'
       )
       console.log(currGroup)
       let response = await axios.patch(
-        'http://localhost:5000/groups/leave-group?id=' +
+        'https://matchmaker-backend01.herokuapp.com/groups/leave-group?id=' +
           props.viewer_id +
           '&group=' +
           currGroup.data
       )
       if (response === 0) {
         response = await axios.delete(
-          'http://localhost:5000/groups/' + currGroup.data
+          'https://matchmaker-backend01.herokuapp.com/groups/' + currGroup.data
         )
       }
       return response.data
@@ -60,7 +60,7 @@ function Groups (props) {
       try {
         // get character at index 's id number
         return await axios.get(
-          'http://127.0.0.1:5000/users/' + props.viewer_id
+          'https://matchmaker-backend01.herokuapp.com/users/' + props.viewer_id
         )
       } catch (error) {
         console.log(error)
@@ -83,7 +83,7 @@ function Groups (props) {
       // get character at index 's id number
       console.log(groupcode)
       const response = await axios.patch(
-        'http://localhost:5000/groups/join-group?id=' +
+        'https://matchmaker-backend01.herokuapp.com/groups/join-group?id=' +
           props.viewer_id +
           '&group=' +
           groupcode
@@ -113,13 +113,13 @@ function Groups (props) {
       // get character at index 's id number
       console.log(group)
       let response = await axios.post(
-        'http://127.0.0.1:5000/groups?userID=' + props.viewer_id,
+        'https://matchmaker-backend01.herokuapp.com/groups?userID=' + props.viewer_id,
         group
       )
       console.log(response.data)
       group = { group: response.data }
       response = await axios.patch(
-        'http://127.0.0.1:5000/users/' + props.viewer_id,
+        'https://matchmaker-backend01.herokuapp.com/users/' + props.viewer_id,
         group
       )
       return response.data

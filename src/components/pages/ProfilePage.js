@@ -31,7 +31,7 @@ function ProfilePage (props) {
     try {
       // get character at index 's id number
       const response = await axios.get(
-        'http://127.0.0.1:5000/games?game_name=' + gameName
+        'https://matchmaker-backend01.herokuapp.com/games?game_name=' + gameName
       )
       // console.log(response)
       return response.data
@@ -87,7 +87,7 @@ function ProfilePage (props) {
   async function fetchUser (id) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://127.0.0.1:5000/users/' + id)
+      const response = await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + id)
       return await setGameRanks(response.data)
     } catch (error) {
       console.log(error)
@@ -118,7 +118,7 @@ function ProfilePage (props) {
   async function makePatchCall (change) {
     try {
       return await axios.patch(
-        'http://localhost:5000/users/' + user._id,
+        'https://matchmaker-backend01.herokuapp.com/users/' + user._id,
         change
       )
     } catch (error) {
@@ -145,7 +145,7 @@ function ProfilePage (props) {
   async function makePatchCallFriends (change) {
     try {
       return await axios.patch(
-        'http://localhost:5000/users/' + viewerId,
+        'https://matchmaker-backend01.herokuapp.com/users/' + viewerId,
         change
       )
     } catch (error) {

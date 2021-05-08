@@ -73,7 +73,7 @@ function TeamBuilder (props) {
   async function makePatchCall (change) {
     try {
       return await axios.patch(
-        'http://localhost:5000/lobbies/submit-results/' + props.match_id,
+        'https://matchmaker-backend01.herokuapp.com/lobbies/submit-results/' + props.match_id,
         change
       )
     } catch (error) {
