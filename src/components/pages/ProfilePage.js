@@ -6,7 +6,7 @@ import ViewableProfile from './ViewableProfilePage'
 import { useParams } from 'react-router-dom'
 
 function ProfilePage (props) {
-  const viewer_id = props.viewer_id
+  const viewerId = this.props.viewer_id
   const id = useParams().id
   const [user, setUser] = useState({
     email: '',
@@ -27,11 +27,11 @@ function ProfilePage (props) {
     _id: ''
   })
 
-  async function get_game (game_name) {
+  async function getGame (gameName) {
     try {
       // get character at index 's id number
       const response = await axios.get(
-        'http://127.0.0.1:5000/games?game_name=' + game_name
+        'http://127.0.0.1:5000/games?game_name=' + gameName
       )
       // console.log(response)
       return response.data
@@ -41,54 +41,54 @@ function ProfilePage (props) {
     }
   }
 
-  async function set_game_ranks (props) {
+  async function setGameRanks (props) {
     if (props === null) {
       return null
     }
 
-    const updated_user = props
-    for (const key of Object.keys(updated_user.games_table)) {
-      const games = await get_game(key)
+    const updatedUser = props
+    for (const key of Object.keys(updatedUser.games_table)) {
+      const games = await getGame(key)
       const game = games.games_list[0]
-      updated_user.games_table[key]._id = game._id
-      if (updated_user.games_table[key].game_score < game.ranking_levels[0]) {
-        updated_user.games_table[key].Rank = 'Iron'
+      updatedUser.games_table[key]._id = game._id
+      if (updatedUser.games_table[key].game_score < game.ranking_levels[0]) {
+        updatedUser.games_table[key].Rank = 'Iron'
       } else if (
-        updated_user.games_table[key].game_score < game.ranking_levels[1]
+        updatedUser.games_table[key].game_score < game.ranking_levels[1]
       ) {
-        updated_user.games_table[key].Rank = 'Bronze'
+        updatedUser.games_table[key].Rank = 'Bronze'
       } else if (
-        updated_user.games_table[key].game_score < game.ranking_levels[2]
+        updatedUser.games_table[key].game_score < game.ranking_levels[2]
       ) {
-        updated_user.games_table[key].Rank = 'Silver'
+        updatedUser.games_table[key].Rank = 'Silver'
       } else if (
-        updated_user.games_table[key].game_score < game.ranking_levels[3]
+        updatedUser.games_table[key].game_score < game.ranking_levels[3]
       ) {
-        updated_user.games_table[key].Rank = 'Gold'
+        updatedUser.games_table[key].Rank = 'Gold'
       } else if (
-        updated_user.games_table[key].game_score < game.ranking_levels[4]
+        updatedUser.games_table[key].game_score < game.ranking_levels[4]
       ) {
-        updated_user.games_table[key].Rank = 'Diamond'
+        updatedUser.games_table[key].Rank = 'Diamond'
       } else if (
-        updated_user.games_table[key].game_score < game.ranking_levels[5]
+        updatedUser.games_table[key].game_score < game.ranking_levels[5]
       ) {
-        updated_user.games_table[key].Rank = 'Platinum'
+        updatedUser.games_table[key].Rank = 'Platinum'
       } else if (
-        updated_user.games_table[key].game_score < game.ranking_levels[6]
+        updatedUser.games_table[key].game_score < game.ranking_levels[6]
       ) {
-        updated_user.games_table[key].Rank = 'Pro'
+        updatedUser.games_table[key].Rank = 'Pro'
       } else {
-        updated_user.games_table[key].Rank = 'God'
+        updatedUser.games_table[key].Rank = 'God'
       }
     }
-    return updated_user
+    return updatedUser
   }
 
   async function fetchUser (id) {
     try {
       // get character at index 's id number
       const response = await axios.get('http://127.0.0.1:5000/users/' + id)
-      return await set_game_ranks(response.data)
+      return await setGameRanks(response.data)
     } catch (error) {
       console.log(error)
       return false
@@ -105,7 +105,7 @@ function ProfilePage (props) {
       }
     })
 
-    fetchUser(viewer_id).then((result) => {
+    fetchUser(viewerId).then((result) => {
       if (result) {
         setViewUser(result)
         console.log('got viewer')
@@ -145,7 +145,7 @@ function ProfilePage (props) {
   async function makePatchCallFriends (change) {
     try {
       return await axios.patch(
-        'http://localhost:5000/users/' + viewer_id,
+        'http://localhost:5000/users/' + viewerId,
         change
       )
     } catch (error) {
@@ -157,7 +157,7 @@ function ProfilePage (props) {
   function updateFriends (change) {
     makePatchCallFriends(change).then((result) => {
       if (result.status === 201) {
-        fetchUser(viewer_id).then((result) => {
+        fetchUser(viewerId).then((result) => {
           if (result) {
             setUser(result)
             console.log("updated user's friends")
@@ -169,13 +169,13 @@ function ProfilePage (props) {
     })
   }
 
-  if (viewer_id === id && user._id) {
+  if (viewerId === id && user._id) {
     return (
       <EditableProfile
         user={user}
         handleSubmit={updateUser}
-        setToken={(id) => props.setToken(id)}
-        viewer_id={props.viewer_id}
+        setToken={(id) => this.props.setToken(id)}
+        viewerId={this.props.viewerId}
       />
     )
   } else if (user._id) {
@@ -184,8 +184,8 @@ function ProfilePage (props) {
         user={user}
         friendsList={viewUser.friends}
         handleSubmit={updateFriends}
-        setToken={(id) => props.setToken(id)}
-        viewer_id={props.viewer_id}
+        setToken={(id) => this.props.setToken(id)}
+        viewerId={this.props.viewerId}
       />
     )
   }

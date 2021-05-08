@@ -4,10 +4,10 @@ import axios from 'axios'
 import './PageTemplate.css'
 
 function Players (props) {
-  const players = Object.keys(props.group.players).map((player, index) => {
+  const players = Object.keys(this.props.group.players).map((player, index) => {
     return (
-      <div>
-        <div>{props.group.players[player]}</div>
+      <div key={index}>
+        <div>{this.props.group.players[player]}</div>
       </div>
     )
   })
@@ -15,9 +15,9 @@ function Players (props) {
 }
 
 function TeamTable (props) {
-  const rows = props.team.map((group) => {
+  const rows = this.props.team.map((group, index) => {
     return (
-      <div>
+      <div key={index}>
         <Players group={group} />
       </div>
     )
@@ -26,26 +26,26 @@ function TeamTable (props) {
   return (
     <div>
       <select
-        disabled={props.disabled}
-        onChange={(e) => props.scoreATeam(props.index, e.target.value)}
+        disabled={this.props.disabled}
+        onChange={(e) => this.props.scoreATeam(this.props.index, e.target.value)}
       >
-        {props.options}
+        {this.props.options}
         {/* <option value={1}>1st</option>
               <option value={2}>2nd</option> */}
       </select>
-      <h3>Team {props.index}</h3>
+      <h3>Team {this.props.index}</h3>
       {rows}
     </div>
   )
 }
 
 function TeamBuilder (props) {
-  const [teams] = useState(props.teams)
+  const [teams] = useState(this.props.teams)
   const [scores] = useState([1, 1])
   const [disabled, setDisabled] = useState(false)
 
-  const options = props.teams.map((team, index) => {
-    return <option value={index + 1}>{index + 1}</option>
+  const options = this.props.teams.map((team, index) => {
+    return <option value={index + 1} key={index}>{index + 1}</option>
   })
 
   function scoreATeam (index, place) {
@@ -55,7 +55,7 @@ function TeamBuilder (props) {
 
   const rows = teams.map((team, index) => {
     return (
-      <div>
+      <div key={index}>
         <Col>
           <TeamTable
             team={team}
@@ -73,7 +73,7 @@ function TeamBuilder (props) {
   async function makePatchCall (change) {
     try {
       return await axios.patch(
-        'http://localhost:5000/lobbies/submit-results/' + props.match_id,
+        'http://localhost:5000/lobbies/submit-results/' + this.props.match_id,
         change
       )
     } catch (error) {

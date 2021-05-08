@@ -7,8 +7,8 @@ function TestPage (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => props.setToken(id)}
-        viewer_id={props.viewer_id}
+        setToken={(id) => this.props.setToken(id)}
+        viewer_id={this.props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -21,7 +21,7 @@ function TestPage (props) {
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" placeholder="Enter email" />
                     <Form.Text className="text-muted">
-                      We'll always share your email with everyone else.
+                      We&apos;ll always share your email with everyone else.
                     </Form.Text>
                   </Form.Group>
 

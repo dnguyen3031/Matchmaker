@@ -5,15 +5,15 @@ import './PageTemplate.css'
 import FriendBar from '../FriendBar'
 
 function Home (props) {
-  if (props.viewer_id != null) {
+  if (this.props.viewer_id != null) {
     window.location.href = '/matchmaking'
   }
 
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => props.setToken(id)}
-        viewer_id={props.viewer_id}
+        setToken={(id) => this.props.setToken(id)}
+        viewer_id={this.props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -31,7 +31,7 @@ function Home (props) {
                 </h2>
               </Col>
               <Col md={3}>
-                <FriendBar _id={props.viewer_id} />
+                <FriendBar _id={this.props.viewer_id} />
               </Col>
             </Row>
           </Col>

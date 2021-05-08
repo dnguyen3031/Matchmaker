@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import CustomNavbar from '../CustomNavbar'
-import { Col, Row, Button, Container, Form } from 'react-bootstrap'
+import { Col, Row, Button, Container } from 'react-bootstrap'
 import axios from 'axios'
 import './PageTemplate.css'
 import FriendBar from '../FriendBar'
 import TeamBuilder from './TeamBuilder'
 
 function Lobby (props) {
-  const match_id = props.match_id
-  const [match, setMatch] = useState(props.match)
+  const matchId = this.props.matchId
+  const [match, setMatch] = useState(this.props.match)
 
   const [refreshInterval] = useState(2)
 
   const [winningTeam, setWinningTeam] = useState('Draw')
   const [disabled, setDisabled] = useState(false)
 
-  async function getMatch (match_id) {
+  async function getMatch (matchId) {
     try {
       // get character at index 's id number
       const response = await axios.get(
-        'http://127.0.0.1:5000/lobbies/' + match_id
+        'http://127.0.0.1:5000/lobbies/' + matchId
       )
       return response.data
     } catch (error) {
@@ -29,9 +29,9 @@ function Lobby (props) {
   }
 
   useEffect(() => {
-    const fetchMatch = (match_id) => {
-      console.log(match_id)
-      getMatch(match_id).then((result) => {
+    const fetchMatch = (matchId) => {
+      console.log(matchId)
+      getMatch(matchId).then((result) => {
         if (result) {
           setMatch(result)
           console.log('got match')
@@ -42,10 +42,10 @@ function Lobby (props) {
     }
 
     if (refreshInterval && refreshInterval > 0) {
-      const interval = setInterval(fetchMatch(match_id), refreshInterval)
+      const interval = setInterval(fetchMatch(matchId), refreshInterval)
       return () => clearInterval(interval)
     }
-  }, [match_id, refreshInterval])
+  }, [matchId, refreshInterval])
 
   function sendWinningTeam () {
     console.log(winningTeam) // send to backend which team was selected
@@ -56,8 +56,8 @@ function Lobby (props) {
     return (
       <div>
         <CustomNavbar
-          setToken={(id) => props.setToken(id)}
-          viewer_id={props.viewer_id}
+          setToken={(id) => this.props.setToken(id)}
+          viewer_id={this.props.viewer_id}
         />
         <Container fluid>
           <Row>
@@ -68,12 +68,12 @@ function Lobby (props) {
                   <h6 style={{ color: 'black' }}> Discord: {match.discord}</h6>
                   {console.dir(match)}
                   <TeamBuilder
-                    match_id={match_id}
+                    matchId={matchId}
                     teams={match.teams}
                   ></TeamBuilder>
                 </Col>
                 <Col md={3}>
-                  <FriendBar _id={props.viewer_id} />
+                  <FriendBar _id={this.props.viewer_id} />
                 </Col>
               </Row>
             </Col>
@@ -87,8 +87,8 @@ function Lobby (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => props.setToken(id)}
-        viewer_id={props.viewer_id}
+        setToken={(id) => this.props.setToken(id)}
+        viewer_id={this.props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -149,7 +149,7 @@ function Lobby (props) {
                 </Row>
               </Col>
               <Col md={3}>
-                <FriendBar _id={props.viewer_id} />
+                <FriendBar _id={this.props.viewer_id} />
               </Col>
             </Row>
           </Col>

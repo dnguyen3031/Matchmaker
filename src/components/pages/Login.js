@@ -33,7 +33,7 @@ function Login (props) {
   }
 
   function handleSuccess (id) {
-    props.setToken(id)
+    this.props.setToken(id)
     console.log('login sucessful of')
     console.log(id)
   }
@@ -61,8 +61,8 @@ function Login (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => props.setToken(id)}
-        viewer_id={props.viewer_id}
+        setToken={(id) => this.props.setToken(id)}
+        viewer_id={this.props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -79,7 +79,7 @@ function Login (props) {
                   required
                 />
                 <Form.Text className="text-white">
-                  We'll always share your information with everyone else.
+                  W&apos;ll always share your information with everyone else.
                 </Form.Text>
               </Form.Group>
               <Form.Group controlId="formBasicPassword">

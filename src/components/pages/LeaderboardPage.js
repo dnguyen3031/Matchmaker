@@ -7,8 +7,8 @@ function LeaderboardPage (props) {
   return (
     <div>
       <CustomNavbar
-        setToken={(id) => props.setToken(id)}
-        viewer_id={props.viewer_id}
+        setToken={(id) => this.props.setToken(id)}
+        viewer_id={this.props.viewer_id}
       />
       <Container fluid>
         <Row>
@@ -17,7 +17,7 @@ function LeaderboardPage (props) {
             <Row>
               <Col>Leaderboard</Col>
               <Col md={3}>
-                <FriendBar _id={props.viewer_id} />
+                <FriendBar _id={this.props.viewer_id} />
               </Col>
             </Row>
           </Col>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {
-  Button,
   Col,
   Container,
   Dropdown,
@@ -36,7 +35,7 @@ function Matchmaking (props) {
       }
     }
 
-    fetchUser(props.viewer_id).then((result) => {
+    fetchUser(this.props.viewer_id).then((result) => {
       if (result) {
         setViewUser(result)
         console.log('got viewer')
@@ -44,15 +43,15 @@ function Matchmaking (props) {
         console.log('failed to get user')
       }
     })
-  }, [props.viewer_id])
+  }, [this.props.viewer_id])
 
-  async function makePatchCall (game_name) {
+  async function makePatchCall (gameName) {
     try {
       return await axios.patch(
         'http://localhost:5000/matchmaking/add-to-queue?game_name=' +
-          game_name +
+          gameName +
           '&id=' +
-          props.viewer_id
+          this.props.viewer_id
       )
     } catch (error) {
       console.log(error)
@@ -60,8 +59,8 @@ function Matchmaking (props) {
     }
   }
 
-  function addToQueue (game_name) {
-    makePatchCall(game_name).then((result) => {
+  function addToQueue (gameName) {
+    makePatchCall(gameName).then((result) => {
       if (result.status === 201) {
         console.log('Added Successfully')
         window.location.reload(false)
@@ -75,8 +74,8 @@ function Matchmaking (props) {
     return (
       <div>
         <CustomNavbar
-          setToken={(id) => props.setToken(id)}
-          viewer_id={props.viewer_id}
+          setToken={(id) => this.props.setToken(id)}
+          viewer_id={this.props.viewer_id}
         />
         <Container fluid>
           <Row>
@@ -84,7 +83,7 @@ function Matchmaking (props) {
             <Col xs={8} className="main-col pr-0">
               <Row>
                 <Col>
-                  <Dropdown></Dropdown>
+                  <Dropdown />
                   <DropdownButton
                     id="dropdown-basic-button"
                     title="Select Game"
@@ -100,7 +99,7 @@ function Matchmaking (props) {
                   </DropdownButton>
                 </Col>
                 <Col md={3}>
-                  <FriendBar _id={props.viewer_id} />
+                  <FriendBar _id={this.props.viewer_id} />
                 </Col>
               </Row>
             </Col>
@@ -113,8 +112,8 @@ function Matchmaking (props) {
 
   return (
     <Queue
-      viewer_id={props.viewer_id}
-      setToken={props.setToken}
+      viewer_id={this.props.viewer_id}
+      setToken={this.props.setToken}
       match_id={viewUser.data.lobby}
     />
   )
