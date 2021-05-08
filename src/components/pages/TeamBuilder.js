@@ -1,35 +1,33 @@
-import React, {useState} from 'react';
-import {Button, Col, Row} from 'react-bootstrap';
-import axios from 'axios';
-import './PageTemplate.css';
+import React, { useState } from 'react'
+import { Button, Col, Row } from 'react-bootstrap'
+import axios from 'axios'
+import './PageTemplate.css'
 
-function Players(props)
-{
-   const players = Object.keys(props.group.players).map((player, index) => {
-      return (
+function Players (props) {
+  const players = Object.keys(props.group.players).map((player, index) => {
+    return (
             <div>
                <div>{props.group.players[player]}</div>
             </div>
-      );
-   })
-   return (
+    )
+  })
+  return (
          <div>
             {players}
          </div>
-   );
+  )
 }
 
-function TeamTable(props)
-{
-   const rows = props.team.map((group) => {
-      return (
+function TeamTable (props) {
+  const rows = props.team.map((group) => {
+    return (
             <div>
                <Players group={group}/>
             </div>
-      );
-   })
+    )
+  })
 
-   return (
+  return (
          <div>
             <select disabled={props.disabled} onChange={(e) => props.scoreATeam(props.index, e.target.value)}>
                {props.options}
@@ -39,61 +37,57 @@ function TeamTable(props)
             <h3>Team {props.index}</h3>
             {rows}
          </div>
-   );
+  )
 }
 
-function TeamBuilder(props) {
-   const [teams] = useState(props.teams);
-   const [scores] = useState([1, 1]);
-   const [disabled, setDisabled] = useState(false);
-    
-   const options = props.teams.map((team, index) => {
-      return (
+function TeamBuilder (props) {
+  const [teams] = useState(props.teams)
+  const [scores] = useState([1, 1])
+  const [disabled, setDisabled] = useState(false)
+
+  const options = props.teams.map((team, index) => {
+    return (
             <option value={index + 1}>{index + 1}</option>
-      )
-   })
+    )
+  })
 
+  function scoreATeam (index, place) { // Helper function that is passed down to each select menu
+    scores[index] = place
+  }
 
-   function scoreATeam(index, place) {  // Helper function that is passed down to each select menu
-      scores[index] = place;
-   }
-
-   const rows = teams.map((team, index) => {
-      return (
+  const rows = teams.map((team, index) => {
+    return (
             <div>
                <Col>
                   <TeamTable team={team} options={options} index={index} scoreATeam={scoreATeam} scores={scores} disabled={disabled}/>
                </Col>
             </div>
-      )
-   })
+    )
+  })
 
+  async function makePatchCall (change) {
+    try {
+      return await axios.patch('http://localhost:5000/lobbies/submit-results/' + props.match_id, change)
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
 
-   async function makePatchCall(change){
-      try {
-         return await axios.patch('http://localhost:5000/lobbies/submit-results/' + props.match_id, change);
-      }
-      catch (error) {
-         console.log(error);
-         return false;
-      }
-   }
+  function pressedSubmit () {
+    setDisabled(true)
+    const obj = {
+      ranking: scores.map((i) => Number(i)) // Convert the scores to an array of Numbers
+    }
+    console.dir(obj)
 
-   function pressedSubmit() {
-      setDisabled(true);
-      const obj = {
-         "ranking": scores.map((i) => Number(i)) // Convert the scores to an array of Numbers
-      };
-      console.dir(obj);
+    makePatchCall(obj)
+  }
 
-      makePatchCall(obj);
-   }
-
-
-   return <div>
+  return <div>
       <Row>{rows}</Row>
       <Button variant="secondary" onClick={pressedSubmit}>Submit</Button>
-   </div>;
+   </div>
 }
 
-export default TeamBuilder;
+export default TeamBuilder

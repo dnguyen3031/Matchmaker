@@ -1,63 +1,57 @@
-import React, {useState} from 'react';
-import { Button, Container, Row, Col, Form, Modal}
-from 'react-bootstrap';
-import CustomNavbar from '../CustomNavbar';
-import axios from 'axios';
-import "./PageTemplate.css";
+import React, { useState } from 'react'
+import { Button, Container, Row, Col, Form, Modal }
+  from 'react-bootstrap'
+import CustomNavbar from '../CustomNavbar'
+import axios from 'axios'
+import './PageTemplate.css'
 
-function Login(props) {
-   const bcrypt = require('bcryptjs');
+function Login (props) {
+  const bcrypt = require('bcryptjs')
 
-   /*Error Model*/
-   const [showError, setErrorShow] = useState(false);
-   const handleErrorClose = () => setErrorShow(false);
-   const handleErrorShow = () => setErrorShow(true);
+  /* Error Model */
+  const [showError, setErrorShow] = useState(false)
+  const handleErrorClose = () => setErrorShow(false)
+  const handleErrorShow = () => setErrorShow(true)
 
-   /*Success Model*/
-   const [showSucess, setSuccessShow] = useState(false);
-   const handleSuccessClose = () => setSuccessShow(false);
+  /* Success Model */
+  const [showSucess, setSuccessShow] = useState(false)
+  const handleSuccessClose = () => setSuccessShow(false)
 
-   const [name, setName] = useState('');
-   const [password, setPassword] = useState('');
+  const [name, setName] = useState('')
+  const [password, setPassword] = useState('')
 
-   async function fetchUser(name){
-      try {
-         // get user matching inputted email
-         const response = await axios.get('http://localhost:5000/users?email=' + name);
-         return response.data;
-      }
-      catch (error) {
-         console.log(error);
-         return false;
-      }
-   }
+  async function fetchUser (name) {
+    try {
+      // get user matching inputted email
+      const response = await axios.get('http://localhost:5000/users?email=' + name)
+      return response.data
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
 
-   function handleSuccess(id){
-      props.setToken(id)
-      console.log("login sucessful of")
-      console.log(id)
-   }
+  function handleSuccess (id) {
+    props.setToken(id)
+    console.log('login sucessful of')
+    console.log(id)
+  }
 
-   function handleFailure(){
-      console.log("login failed")
-      handleErrorShow();
-   }
+  function handleFailure () {
+    console.log('login failed')
+    handleErrorShow()
+  }
 
-   const handleSubmit = (e) => {
-      e.preventDefault();
-      fetchUser(name).then( result => {
-         if (result && result.users_list.length > 0)
-            if(bcrypt.compareSync(password, result.users_list[0].password))
-               handleSuccess(result.users_list[0]._id);
-            else
-               handleFailure()
-         else
-            handleFailure()
-      });
-   }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    fetchUser(name).then(result => {
+      if (result && result.users_list.length > 0) {
+        if (bcrypt.compareSync(password, result.users_list[0].password)) { handleSuccess(result.users_list[0]._id) } else { handleFailure() }
+      } else { handleFailure() }
+    })
+  }
 
-
-   return <div>
+  return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid >
          <Row>
@@ -116,7 +110,7 @@ function Login(props) {
             <Modal.Body>Login Successful!</Modal.Body>
          </Modal>
       </Container>
-   </div>;
- }
+   </div>
+}
 
-export default Login;
+export default Login

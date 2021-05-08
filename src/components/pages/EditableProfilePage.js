@@ -1,77 +1,76 @@
-import { Row, Col, Container, Image, Table, Button, Modal} from 'react-bootstrap';
-import CustomNavbar from '../CustomNavbar';
-import React, {useState} from 'react';
-import './ProfilePage.css';
-import FriendBar from "../FriendBar";
-import { BsPencil } from "react-icons/bs";
+import { Row, Col, Container, Image, Table, Button, Modal } from 'react-bootstrap'
+import CustomNavbar from '../CustomNavbar'
+import React, { useState } from 'react'
+import './ProfilePage.css'
+import FriendBar from '../FriendBar'
+import { BsPencil } from 'react-icons/bs'
 
-function EditableProfile(props) {
-   const [modalShow, setModalShow] = React.useState(false);
-   const [modalField, setModalField] = useState({dName:"",fName:""});
-   const [data, setData] = useState({input: props.user[modalField.fName]});
+function EditableProfile (props) {
+  const [modalShow, setModalShow] = React.useState(false)
+  const [modalField, setModalField] = useState({ dName: '', fName: '' })
+  const [data, setData] = useState({ input: props.user[modalField.fName] })
 
-   function ActivateModal(fields) {
-      setModalShow(true)
-      setModalField({dName: fields[0], fName: fields[1]})
-      switch(fields.length) {
-         case 2:
-            setData({input: props.user[fields[1]]});
-            break
-         case 3:
-            setData({input: props.user[fields[2]][fields[1]]});
-            break
-         case 4:
-            setData({input: props.user[fields[3]][fields[2]][fields[1]]});
-            break
-      }
-   }
+  function ActivateModal (fields) {
+    setModalShow(true)
+    setModalField({ dName: fields[0], fName: fields[1] })
+    switch (fields.length) {
+      case 2:
+        setData({ input: props.user[fields[1]] })
+        break
+      case 3:
+        setData({ input: props.user[fields[2]][fields[1]] })
+        break
+      case 4:
+        setData({ input: props.user[fields[3]][fields[2]][fields[1]] })
+        break
+    }
+  }
 
-   function GameTable()
-   {
-      const rows = Object.keys(props.user.games_table).map((game, index) => {
-         return (
+  function GameTable () {
+    const rows = Object.keys(props.user.games_table).map((game, index) => {
+      return (
                <tr key={index}>
                   <td>{game}</td>
                   <td>{props.user.games_table[game].Rank}</td>
                </tr>
-         );
-      })
-      return (
+      )
+    })
+    return (
             <tbody>
                {rows}
             </tbody>
-      );
-   }
+    )
+  }
 
-   function handleChange(event) {
-      const { value } = event.target;
-      setData({input: value});
-   }
+  function handleChange (event) {
+    const { value } = event.target
+    setData({ input: value })
+  }
 
-   function switchCases(fName) {
-      switch(fName) {
-         case "name":
-            return {"name": data.input}
-         case "bio":
-            return {"profile_info": {"bio": data.input}}
-         case "discord":
-            return {"profile_info": {"discord": data.input}}
-         case "email":
-            return {"email": data.input}
-         case "steam_name":
-            return {"profile_info": {"steam_name": data.input}}
-      }
-   }
+  function switchCases (fName) {
+    switch (fName) {
+      case 'name':
+        return { name: data.input }
+      case 'bio':
+        return { profile_info: { bio: data.input } }
+      case 'discord':
+        return { profile_info: { discord: data.input } }
+      case 'email':
+        return { email: data.input }
+      case 'steam_name':
+        return { profile_info: { steam_name: data.input } }
+    }
+  }
 
-   const handleClose = () => setModalShow(false);
+  const handleClose = () => setModalShow(false)
 
-   function submitChange() {
-      const change = switchCases(modalField.fName)
-      props.handleSubmit(change);
-      handleClose()
-   }
+  function submitChange () {
+    const change = switchCases(modalField.fName)
+    props.handleSubmit(change)
+    handleClose()
+  }
 
-   return <div>
+  return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid>
          <Row>
@@ -81,13 +80,13 @@ function EditableProfile(props) {
                   <Col>
                      <Row className="pt-3 pb-3">
                         <Col >
-                           <Image src={"DefaultProfilePic.jpg"} rounded fluid/>
+                           <Image src={'DefaultProfilePic.jpg'} rounded fluid/>
                         </Col>
                         <Col className="pt-2 text-white">
-                           <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(["Name", "name"])}/></div>
+                           <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(['Name', 'name'])}/></div>
                            <div className="h5">Bio: </div>
                            <div>
-                              {props.user.profile_info.bio} <BsPencil onClick={() => ActivateModal(["Bio", "bio", "profile_info"])}/>
+                              {props.user.profile_info.bio} <BsPencil onClick={() => ActivateModal(['Bio', 'bio', 'profile_info'])}/>
                            </div>
                         </Col>
                      </Row>
@@ -105,10 +104,10 @@ function EditableProfile(props) {
                         </Col>
                         <Col xs={6} className="bg-dark text-white">
                            <div>Contact Info</div>
-                           <div className="pt-4">Email: {props.user.email} <BsPencil onClick={() => ActivateModal(["Email", "email"])} /></div>
-                           <div className="pt-4">Discord: {props.user.profile_info.discord} <BsPencil onClick={() => ActivateModal(["Discord", "discord", "profile_info"])} /></div>
+                           <div className="pt-4">Email: {props.user.email} <BsPencil onClick={() => ActivateModal(['Email', 'email'])} /></div>
+                           <div className="pt-4">Discord: {props.user.profile_info.discord} <BsPencil onClick={() => ActivateModal(['Discord', 'discord', 'profile_info'])} /></div>
                            <div className="pt-4 pb-4">Steam Name: {props.user.profile_info.steam_name}
-                              <BsPencil onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])} /></div>
+                              <BsPencil onClick={() => ActivateModal(['Steam Name', 'steam_name', 'profile_info'])} /></div>
                         </Col>
                      </Row>
 
@@ -145,7 +144,7 @@ function EditableProfile(props) {
             <Button onClick={handleClose}>Cancel</Button>
          </Modal.Footer>
       </Modal>
-   </div>;
+   </div>
 }
 
-export default EditableProfile;
+export default EditableProfile

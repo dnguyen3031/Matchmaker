@@ -1,11 +1,11 @@
-import React from 'react';
-import CustomNavbar from '../CustomNavbar';
-import FriendBar from "../FriendBar";
-import { Row, Col, Container } from "react-bootstrap";
-import "./PageTemplate.css";
+import React from 'react'
+import CustomNavbar from '../CustomNavbar'
+import FriendBar from '../FriendBar'
+import { Row, Col, Container } from 'react-bootstrap'
+import './PageTemplate.css'
 
-function TestPage(props) {
-   return <div>
+function TestPage (props) {
+  return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid>
          <Row>
@@ -21,7 +21,7 @@ function TestPage(props) {
             <Col className="side-col" />
          </Row>
       </Container>
-   </div>;
- }
- 
-export default TestPage;
+   </div>
+}
+
+export default TestPage
