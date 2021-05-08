@@ -30,7 +30,9 @@ function ProfilePage (props) {
   async function get_game (game_name) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://127.0.0.1:5000/games?game_name=' + game_name)
+      const response = await axios.get(
+        'http://127.0.0.1:5000/games?game_name=' + game_name
+      )
       // console.log(response)
       return response.data
     } catch (error) {
@@ -40,14 +42,44 @@ function ProfilePage (props) {
   }
 
   async function set_game_ranks (props) {
-    if (props === null) { return null }
+    if (props === null) {
+      return null
+    }
 
     const updated_user = props
     for (const key of Object.keys(updated_user.games_table)) {
       const games = await get_game(key)
       const game = games.games_list[0]
       updated_user.games_table[key]._id = game._id
-      if (updated_user.games_table[key].game_score < game.ranking_levels[0]) { updated_user.games_table[key].Rank = 'Iron' } else if (updated_user.games_table[key].game_score < game.ranking_levels[1]) { updated_user.games_table[key].Rank = 'Bronze' } else if (updated_user.games_table[key].game_score < game.ranking_levels[2]) { updated_user.games_table[key].Rank = 'Silver' } else if (updated_user.games_table[key].game_score < game.ranking_levels[3]) { updated_user.games_table[key].Rank = 'Gold' } else if (updated_user.games_table[key].game_score < game.ranking_levels[4]) { updated_user.games_table[key].Rank = 'Diamond' } else if (updated_user.games_table[key].game_score < game.ranking_levels[5]) { updated_user.games_table[key].Rank = 'Platinum' } else if (updated_user.games_table[key].game_score < game.ranking_levels[6]) { updated_user.games_table[key].Rank = 'Pro' } else { updated_user.games_table[key].Rank = 'God' }
+      if (updated_user.games_table[key].game_score < game.ranking_levels[0]) {
+        updated_user.games_table[key].Rank = 'Iron'
+      } else if (
+        updated_user.games_table[key].game_score < game.ranking_levels[1]
+      ) {
+        updated_user.games_table[key].Rank = 'Bronze'
+      } else if (
+        updated_user.games_table[key].game_score < game.ranking_levels[2]
+      ) {
+        updated_user.games_table[key].Rank = 'Silver'
+      } else if (
+        updated_user.games_table[key].game_score < game.ranking_levels[3]
+      ) {
+        updated_user.games_table[key].Rank = 'Gold'
+      } else if (
+        updated_user.games_table[key].game_score < game.ranking_levels[4]
+      ) {
+        updated_user.games_table[key].Rank = 'Diamond'
+      } else if (
+        updated_user.games_table[key].game_score < game.ranking_levels[5]
+      ) {
+        updated_user.games_table[key].Rank = 'Platinum'
+      } else if (
+        updated_user.games_table[key].game_score < game.ranking_levels[6]
+      ) {
+        updated_user.games_table[key].Rank = 'Pro'
+      } else {
+        updated_user.games_table[key].Rank = 'God'
+      }
     }
     return updated_user
   }
@@ -64,24 +96,31 @@ function ProfilePage (props) {
   }
 
   useEffect(() => {
-    fetchUser(id).then(result => {
+    fetchUser(id).then((result) => {
       if (result) {
         setUser(result)
         console.log('got user')
-      } else { console.log('failed to get user') }
+      } else {
+        console.log('failed to get user')
+      }
     })
 
-    fetchUser(viewer_id).then(result => {
+    fetchUser(viewer_id).then((result) => {
       if (result) {
         setViewUser(result)
         console.log('got viewer')
-      } else { console.log('failed to get user') }
+      } else {
+        console.log('failed to get user')
+      }
     })
   }, [])
 
   async function makePatchCall (change) {
     try {
-      return await axios.patch('http://localhost:5000/users/' + user._id, change)
+      return await axios.patch(
+        'http://localhost:5000/users/' + user._id,
+        change
+      )
     } catch (error) {
       console.log(error)
       return false
@@ -89,13 +128,15 @@ function ProfilePage (props) {
   }
 
   function updateUser (change) {
-    makePatchCall(change).then(result => {
+    makePatchCall(change).then((result) => {
       if (result.status === 201) {
-        fetchUser(id).then(result => {
+        fetchUser(id).then((result) => {
           if (result) {
             setUser(result)
             console.log('updated user')
-          } else { console.log('failed to update user') }
+          } else {
+            console.log('failed to update user')
+          }
         })
       }
     })
@@ -103,7 +144,10 @@ function ProfilePage (props) {
 
   async function makePatchCallFriends (change) {
     try {
-      return await axios.patch('http://localhost:5000/users/' + viewer_id, change)
+      return await axios.patch(
+        'http://localhost:5000/users/' + viewer_id,
+        change
+      )
     } catch (error) {
       console.log(error)
       return false
@@ -111,19 +155,40 @@ function ProfilePage (props) {
   }
 
   function updateFriends (change) {
-    makePatchCallFriends(change).then(result => {
+    makePatchCallFriends(change).then((result) => {
       if (result.status === 201) {
-        fetchUser(viewer_id).then(result => {
+        fetchUser(viewer_id).then((result) => {
           if (result) {
             setUser(result)
             console.log("updated user's friends")
-          } else { console.log('failed to update user') }
+          } else {
+            console.log('failed to update user')
+          }
         })
       }
     })
   }
 
-  if (viewer_id === id && user._id) { return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/> } else if (user._id) { return <ViewableProfile user={user} friendsList={viewUser.friends} handleSubmit={updateFriends} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/> }
+  if (viewer_id === id && user._id) {
+    return (
+      <EditableProfile
+        user={user}
+        handleSubmit={updateUser}
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
+      />
+    )
+  } else if (user._id) {
+    return (
+      <ViewableProfile
+        user={user}
+        friendsList={viewUser.friends}
+        handleSubmit={updateFriends}
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
+      />
+    )
+  }
 
   return <h1>404: Failed to load user</h1>
 }

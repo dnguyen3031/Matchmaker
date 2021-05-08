@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import {
-  Button, Container, Row, Col, Form, FormControl, FormGroup, Modal
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  FormControl,
+  FormGroup,
+  Modal
 } from 'react-bootstrap'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
@@ -26,7 +33,9 @@ function CreateAccount (props) {
   async function fetchUser (email) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://127.0.0.1:5000/users?email=' + email)
+      const response = await axios.get(
+        'http://127.0.0.1:5000/users?email=' + email
+      )
       console.log(response.data.users_list.length)
       return response.data.users_list.length
     } catch (error) {
@@ -86,7 +95,7 @@ function CreateAccount (props) {
     const handleSubmit = (e) => {
       e.preventDefault()
       const jsonData = makeJson()
-      fetchUser(email).then(result => {
+      fetchUser(email).then((result) => {
         console.log(result)
         if (password.localeCompare(confirmPassword) === 0 && result === 0) {
           postUser(hashPassword(jsonData))
@@ -99,84 +108,109 @@ function CreateAccount (props) {
       })
     }
 
-    return <Form className="text-white">
-      <Row>
-         <Form.Label>Create an Account</Form.Label>
-      </Row>
-      <Row>
-         <Col>
+    return (
+      <Form className="text-white">
+        <Row>
+          <Form.Label>Create an Account</Form.Label>
+        </Row>
+        <Row>
+          <Col>
             <Form.Group controlId="username">
-               <Form.Label>Username</Form.Label>
-               <Form.Control type="text" placeholder="username"
-                value = {username}
-                onChange={e => setUsername(e.target.value)}/>
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </Form.Group>
-         </Col>
-         <Col>
+          </Col>
+          <Col>
             <Form.Group controlId="email">
-               <Form.Label>Email</Form.Label>
-               <Form.Control type="text" placeholder="email@address.com"
-                value = {email}
-                onChange={(e) => setEmail(e.target.value)}/>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="email@address.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </Form.Group>
-         </Col>
-      </Row>
-      <Row>
-         <Col>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <FormGroup controlId="password">
-               <Form.Label>Password</Form.Label>
-               <FormControl placeholder="password" type="password" value = {password}
-                onChange={(e) => setPassword(e.target.value)}/>
-               <Form.Text id="passwordHelpBlock">
-                  Your password must be 8-20 characters long, contain letters and numbers, and
-                  must not contain spaces, special characters, or emoji.
-               </Form.Text>
+              <Form.Label>Password</Form.Label>
+              <FormControl
+                placeholder="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Form.Text id="passwordHelpBlock">
+                Your password must be 8-20 characters long, contain letters and
+                numbers, and must not contain spaces, special characters, or
+                emoji.
+              </Form.Text>
             </FormGroup>
-         </Col>
-         <Col>
+          </Col>
+          <Col>
             <FormGroup controlId="confirmedPassword">
-               <Form.Label>Confirm Password</Form.Label>
-               <FormControl placeholder="password" type="password"
-                value = {confirmPassword}
-                onChange={(e) => setconfirmPassword(e.target.value)}/>
+              <Form.Label>Confirm Password</Form.Label>
+              <FormControl
+                placeholder="password"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setconfirmPassword(e.target.value)}
+              />
             </FormGroup>
-         </Col>
-      </Row>
-      <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
-   </Form>
+          </Col>
+        </Row>
+        <Button block type="submit" onClick={handleSubmit}>
+          Create Account
+        </Button>
+      </Form>
+    )
   }
 
-  return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+  return (
+    <div>
+      <CustomNavbar
+        setToken={(id) => this.props.setToken(id)}
+        viewer_id={this.props.viewer_id}
+      />
       <Container fluid>
-         <Row>
-            <Col className="side-col" />
-            <Col xs={8} className="main-col">
-               <Row>
-                  <Col>
-                     <CreateAccountForm />
-                  </Col>
-               </Row>
-            </Col>
-            <Col className="side-col" />
-         </Row>
+        <Row>
+          <Col className="side-col" />
+          <Col xs={8} className="main-col">
+            <Row>
+              <Col>
+                <CreateAccountForm />
+              </Col>
+            </Row>
+          </Col>
+          <Col className="side-col" />
+        </Row>
 
-         <Modal show={showError} onHide={handleErrorClose}>
-            <Modal.Header closeButton>
-               <Modal.Title>Error!</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Your password and confirm password fields do not match
-                or your email has already been used!</Modal.Body>
-         </Modal>
+        <Modal show={showError} onHide={handleErrorClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Error!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Your password and confirm password fields do not match or your email
+            has already been used!
+          </Modal.Body>
+        </Modal>
 
-         <Modal show={showSucess} onHide={handleSuccessClose}>
-            <Modal.Header closeButton>
-               <Modal.Title>Success!</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>You have sucessfully created your account!</Modal.Body>
-         </Modal>
+        <Modal show={showSucess} onHide={handleSuccessClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Success!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>You have sucessfully created your account!</Modal.Body>
+        </Modal>
       </Container>
-   </div>
+    </div>
+  )
 }
 
 export default CreateAccount

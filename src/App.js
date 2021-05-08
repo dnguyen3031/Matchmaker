@@ -27,39 +27,39 @@ function App () {
   const token = getToken()
 
   return (
-         <Router>
-            <div>
-               <Switch>
-                  <Route path="/login">
-                     <Login setToken={(id) => setToken(id)} viewer_id={token}/>
-                  </Route>
-                  <Route path="/matchmaking">
-                     <Matchmaking viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-                  <Route path="/profile/:id">
-                     <ProfilePage viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-                  <Route path="/create-account">
-                     <CreateAccount viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-                  <Route path="/testpage">
-                     <TestPage viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-                  <Route path="/groups">
-                     <Groups viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-                  <Route path="/groupinfo">
-                     <GroupInfo viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-                  <Route path="/searchpage">
-                     <SearchPage viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-                  <Route path="/">
-                     <Home viewer_id={token} setToken={(id) => setToken(id)}/>
-                  </Route>
-               </Switch>
-            </div>
-         </Router>
+    <Router>
+      <div>
+        <Switch>
+          <Route path="/login">
+            <Login setToken={(id) => setToken(id)} viewer_id={token} />
+          </Route>
+          <Route path="/matchmaking">
+            <Matchmaking viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+          <Route path="/profile/:id">
+            <ProfilePage viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+          <Route path="/create-account">
+            <CreateAccount viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+          <Route path="/testpage">
+            <TestPage viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+          <Route path="/groups">
+            <Groups viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+          <Route path="/groupinfo">
+            <GroupInfo viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+          <Route path="/searchpage">
+            <SearchPage viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+          <Route path="/">
+            <Home viewer_id={token} setToken={(id) => setToken(id)} />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   )
 }
 

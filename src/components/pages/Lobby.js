@@ -18,7 +18,9 @@ function Lobby (props) {
   async function getMatch (match_id) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://127.0.0.1:5000/lobbies/' + match_id)
+      const response = await axios.get(
+        'http://127.0.0.1:5000/lobbies/' + match_id
+      )
       return response.data
     } catch (error) {
       console.log(error)
@@ -29,11 +31,13 @@ function Lobby (props) {
   useEffect(() => {
     const fetchMatch = (match_id) => {
       console.log(match_id)
-      getMatch(match_id).then(result => {
+      getMatch(match_id).then((result) => {
         if (result) {
           setMatch(result)
           console.log('got match')
-        } else { console.log('failed to get match') }
+        } else {
+          console.log('failed to get match')
+        }
       })
     }
 
@@ -49,82 +53,111 @@ function Lobby (props) {
   }
 
   if (match) {
-    return <div>
-         <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-         <Container fluid>
-            <Row>
-               <Col className="side-col" />
-               <Col xs={8} className="pr-0 main-col">
-                  <Row>
-                     <Col>
-                        <h6 style={{ color: 'black' }}> Discord: {match.discord}</h6>
-                        {console.dir(match)}
-                        <TeamBuilder match_id={match_id} teams={match.teams}></TeamBuilder>
-                     </Col>
-                     <Col md={3}>
-                        <FriendBar _id={props.viewer_id}/>
-                     </Col>
-                  </Row>
-               </Col>
-               <Col className="side-col" />
-            </Row>
-         </Container>
-      </div>
-  }
-
-  return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-      <Container fluid>
-         <Row>
+    return (
+      <div>
+        <CustomNavbar
+          setToken={(id) => props.setToken(id)}
+          viewer_id={props.viewer_id}
+        />
+        <Container fluid>
+          <Row>
             <Col className="side-col" />
             <Col xs={8} className="pr-0 main-col">
-               <Row>
-                  <Col>
-                     <Row>
-                        <Col>
-                           <h4 style={{ color: 'red' }}> Team 1</h4>
-                        </Col>
-                        <Col>
-                           <h2 style={{ color: 'white' }}> Lobby</h2>
-                           <h4 style={{ color: 'white' }}> Match info</h4>
-                           <h6 style={{ color: 'black' }}> Discord:</h6>
-                        </Col>
-                        <Col>
-                           <h4 style={{ color: 'blue' }}> Team 2</h4>
-                        </Col>
-                     </Row>
-                     <Row>
-                        <Col />
-                        <Col md={5}>
-                           <Row>
-                              Which team won?
-                           </Row>
-                           <Row>
-                              <div className="form-check">
-                                 <input className="form-check-input" type="radio" onChange={() => setWinningTeam('Team A')} name="choseWinningTeam" disabled={disabled}/>
-                                 <label className="form-check-label" htmlFor="teamA">Team A</label>
-                              </div>
-                              <div className="form-check">
-                                 <input className="form-check-input" type="radio" onChange={() => setWinningTeam('Team B')} name="choseWinningTeam" disabled={disabled}/>
-                                 <label className="form-check-label" htmlFor="teamB">Team B</label>
-                              </div>
-                           </Row>
-                           <Row>
-                              <Button variant="secondary" onClick={sendWinningTeam}>Submit</Button>
-                           </Row>
-                        </Col>
-                        <Col />
-                     </Row>
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewer_id}/>
-                  </Col>
-               </Row>
+              <Row>
+                <Col>
+                  <h6 style={{ color: 'black' }}> Discord: {match.discord}</h6>
+                  {console.dir(match)}
+                  <TeamBuilder
+                    match_id={match_id}
+                    teams={match.teams}
+                  ></TeamBuilder>
+                </Col>
+                <Col md={3}>
+                  <FriendBar _id={props.viewer_id} />
+                </Col>
+              </Row>
             </Col>
             <Col className="side-col" />
-         </Row>
+          </Row>
+        </Container>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <CustomNavbar
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
+      />
+      <Container fluid>
+        <Row>
+          <Col className="side-col" />
+          <Col xs={8} className="pr-0 main-col">
+            <Row>
+              <Col>
+                <Row>
+                  <Col>
+                    <h4 style={{ color: 'red' }}> Team 1</h4>
+                  </Col>
+                  <Col>
+                    <h2 style={{ color: 'white' }}> Lobby</h2>
+                    <h4 style={{ color: 'white' }}> Match info</h4>
+                    <h6 style={{ color: 'black' }}> Discord:</h6>
+                  </Col>
+                  <Col>
+                    <h4 style={{ color: 'blue' }}> Team 2</h4>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col />
+                  <Col md={5}>
+                    <Row>Which team won?</Row>
+                    <Row>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          onChange={() => setWinningTeam('Team A')}
+                          name="choseWinningTeam"
+                          disabled={disabled}
+                        />
+                        <label className="form-check-label" htmlFor="teamA">
+                          Team A
+                        </label>
+                      </div>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          onChange={() => setWinningTeam('Team B')}
+                          name="choseWinningTeam"
+                          disabled={disabled}
+                        />
+                        <label className="form-check-label" htmlFor="teamB">
+                          Team B
+                        </label>
+                      </div>
+                    </Row>
+                    <Row>
+                      <Button variant="secondary" onClick={sendWinningTeam}>
+                        Submit
+                      </Button>
+                    </Row>
+                  </Col>
+                  <Col />
+                </Row>
+              </Col>
+              <Col md={3}>
+                <FriendBar _id={props.viewer_id} />
+              </Col>
+            </Row>
+          </Col>
+          <Col className="side-col" />
+        </Row>
       </Container>
-   </div>
+    </div>
+  )
 }
 
 export default Lobby

@@ -22,52 +22,79 @@ function LoggedInNavbar (props) {
   }
 
   useEffect(() => {
-    fetchUser(props.viewer_id).then(result => {
+    fetchUser(this.props.viewer_id).then((result) => {
       if (result) {
         setUser(result.data)
         console.log('got user')
-      } else { console.log('failed to get user') }
+      } else {
+        console.log('failed to get user')
+      }
     })
-  }, [props.viewer_id])
+  }, [this.props.viewer_id])
 
-  const profile_url = '/profile/' + props.viewer_id
+  const profileUrl = '/profile/' + this.props.viewer_id
 
-  return <div>
+  return (
+    <div>
       <Navbar bg="dark" variant="dark" expand="lg">
-         <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
-         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-         <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-               <Nav.Link href="/matchmaking" style={{ color: 'white' }}>Find Match</Nav.Link>
-               <Nav.Link href={profile_url} style={{ color: 'white' }}>Profile</Nav.Link>
-               <Nav.Link href="/groups" style={{ color: 'white' }}>Groups</Nav.Link>
-               <Nav.Link href="/searchpage" style={{ color: 'white' }}>Search</Nav.Link>
-            </Nav>
-            <DropdownButton variant="secondary" menuAlign="right" title={user.name} id="dropdown-menu-align-right">
-               <Dropdown.Item eventKey="3" onClick={() => props.setToken(null)}>Logout</Dropdown.Item>
-            </DropdownButton>
-         </Navbar.Collapse>
+        <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="/matchmaking" style={{ color: 'white' }}>
+              Find Match
+            </Nav.Link>
+            <Nav.Link href={profileUrl} style={{ color: 'white' }}>
+              Profile
+            </Nav.Link>
+            <Nav.Link href="/groups" style={{ color: 'white' }}>
+              Groups
+            </Nav.Link>
+            <Nav.Link href="/searchpage" style={{ color: 'white' }}>
+              Search
+            </Nav.Link>
+          </Nav>
+          <DropdownButton
+            variant="secondary"
+            menuAlign="right"
+            title={user.name}
+            id="dropdown-menu-align-right"
+          >
+            <Dropdown.Item eventKey="3" onClick={() => this.props.setToken(null)}>
+              Logout
+            </Dropdown.Item>
+          </DropdownButton>
+        </Navbar.Collapse>
       </Navbar>
-   </div>
+    </div>
+  )
 }
 
 function DefaultNavbar () {
-  return <div>
+  return (
+    <div>
       <Navbar className="color-nav" expand="lg" bg="dark" variant="dark">
-         <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
-         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-         <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-               <Nav.Link href="/login" style={{ color: 'white' }}>Login</Nav.Link>
-               <Nav.Link href="/searchpage" style={{ color: 'white' }}>Search</Nav.Link>
-            </Nav>
-         </Navbar.Collapse>
+        <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="/login" style={{ color: 'white' }}>
+              Login
+            </Nav.Link>
+            <Nav.Link href="/searchpage" style={{ color: 'white' }}>
+              Search
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
-   </div>
+    </div>
+  )
 }
 
 function CustomNavbar (props) {
-  if (props.viewer_id) { return LoggedInNavbar(props) }
+  if (props.viewer_id) {
+    return LoggedInNavbar(props)
+  }
 
   return DefaultNavbar()
 }

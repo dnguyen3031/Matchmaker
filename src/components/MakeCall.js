@@ -1,7 +1,6 @@
 import axios from 'axios'
 
-function MakeCall () {
-}
+function MakeCall () {}
 
 export async function MakeGetCall (person) {
   try {

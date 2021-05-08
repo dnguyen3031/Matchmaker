@@ -15,7 +15,8 @@ function SearchPage (props) {
     async function makeGetByNameCall (name) {
       try {
         return await axios.get(
-          'http://localhost:5000/users?secureName=' + name)
+          'http://localhost:5000/users?secureName=' + name
+        )
       } catch (error) {
         console.log(error)
         return false
@@ -24,7 +25,7 @@ function SearchPage (props) {
 
     function submitSearch () {
       if (searchTerm !== '') {
-        makeGetByNameCall(searchTerm).then(result => {
+        makeGetByNameCall(searchTerm).then((result) => {
           if (result.status === 200) {
             console.log(result.data.users_list)
             console.log('sr detek: ' + result.data.users_list.length)
@@ -42,18 +43,23 @@ function SearchPage (props) {
       }
     }
 
-    return <Form>
-         <Form.Group controlId="searchForm">
-            <Form.Label>Search term</Form.Label>
-            <Form.Control type="username" placeholder="Enter username"
-                          value={searchTerm}
-                          onChange={e => setSearchTerm(e.target.value)} />
-         </Form.Group>
-         <Button variant="primary" type="button" onClick ={submitSearch}>
-            {/* TODO: change to Submit type button */}
-            Submit
-         </Button>
+    return (
+      <Form>
+        <Form.Group controlId="searchForm">
+          <Form.Label>Search term</Form.Label>
+          <Form.Control
+            type="username"
+            placeholder="Enter username"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Form.Group>
+        <Button variant="primary" type="button" onClick={submitSearch}>
+          {/* TODO: change to Submit type button */}
+          Submit
+        </Button>
       </Form>
+    )
   }
 
   function ResultsTable () {
@@ -64,65 +70,68 @@ function SearchPage (props) {
     }
 
     if (searchResults === 'noResults') {
-      console.log('detected \'noresults\'')
+      console.log("detected 'noresults'")
       return (
-               <div>
-                  <table>
-                     <tbody>
-                     <tr>
-                        <th style={{ color: 'black' }}>No Results</th>
-                     </tr>
-                     </tbody>
-                  </table>
-               </div>
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <th style={{ color: 'black' }}>No Results</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       )
     }
 
     const rows = searchResults.map((user, index) => {
       return (
-            <tr key={index}>
-               <td>
-                  <Link to={'/profile/' + user._id} >
-                     {user.name}
-                  </Link>
-               </td>
-            </tr>
+        <tr key={index}>
+          <td>
+            <Link to={'/profile/' + user._id}>{user.name}</Link>
+          </td>
+        </tr>
       )
     })
     return (
-         <div>
-            <table>
-               <tbody>
-               <tr>
-                  <th style={{ color: 'black' }}>Results</th>
-               </tr>
-                  {rows}
-               </tbody>
-            </table>
-         </div>
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th style={{ color: 'black' }}>Results</th>
+            </tr>
+            {rows}
+          </tbody>
+        </table>
+      </div>
     )
   }
 
-  return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+  return (
+    <div>
+      <CustomNavbar
+        setToken={(id) => props.setToken(id)}
+        viewer_id={props.viewer_id}
+      />
       <Container fluid>
-         <Row>
-            <Col className="side-col" />
-            <Col xs={8} className="pr-0">
-               <Row>
-                  <Col>
-                    <SearchBar/>
-                    <ResultsTable />
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewer_id}/>
-                  </Col>
-               </Row>
-            </Col>
-            <Col className="side-col" />
-         </Row>
+        <Row>
+          <Col className="side-col" />
+          <Col xs={8} className="pr-0">
+            <Row>
+              <Col>
+                <SearchBar />
+                <ResultsTable />
+              </Col>
+              <Col md={3}>
+                <FriendBar _id={props.viewer_id} />
+              </Col>
+            </Row>
+          </Col>
+          <Col className="side-col" />
+        </Row>
       </Container>
-   </div>
+    </div>
+  )
 }
 
 export default SearchPage

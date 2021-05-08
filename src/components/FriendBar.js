@@ -11,10 +11,20 @@ function FriendBar (props) {
     games_table: {},
     name: '',
     password: '',
-    profile_info: { bio: '', discord: '', profile_pic: '', steam_friend_code: '', steam_name: '' }
+    profile_info: {
+      bio: '',
+      discord: '',
+      profile_pic: '',
+      steam_friend_code: '',
+      steam_name: ''
+    }
   })
 
-  const [usergroup, setGroup] = React.useState({ _id: '', num_players: '', players: {} })
+  const [usergroup, setGroup] = React.useState({
+    _id: '',
+    num_players: '',
+    players: {}
+  })
 
   async function fetchUser (_id) {
     try {
@@ -37,17 +47,17 @@ function FriendBar (props) {
       }
     }
 
-    fetchUser(props._id).then(result => {
+    fetchUser(this.props._id).then((result) => {
       if (result) {
         setUser(result)
-        fetchGroup(result.group).then(result => {
+        fetchGroup(result.group).then((result) => {
           if (result) {
             setGroup(result)
           }
         })
       }
     })
-  }, [props._id])
+  }, [this.props._id])
 
   function FriendsList (props) {
     const [, setFriendList] = React.useState([])
@@ -55,69 +65,80 @@ function FriendBar (props) {
 
     React.useEffect(() => {
       async function getAllFriends () {
-        for (const key in props.list) {
-          if (props.list[key] !== 'Deleted') {
+        for (const key in this.props.list) {
+          if (this.props.list[key] !== 'Deleted') {
             const response = await fetchUser(key)
-            setFriendList(friendList => [...friendList, response.name])
-            setResponseList(responseList => [...responseList, response])
-          } else { console.log(key + ' is a deleted friend.') }
+            setFriendList((friendList) => [...friendList, response.name])
+            setResponseList((responseList) => [...responseList, response])
+          } else {
+            console.log(key + ' is a deleted friend.')
+          }
         }
       }
 
       getAllFriends()
-    }, [props.list])
+    }, [this.props.list])
 
     const rows = responseList.map((friend, i) => {
       return (
-               <Col key={i}>
-                  <ListGroup variant="flush">
-                     <ListGroup.Item>
-                        <p onClick={() => { window.location.href = '/profile/' + friend._id }}>
-                           {friend.name}
-                        </p>
-                     </ListGroup.Item>
-                  </ListGroup>
-               </Col>
+        <Col key={i}>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <p
+                onClick={() => {
+                  window.location.href = '/profile/' + friend._id
+                }}
+              >
+                {friend.name}
+              </p>
+            </ListGroup.Item>
+          </ListGroup>
+        </Col>
       )
     })
 
-    return (
-            <div>
-               {rows}
-            </div>
-    )
+    return <div>{rows}</div>
   }
 
-  return <div style={{ fontSize: 14 }}>
+  return (
+    <div style={{ fontSize: 14 }}>
       <Accordion defaultActiveKey="0">
-         <Card>
-            <Accordion.Toggle as={Card.Header} eventKey="0" className="text-center">
-               Your Friends
-            </Accordion.Toggle>
-         <Accordion.Collapse eventKey="0">
+        <Card>
+          <Accordion.Toggle
+            as={Card.Header}
+            eventKey="0"
+            className="text-center"
+          >
+            Your Friends
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey="0">
             <Card.Body className="pl-0">
-               <FriendsList list={user.friends}/>
+              <FriendsList list={user.friends} />
             </Card.Body>
-         </Accordion.Collapse>
-         </Card>
+          </Accordion.Collapse>
+        </Card>
       </Accordion>
       <Accordion defaultActiveKey="0">
-         <Card>
-            <Accordion.Toggle as={Card.Header} eventKey="0" className="text-center">
-               Your Group
-            </Accordion.Toggle>
-         <Accordion.Collapse eventKey="0">
+        <Card>
+          <Accordion.Toggle
+            as={Card.Header}
+            eventKey="0"
+            className="text-center"
+          >
+            Your Group
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey="0">
             <Card.Body className="pl-0">
-               Group Code: {'\n'}
-               {user.group} {'\n'}
-               Group members
-               <FriendsList list={usergroup.players}/>
+              Group Code: {'\n'}
+              {user.group} {'\n'}
+              Group members
+              <FriendsList list={usergroup.players} />
             </Card.Body>
-         </Accordion.Collapse>
-         </Card>
+          </Accordion.Collapse>
+        </Card>
       </Accordion>
-
-   </div>
+    </div>
+  )
 }
 
 export default FriendBar
