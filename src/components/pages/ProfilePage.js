@@ -51,7 +51,6 @@ function ProfilePage (props) {
       const games = await getGame(key)
       const game = games.games_list[0]
       updatedUser.games_table[key]._id = game._id
-      // ToDo: change to switch case
       if (updatedUser.games_table[key].game_score < game.ranking_levels[0]) {
         updatedUser.games_table[key].Rank = 'Iron'
       } else if (
