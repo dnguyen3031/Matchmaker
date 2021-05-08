@@ -25,6 +25,7 @@ function setToken(userToken) {
 }
 
 function App() {
+   super()
    const token = getToken();
 
    return (
