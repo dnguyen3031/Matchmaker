@@ -1,9 +1,11 @@
 import time
 
-from suitable_lobby import find_suitable
 from mongodb import *
 from bson import ObjectId
 from ELO import *
+from suitable_lobby import find_suitable
+from team_assignment import assign_teams
+
 
 def check_sizes(lobby, o_lobby, num_players_needed):
     # 1 means >  (lobby too big)
@@ -33,36 +35,6 @@ def merge_matches(game, lobby, matched_lobby):
     game["queue"].remove(lobby)
     game["queue"].remove(matched_lobby)
     return merged_lobby
-
-
-def largest_group(unused_groups):
-    largest_group = 0
-    for i in range(len(unused_groups)):
-        if len(unused_groups[i]["players"].keys()) > len(unused_groups[largest_group]["players"].keys()):
-            largest_group = i
-    return unused_groups.pop(largest_group)
-
-
-def find_best_teams(groups):
-    team1, team2 = {"size": 0, "groups": []}, {"size": 0, "groups": []}
-    unused_groups = [] + groups
-    for i in range(len(groups)):
-        if team1["size"] > team2["size"]:
-            temp = largest_group(unused_groups)
-            team2["groups"] += [temp]
-            team2["size"] += len(temp["players"].keys())
-        else:
-            temp = largest_group(unused_groups)
-            team1["groups"] += [temp]
-            team1["size"] += len(temp["players"].keys())
-    return team1["groups"], team2["groups"]
-
-
-def assign_teams(full_lobby):
-    game = Game({"_id": full_lobby["game_id"]})
-    game.reload()
-    team1, team2 = find_best_teams(full_lobby["groups"])
-    full_lobby["teams"] = [team1, team2]
 
 
 def get_next_discord():
@@ -243,7 +215,6 @@ def unqueue_players(teams):
                 user["in_queue"] = False
                 user["lobby"] = None
                 user.patch()
-
 
 def terminate_lobby(lobby):
     free_discord(lobby["discord"])
