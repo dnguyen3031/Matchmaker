@@ -145,7 +145,6 @@ function ProfilePage(props) {
       });
    }
    
-   console.log("user id:", user._id)
    if (user._id == "NULL") {
       return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
    }
