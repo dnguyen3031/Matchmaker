@@ -81,7 +81,7 @@ function EditableProfile(props) {
                   <Col>
                      <Row className="pt-3 pb-3">
                         <Col >
-                           <Image src={"DefaultProfilePic.jpg"} rounded fluid/>
+                           <Image src={require("../../DefaultProfilePic.jpg").default} height = {200} width = {200} rounded fluid/>
                         </Col>
                         <Col className="pt-2 text-white">
                            <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(["Name", "name"])}/></div>
