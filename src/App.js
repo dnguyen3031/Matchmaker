@@ -8,7 +8,6 @@ import TestPage from './components/pages/TestPage'
 import Groups from './components/pages/Groups'
 import GroupInfo from './components/pages/GroupInfo'
 import Matchmaking from './components/pages/Matchmaking'
-import LeaderboardPage from './components/pages/LeaderboardPage'
 import CreateAccount from './components/pages/CreateAccount'
 import SearchPage from './components/pages/SearchPage'
 
@@ -32,31 +31,31 @@ function App () {
             <div>
                <Switch>
                   <Route path="/login">
-                     <Login setToken={(id) => setToken(id)} viewer_id={token}/>
+                     <Login setToken={(id) => setToken(id)} viewerId={token}/>
                   </Route>
                   <Route path="/matchmaking">
-                     <Matchmaking viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <Matchmaking viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                   <Route path="/profile/:id">
-                     <ProfilePage viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <ProfilePage viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                   <Route path="/create-account">
-                     <CreateAccount viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <CreateAccount viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                   <Route path="/testpage">
-                     <TestPage viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <TestPage viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                   <Route path="/groups">
-                     <Groups viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <Groups viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                   <Route path="/groupinfo">
-                     <GroupInfo viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <GroupInfo viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                   <Route path="/searchpage">
-                     <SearchPage viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <SearchPage viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                   <Route path="/">
-                     <Home viewer_id={token} setToken={(id) => setToken(id)}/>
+                     <Home viewerId={token} setToken={(id) => setToken(id)}/>
                   </Route>
                </Switch>
             </div>

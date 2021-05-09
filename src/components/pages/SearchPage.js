@@ -104,7 +104,7 @@ function SearchPage (props) {
   }
 
   return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
       <Container fluid>
          <Row>
             <Col className="side-col" />
@@ -115,7 +115,7 @@ function SearchPage (props) {
                     <ResultsTable />
                   </Col>
                   <Col md={3}>
-                     <FriendBar _id={props.viewer_id}/>
+                     <FriendBar _id={props.viewerId}/>
                   </Col>
                </Row>
             </Col>

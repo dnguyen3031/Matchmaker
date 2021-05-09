@@ -22,15 +22,15 @@ function LoggedInNavbar (props) {
   }
 
   useEffect(() => {
-    fetchUser(props.viewer_id).then(result => {
+    fetchUser(props.viewerId).then(result => {
       if (result) {
         setUser(result.data)
         console.log('got user')
       } else { console.log('failed to get user') }
     })
-  }, [props.viewer_id])
+  }, [props.viewerId])
 
-  const profile_url = '/profile/' + props.viewer_id
+  const profileUrl = '/profile/' + props.viewerId
 
   return <div>
       <Navbar bg="dark" variant="dark" expand="lg">
@@ -39,7 +39,7 @@ function LoggedInNavbar (props) {
          <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
                <Nav.Link href="/matchmaking" style={{ color: 'white' }}>Find Match</Nav.Link>
-               <Nav.Link href={profile_url} style={{ color: 'white' }}>Profile</Nav.Link>
+               <Nav.Link href={profileUrl} style={{ color: 'white' }}>Profile</Nav.Link>
                <Nav.Link href="/groups" style={{ color: 'white' }}>Groups</Nav.Link>
                <Nav.Link href="/searchpage" style={{ color: 'white' }}>Search</Nav.Link>
             </Nav>
@@ -67,7 +67,7 @@ function DefaultNavbar () {
 }
 
 function CustomNavbar (props) {
-  if (props.viewer_id) { return LoggedInNavbar(props) }
+  if (props.viewerId) { return LoggedInNavbar(props) }
 
   return DefaultNavbar()
 }

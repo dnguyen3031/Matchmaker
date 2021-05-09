@@ -6,7 +6,7 @@ import './PageTemplate.css'
 
 function TestPage (props) {
   return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
       <Container fluid>
          <Row>
             <Col className="side-col" />

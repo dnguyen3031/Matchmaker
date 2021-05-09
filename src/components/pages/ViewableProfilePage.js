@@ -1,68 +1,66 @@
-import { Row, Card, Col, Container, Image, Table, Button} from 'react-bootstrap';
-import CustomNavbar from '../CustomNavbar';
-import React from 'react';
-import './ProfilePage.css';
-import FriendBar from "../FriendBar";
+import { Row, Card, Col, Container, Table, Button } from 'react-bootstrap'
+import CustomNavbar from '../CustomNavbar'
+import React from 'react'
+import './ProfilePage.css'
+import FriendBar from '../FriendBar'
 import {
-   useParams
- } from "react-router-dom";
+  useParams
+} from 'react-router-dom'
 
-function ViewableProfile(props) {
-   const [profileID] = React.useState(useParams().id);
-   const [areFriends, setAreFriends] = React.useState(false);
-   
+function ViewableProfile (props) {
+  const [profileID] = React.useState(useParams().id)
+  const [areFriends, setAreFriends] = React.useState(false)
 
-   React.useEffect(() => {
-      function confirmFriends() {
-         for (const key in props.friendsList) {
-            if (key === profileID && props.friendsList[key] !== "Deleted") {
-               console.log(props.viewer_id  + " has already added " + key);
-               setAreFriends(true);
-            }
-         }
+  React.useEffect(() => {
+    function confirmFriends () {
+      for (const key in props.friendsList) {
+        if (key === profileID && props.friendsList[key] !== 'Deleted') {
+          console.log(props.viewerId + ' has already added ' + key)
+          setAreFriends(true)
+        }
       }
-      
-      confirmFriends();
-   }, [profileID, props.friendsList, props.viewer_id]);
+    }
 
+    confirmFriends()
+  }, [profileID, props.friendsList, props.viewerId])
 
-   function addFriendAction() {
-      props.handleSubmit({"friends": {
-            [profileID] : "Standard"
-         }})
-      console.log("Adding this id :" + profileID);
-   }
+  function addFriendAction () {
+    props.handleSubmit({
+      friends: {
+        [profileID]: 'Standard'
+      }
+    })
+    console.log('Adding this id :' + profileID)
+  }
 
+  function removeFriendAction () {
+    props.handleSubmit({
+      friends: {
+        [profileID]: 'Deleted'
+      }
+    })
+    console.log('Removing!')
+  }
 
-   function removeFriendAction() {
-      props.handleSubmit({"friends": {
-            [profileID] : "Deleted"
-         }})
-      console.log("Removing!");
-   }
-
-
-   function GameTable()
-   {
-      const rows = Object.keys(props.user.games_table).map((game, index) => {
-         return (
+  function GameTable () {
+    const rows = Object.keys(props.user.games_table).map((game, index) => {
+      return (
                <tr key={index}>
                   <td>{game}</td>
                   <td>{props.user.games_table[game].Rank}</td>
                </tr>
-         );
-      })
-      return (
+      )
+    })
+    return (
             <tbody>
                {rows}
             </tbody>
-      );
-   }
+    )
+  }
 
-
-   return <div>
-   <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-   <Container fluid> 
+  return <div>
+   <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
+   <Container fluid>
       <Row>
          <Col className="side-col" />
          <Col xs={8} className="main-col pr-0">
@@ -85,7 +83,7 @@ function ViewableProfile(props) {
 
                         </Card>
                      </Col>
-                     <Col></Col>
+                     <Col/>
                   </Row>
                   <Row className="justify-content-md-center pb-3">
                      <Card bg='dark' text='white'>
@@ -112,7 +110,7 @@ function ViewableProfile(props) {
                   </Row>
                </Col>
                <Col md={3}>
-                  <FriendBar _id={props.user._id} /> 
+                  <FriendBar _id={props.viewerId} />
                   {/* _id="603c339a5ef99cf0de73b4b8" */}
                </Col>
             </Row>
@@ -120,7 +118,7 @@ function ViewableProfile(props) {
          <Col className="side-col" />
       </Row>
    </Container>
-</div>;
- }
+</div>
+}
 
- export default ViewableProfile;
+export default ViewableProfile

@@ -1,69 +1,64 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import {Button, Col, Container, Dropdown, DropdownButton, Row} from 'react-bootstrap';
-import CustomNavbar from '../CustomNavbar';
-import FriendBar from "../FriendBar";
-import Queue from './Queue';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { Col, Container, Dropdown, DropdownButton, Row } from 'react-bootstrap'
+import CustomNavbar from '../CustomNavbar'
+import FriendBar from '../FriendBar'
+import Queue from './Queue'
 
-function Matchmaking(props) {
-   const [viewUser, setViewUser] = useState({email: "", 
-                              profile_info: {discord: "", profile_pic: "", bio: ""},
-                              games_table: {},
-                              friends: {},
-                              name: "",
-                              password: "",
-                              _id: "",
-                              lobby: null,
-                              in_queue: false});
+function Matchmaking (props) {
+  const [viewUser, setViewUser] = useState({
+    email: '',
+    profile_info: { discord: '', profile_pic: '', bio: '' },
+    games_table: {},
+    friends: {},
+    name: '',
+    password: '',
+    _id: '',
+    lobby: null,
+    in_queue: false
+  })
 
-
-   useEffect(() => {
-      async function fetchUser(id){
-         try {
-            // get character at index 's id number
-            return await axios.get('http://127.0.0.1:5000/users/' + id);
-         }
-         catch (error) {
-            console.log(error);
-            return false;
-         }
+  useEffect(() => {
+    async function fetchUser (id) {
+      try {
+        // get character at index 's id number
+        return await axios.get('http://127.0.0.1:5000/users/' + id)
+      } catch (error) {
+        console.log(error)
+        return false
       }
-      
-      fetchUser(props.viewer_id).then( result => {
-         if (result) {
-            setViewUser(result);
-            console.log("got viewer");
-         } else
-            console.log("failed to get user")
-      });
-   }, [props.viewer_id]);
+    }
 
+    fetchUser(props.viewerId).then(result => {
+      if (result) {
+        setViewUser(result)
+        console.log('got viewer')
+      } else { console.log('failed to get user') }
+    })
+  }, [props.viewerId])
 
-   async function makePatchCall(game_name){
-      try{
-         return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + game_name + '&id=' + props.viewer_id);
-      }
-      catch(error){
-         console.log(error)
-         return false
-      }
-   }
+  async function makePatchCall (gameName) {
+    try {
+      return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.viewerId)
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
 
-   function addToQueue(game_name) {
-      makePatchCall(game_name).then( result => {
-         if (result.status === 201) {
-            console.log('Added Successfully')
-            window.location.reload(false);
-         } else
-            console.log('failed to add to queue')
-      });
-   }
+  function addToQueue (gameName) {
+    makePatchCall(gameName).then(result => {
+      if (result.status === 201) {
+        console.log('Added Successfully')
+        window.location.reload(false)
+      } else { console.log('failed to add to queue') }
+    })
+  }
 
-
-   if (viewUser.data === undefined || viewUser.data.in_queue === false)
-      return <div> 
-         <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-         <Container fluid> 
+  if (viewUser.data === undefined || viewUser.data.in_queue === false) {
+    return <div>
+         <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
+         <Container fluid>
             <Row>
                <Col className="side-col" />
                <Col xs={8} className="main-col pr-0">
@@ -72,21 +67,22 @@ function Matchmaking(props) {
                         <Dropdown>
                         </Dropdown>
                         <DropdownButton id="dropdown-basic-button" title="Select Game">
-                           <Dropdown.Item onClick={() => addToQueue("Krunker - Hardpoint")}>Krunker - Hardpoint</Dropdown.Item>
-                           <Dropdown.Item onClick={() => addToQueue("Skribbl.io")}>Skribbl.io</Dropdown.Item>
+                           <Dropdown.Item onClick={() => addToQueue('Krunker - Hardpoint')}>Krunker - Hardpoint</Dropdown.Item>
+                           <Dropdown.Item onClick={() => addToQueue('Skribbl.io')}>Skribbl.io</Dropdown.Item>
                         </DropdownButton>
                      </Col>
                      <Col md={3}>
-                        <FriendBar _id={props.viewer_id} />
+                        <FriendBar _id={props.viewerId} />
                      </Col>
                   </Row>
                </Col>
                <Col className="side-col" />
             </Row>
          </Container>
-      </div>;
+      </div>
+  }
 
-   return <Queue viewer_id={props.viewer_id} setToken={props.setToken} match_id={viewUser.data.lobby}/>
+  return <Queue viewerId={props.viewerId} setToken={props.setToken} matchId={viewUser.data.lobby}/>
 }
- 
-export default Matchmaking;
+
+export default Matchmaking

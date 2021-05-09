@@ -52,7 +52,7 @@ function Login (props) {
   }
 
   return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
       <Container fluid >
          <Row>
             <Col className="side-col" />
@@ -67,7 +67,7 @@ function Login (props) {
                                    required
                      />
                      <Form.Text className="text-white">
-                        We'll always share your information with everyone else.
+                        We&apos;ll always share your information with everyone else.
                      </Form.Text>
                   </Form.Group>
                   <Form.Group controlId="formBasicPassword">

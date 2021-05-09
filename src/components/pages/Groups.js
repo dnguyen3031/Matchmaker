@@ -13,9 +13,9 @@ function Groups (props) {
   async function makeLeaveCall () {
     try {
       // get character at index 's id number
-      const currGroup = await axios.get('http://localhost:5000/users/' + props.viewer_id + '?group=true')
+      const currGroup = await axios.get('http://localhost:5000/users/' + props.viewerId + '?group=true')
       console.log(currGroup)
-      let response = await axios.patch('http://localhost:5000/groups/leave-group?id=' + props.viewer_id + '&group=' + currGroup.data)
+      let response = await axios.patch('http://localhost:5000/groups/leave-group?id=' + props.viewerId + '&group=' + currGroup.data)
       if (response === 0) {
         response = await axios.delete('http://localhost:5000/groups/' + currGroup.data)
       }
@@ -38,26 +38,26 @@ function Groups (props) {
     async function fetchUser (id) {
       try {
         // get character at index 's id number
-        return await axios.get('http://127.0.0.1:5000/users/' + props.viewer_id)
+        return await axios.get('http://127.0.0.1:5000/users/' + props.viewerId)
       } catch (error) {
         console.log(error)
         return false
       }
     }
 
-    fetchUser(props.viewer_id).then(result => {
+    fetchUser(props.viewerId).then(result => {
       if (result) {
         setUser(result.data)
         console.log('got user')
       } else { console.log('failed to get user') }
     })
-  }, [props.viewer_id])
+  }, [props.viewerId])
 
   async function makePatchCall (groupcode) {
     try {
       // get character at index 's id number
       console.log(groupcode)
-      const response = await axios.patch('http://localhost:5000/groups/join-group?id=' + props.viewer_id + '&group=' + groupcode)
+      const response = await axios.patch('http://localhost:5000/groups/join-group?id=' + props.viewerId + '&group=' + groupcode)
       return response.data
     } catch (error) {
       console.log(error)
@@ -78,10 +78,10 @@ function Groups (props) {
     try {
       // get character at index 's id number
       console.log(group)
-      let response = await axios.post('http://127.0.0.1:5000/groups?userID=' + props.viewer_id, group)
+      let response = await axios.post('http://127.0.0.1:5000/groups?userID=' + props.viewerId, group)
       console.log(response.data)
       group = { group: response.data }
-      response = await axios.patch('http://127.0.0.1:5000/users/' + props.viewer_id, group)
+      response = await axios.patch('http://127.0.0.1:5000/users/' + props.viewerId, group)
       return response.data
     } catch (error) {
       console.log(error)
@@ -92,7 +92,7 @@ function Groups (props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     const playerdict = {}
-    playerdict[props.viewer_id] = user.name
+    playerdict[props.viewerId] = user.name
     const jsonData = { players: playerdict, num_players: 1 }
     postGroup(jsonData).then(result => {
       if (result.status === 201) { console.log('Created Successfully') } else { console.log('failed to create group') }
@@ -103,7 +103,7 @@ function Groups (props) {
 
   if (!user.group) {
     return <div>
-         <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+         <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
          <Container fluid>
             <Row>
                <Col className="side-col" />
@@ -117,7 +117,7 @@ function Groups (props) {
                         <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
                      </Col>
                      <Col md={3}>
-                        <FriendBar _id={props.viewer_id}/>
+                        <FriendBar _id={props.viewerId}/>
                      </Col>
                   </Row>
                   <Row>
@@ -138,7 +138,7 @@ function Groups (props) {
   }
 
   return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+      <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
       <Container fluid>
          <Row>
             <Col className="side-col" />
@@ -153,7 +153,7 @@ function Groups (props) {
                      <Button variant="primary" onClick = {leaveSubmit}>Leave Group</Button>{' '}
                   </Col>
                   <Col md={3}>
-                     <FriendBar _id={props.viewer_id}/>
+                     <FriendBar _id={props.viewerId}/>
                   </Col>
                </Row>
             </Col>
