@@ -1,4 +1,4 @@
-import { Row, Col, Container, Image, Table, Button} from 'react-bootstrap';
+import { Row, Card, Col, Container, Image, Table, Button} from 'react-bootstrap';
 import CustomNavbar from '../CustomNavbar';
 import React from 'react';
 import './ProfilePage.css';
@@ -61,62 +61,66 @@ function ViewableProfile(props) {
 
 
    return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-      <Container fluid>
-         <Row>
-            <Col className="side-col" />
-            <Col xs={8} className="main-col pr-0">
-               <Row>
-                  <Col>
-                     <Row className="pt-3 pb-3">
-                        <Col xs={3}>
-                           <Image src="test_profile_pic.jpg" rounded fluid/>
-                        </Col>
-                        <Col xs={4} className="pt-2 text-white">
-                           <div className="h3">{props.user.name}</div>
-                           <div className="h5">Bio: </div>
-                           <div>
-                              {props.user.profile_info.bio}
-                           </div>
-                           {/* <div>Viewer's id: {props.viewer_id}</div>
-                              <div>Token (This profile id): {profileID}</div> */}
-                           <div>{!areFriends && <Button variant="info" onClick={addFriendAction}>Add Friend</Button>}</div>
-                           {' '}
-                           <Button variant="info" onClick={removeFriendAction}>Remove Friend</Button>
-                        </Col>
-                        <Col xs={4} className="pt-2 bg-dark text-white">
-                           <div className="text-center">Contact Info</div>
-                           <div className="pt-4">Email: {props.user.email} </div>
-                           <div className="pt-4">Discord: {props.user.profile_info.discord}</div>
-                           <div className="pt-4 pb-4">Steam Name: {props.user.profile_info.steam_name} </div>
-                        </Col>
-                     </Row>
-                     <Row>
-                        <Col xs={8}>
-                           <Table variant="dark">
-                              <thead>
+   <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
+   <Container fluid> 
+      <Row>
+         <Col className="side-col" />
+         <Col xs={8} className="main-col pr-0">
+            <Row>
+               <Col>
+                  <Row className="pt-3 pb-3">
+                     {/* TODO: Fix pictures */}
+                     {/* <Col>
+                        <Image src="../DefaultProfilePic.jpg" rounded/>
+                     </Col> */}
+                     <Col>
+                        <Card bg='dark' text='white'>
+                           <Card.Body>
+                              <Card.Title>{props.user.name}</Card.Title>
+                              <Card.Text class="text-white">{props.user.profile_info.bio}</Card.Text>
+                              {!areFriends && <Button variant="info" onClick={addFriendAction}>Add Friend</Button>}
+                              {' '}
+                              <Button variant="info" onClick={removeFriendAction}>Remove Friend</Button>
+                           </Card.Body>
+
+                        </Card>
+                     </Col>
+                     <Col></Col>
+                  </Row>
+                  <Row className="justify-content-md-center pb-3">
+                     <Card bg='dark' text='white'>
+                        <Card.Body>
+                           <Card.Title>Contact Information</Card.Title>
+                           <Card.Text class="text-white">Email: {props.user.email}</Card.Text>
+                           <Card.Text class="text-white">Discord: {props.user.profile_info.discord}</Card.Text>
+                           <Card.Text class="text-white">Steam Name: {props.user.profile_info.steam_name}</Card.Text>
+                        </Card.Body>
+                     </Card>
+                  </Row>
+                  <Row className="justify-content-md-center">
+                     <Col xs={6}>
+                        <Table variant="dark">
+                           <thead>
                               <tr>
                                  <th>Game</th>
                                  <th>Rank</th>
                               </tr>
-                              </thead>
-                              <GameTable />
-                           </Table>
-                        </Col>
-                        <Col/>
-                     </Row>
-
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewer_id} />
-                     {/* changed from user_id to viewer_id because we want to keep freinds bar of the person that is logged in */}
-                  </Col>
-               </Row>
-            </Col>
-            <Col className="side-col" />
-         </Row>
-      </Container>
-   </div>;
+                           </thead>
+                          <GameTable />
+                        </Table>
+                     </Col>
+                  </Row>
+               </Col>
+               <Col md={3}>
+                  <FriendBar _id={props.user._id} /> 
+                  {/* _id="603c339a5ef99cf0de73b4b8" */}
+               </Col>
+            </Row>
+         </Col>
+         <Col className="side-col" />
+      </Row>
+   </Container>
+</div>;
  }
 
  export default ViewableProfile;
