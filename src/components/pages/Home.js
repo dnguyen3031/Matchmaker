@@ -1,14 +1,13 @@
-import React from 'react';
-import CustomNavbar from '../CustomNavbar';
-import { Col, Row, Container} from 'react-bootstrap';
-import './PageTemplate.css';
-import FriendBar from "../FriendBar"
+import React from 'react'
+import CustomNavbar from '../CustomNavbar'
+import { Col, Row, Container } from 'react-bootstrap'
+import './PageTemplate.css'
+import FriendBar from '../FriendBar'
 
-function Home(props) {
-   if (props.viewer_id != null)
-      window.location.href='/matchmaking'
+function Home (props) {
+  if (props.viewer_id != null) { window.location.href = '/matchmaking' }
 
-   return <div>
+  return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid>
          <Row>
@@ -16,7 +15,7 @@ function Home(props) {
             <Col xs={8} className="pr-0 main-col">
                <Row>
                   <Col>
-                     <h2 style={{color: 'white'}} onClick={() => {window.location.href='/login'}}>
+                     <h2 style={{ color: 'white' }} onClick={() => { window.location.href = '/login' }}>
                         Please Login to Start Matchmaking
                      </h2>
                   </Col>
@@ -28,7 +27,7 @@ function Home(props) {
             <Col className="side-col" />
          </Row>
       </Container>
-   </div>;
+   </div>
 }
 
-export default Home;
+export default Home

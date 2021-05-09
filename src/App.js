@@ -1,33 +1,33 @@
-import './App.css';
-import React from "react";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Home from './components/pages/Home';
-import ProfilePage from './components/pages/ProfilePage';
-import Login from './components/pages/Login';
-import TestPage from './components/pages/TestPage';
-import Groups from './components/pages/Groups';
-import GroupInfo from './components/pages/GroupInfo';
-import Matchmaking from './components/pages/Matchmaking';
-import LeaderboardPage from './components/pages/LeaderboardPage';
-import CreateAccount from './components/pages/CreateAccount';
-import SearchPage from './components/pages/SearchPage';
+import './App.css'
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Home from './components/pages/Home'
+import ProfilePage from './components/pages/ProfilePage'
+import Login from './components/pages/Login'
+import TestPage from './components/pages/TestPage'
+import Groups from './components/pages/Groups'
+import GroupInfo from './components/pages/GroupInfo'
+import Matchmaking from './components/pages/Matchmaking'
+import LeaderboardPage from './components/pages/LeaderboardPage'
+import CreateAccount from './components/pages/CreateAccount'
+import SearchPage from './components/pages/SearchPage'
 
-import 'bootstrap/dist/css/bootstrap.min.css'; //Need this import for React Bootstrap styling
+import 'bootstrap/dist/css/bootstrap.min.css' // Need this import for React Bootstrap styling
 
-function getToken() {
-   const tokenString = sessionStorage.getItem('token');
-   return JSON.parse(tokenString)
+function getToken () {
+  const tokenString = sessionStorage.getItem('token')
+  return JSON.parse(tokenString)
 }
 
-function setToken(userToken) {
-   sessionStorage.setItem('token', JSON.stringify(userToken));
-   window.location.reload()
+function setToken (userToken) {
+  sessionStorage.setItem('token', JSON.stringify(userToken))
+  window.location.reload()
 }
 
-function App() {
-   const token = getToken();
+function App () {
+  const token = getToken()
 
-   return (
+  return (
          <Router>
             <div>
                <Switch>
@@ -61,7 +61,7 @@ function App() {
                </Switch>
             </div>
          </Router>
-   );
+  )
 }
 
-export default App;
+export default App

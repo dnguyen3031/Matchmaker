@@ -1,109 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
-   Button, Container, Row, Col, Form, FormControl, FormGroup, Modal
-} from 'react-bootstrap';
-import axios from 'axios';
-import { useHistory } from "react-router-dom";
-import "./PageTemplate.css";
-import CustomNavbar from '../CustomNavbar';
+  Button, Container, Row, Col, Form, FormControl, FormGroup, Modal
+} from 'react-bootstrap'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
+import './PageTemplate.css'
+import CustomNavbar from '../CustomNavbar'
 
+function CreateAccount (props) {
+  const history = useHistory()
 
-function CreateAccount(props) {
-   const history = useHistory();
+  const bcrypt = require('bcryptjs')
+  const saltRounds = 9
 
-   const bcrypt = require('bcryptjs');
-   const saltRounds = 9;
-   
-   /*Error Model*/
-   const [showError, setErrorShow] = useState(false);
-   const handleErrorClose = () => setErrorShow(false);
-   const handleErrorShow = () => setErrorShow(true);
+  /* Error Model */
+  const [showError, setErrorShow] = useState(false)
+  const handleErrorClose = () => setErrorShow(false)
+  const handleErrorShow = () => setErrorShow(true)
 
-   /*Success Model*/
-   const [showSucess, setSuccessShow] = useState(false);
-   const handleSuccessClose = () => setSuccessShow(false);
-   const handleSuccessShow = () => setSuccessShow(true);
+  /* Success Model */
+  const [showSucess, setSuccessShow] = useState(false)
+  const handleSuccessClose = () => setSuccessShow(false)
+  const handleSuccessShow = () => setSuccessShow(true)
 
-   async function fetchUser(email){
-      try {
-         // get character at index 's id number
-         const response = await axios.get('http://127.0.0.1:5000/users?email=' + email);
-         console.log(response.data.users_list.length);
-         return response.data.users_list.length;
+  async function fetchUser (email) {
+    try {
+      // get character at index 's id number
+      const response = await axios.get('http://127.0.0.1:5000/users?email=' + email)
+      console.log(response.data.users_list.length)
+      return response.data.users_list.length
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  function hashPassword (jsonData) {
+    jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
+    return jsonData
+  }
+
+  async function postUser (account) {
+    try {
+      // get character at index 's id number
+      console.log(account)
+      const response = await axios.post('http://127.0.0.1:5000/users', account)
+      return response.data
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  function CreateAccountForm (props) {
+    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setconfirmPassword] = useState('')
+
+    function makeJson () {
+      return {
+        name: username,
+        email: email,
+        password: password,
+        friends: {},
+        games_table: {
+          'Krunker - Hardpoint': {
+            game_score: 1000,
+            time_played: 0
+          }
+        },
+        group: null,
+        in_queue: false,
+        lobby: null,
+        profile_info: {
+          bio: 'This user has no bio',
+          discord: '',
+          profile_pic: 'DefaultProfilePic.jpg',
+          steam_friend_code: '',
+          steam_name: ''
+        }
       }
-      catch (error) {
-         console.log(error);
-         return false;
-      }
-   }
+    }
 
-   function hashPassword(jsonData) {
-      jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
-      return jsonData
-   }
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      const jsonData = makeJson()
+      fetchUser(email).then(result => {
+        console.log(result)
+        if (password.localeCompare(confirmPassword) === 0 && result === 0) {
+          postUser(hashPassword(jsonData))
+          history.push('/home')
+          handleSuccessShow()
+        } else {
+          console.log('Invalid Password Matching\n')
+          handleErrorShow()
+        }
+      })
+    }
 
-   async function postUser(account) {
-      try {
-         // get character at index 's id number
-         console.log(account);
-         const response = await axios.post('http://127.0.0.1:5000/users', account);
-         return response.data;
-      }
-      catch (error) {
-         console.log(error);
-         return false;
-      }
-   }
-
-   function CreateAccountForm(props){
-      const [email, setEmail] = useState('');
-      const [username, setUsername] = useState('');
-      const [password, setPassword] = useState('');
-      const [confirmPassword, setconfirmPassword] = useState('');
-
-      function makeJson(){
-         return { 
-            "name": username, 
-            "email": email, 
-            "password": password,
-            "friends": {},
-            "games_table": {
-               "Krunker - Hardpoint": {
-                  "game_score": 1000,
-                  "time_played": 0
-               }
-            },
-            "group": null,
-            "in_queue": false,
-            "lobby": null,
-            "profile_info": {
-               "bio": "This user has no bio",
-               "discord": "",
-               "profile_pic": "DefaultProfilePic.jpg",
-               "steam_friend_code": "",
-               "steam_name": ""
-            }
-         };
-      }
-
-      const handleSubmit = (e) => {
-         e.preventDefault();
-         var jsonData = makeJson();
-         fetchUser(email).then( result => {
-            console.log(result);
-            if (password.localeCompare(confirmPassword) === 0 && result === 0)
-            {
-               postUser(hashPassword(jsonData));
-               history.push("/home");
-               handleSuccessShow();
-            } else {
-               console.log("Invalid Password Matching\n");
-               handleErrorShow();
-            }
-         });
-      }
-
-      return <Form className="text-white">
+    return <Form className="text-white">
       <Row>
          <Form.Label>Create an Account</Form.Label>
       </Row>
@@ -119,7 +115,7 @@ function CreateAccount(props) {
          <Col>
             <Form.Group controlId="email">
                <Form.Label>Email</Form.Label>
-               <Form.Control type="text" placeholder="email@address.com" 
+               <Form.Control type="text" placeholder="email@address.com"
                 value = {email}
                 onChange={(e) => setEmail(e.target.value)}/>
             </Form.Group>
@@ -140,19 +136,19 @@ function CreateAccount(props) {
          <Col>
             <FormGroup controlId="confirmedPassword">
                <Form.Label>Confirm Password</Form.Label>
-               <FormControl placeholder="password" type="password" 
+               <FormControl placeholder="password" type="password"
                 value = {confirmPassword}
                 onChange={(e) => setconfirmPassword(e.target.value)}/>
             </FormGroup>
          </Col>
       </Row>
       <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
-   </Form> 
-   }
+   </Form>
+  }
 
-   return <div> 
+  return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-      <Container fluid> 
+      <Container fluid>
          <Row>
             <Col className="side-col" />
             <Col xs={8} className="main-col">
@@ -180,8 +176,7 @@ function CreateAccount(props) {
             <Modal.Body>You have sucessfully created your account!</Modal.Body>
          </Modal>
       </Container>
-   </div>;
- }
- 
+   </div>
+}
 
-export default CreateAccount;
+export default CreateAccount

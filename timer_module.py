@@ -259,8 +259,9 @@ def check_for_end_match(lobbies):
             terminate_lobby(lobby)
 
 
-if __name__ == '__main__':
+def main():
     clock_delay = 5
+    print("timer running")
     while True:
         games = Game().find_all()
         lobbies = Lobby().find_all()

@@ -1,54 +1,48 @@
-import React from 'react';
-import {Link} from "react-router-dom";
-import CustomNavbar from '../CustomNavbar';
-import FriendBar from "../FriendBar";
-import {Button, Col, Container, Form, Row} from "react-bootstrap";
-import axios from 'axios';
-import "./PageTemplate.css";
+import React from 'react'
+import { Link } from 'react-router-dom'
+import CustomNavbar from '../CustomNavbar'
+import FriendBar from '../FriendBar'
+import { Button, Col, Container, Form, Row } from 'react-bootstrap'
+import axios from 'axios'
+import './PageTemplate.css'
 
-function SearchPage(props) {
-   const [searchResults, setSearchResults] = React.useState([]);
+function SearchPage (props) {
+  const [searchResults, setSearchResults] = React.useState([])
 
+  function SearchBar () {
+    const [searchTerm, setSearchTerm] = React.useState('')
 
-   function SearchBar(){
-      const [searchTerm, setSearchTerm] = React.useState("");
-
-
-      async function makeGetByNameCall(name){
-         try{
-            return await axios.get(
-                  'http://localhost:5000/users?secureName=' + name);
-         }
-         catch(error){
-            console.log(error)
-            return false
-         }
+    async function makeGetByNameCall (name) {
+      try {
+        return await axios.get(
+          'http://localhost:5000/users?secureName=' + name)
+      } catch (error) {
+        console.log(error)
+        return false
       }
+    }
 
-      function submitSearch(){
-         if (searchTerm !== ""){
-            makeGetByNameCall(searchTerm).then( result => {
-               if (result.status === 200) {
-                  console.log(result.data["users_list"])
-                  console.log('sr detek: '+result.data["users_list"].length)
-                  if (result.data["users_list"].length === 0){
-                     console.log('setting noResults')
-                     setSearchResults("noResults")
-                  }
-                  else{
-                     setSearchResults(result.data["users_list"])
-                  }
-               }
-               else{
-                  console.log('failed to find users')
-                  console.log(result)
-               }
-            });
-         }
+    function submitSearch () {
+      if (searchTerm !== '') {
+        makeGetByNameCall(searchTerm).then(result => {
+          if (result.status === 200) {
+            console.log(result.data.users_list)
+            console.log('sr detek: ' + result.data.users_list.length)
+            if (result.data.users_list.length === 0) {
+              console.log('setting noResults')
+              setSearchResults('noResults')
+            } else {
+              setSearchResults(result.data.users_list)
+            }
+          } else {
+            console.log('failed to find users')
+            console.log(result)
+          }
+        })
       }
+    }
 
-
-      return <Form>
+    return <Form>
          <Form.Group controlId="searchForm">
             <Form.Label>Search term</Form.Label>
             <Form.Control type="username" placeholder="Enter username"
@@ -56,64 +50,62 @@ function SearchPage(props) {
                           onChange={e => setSearchTerm(e.target.value)} />
          </Form.Group>
          <Button variant="primary" type="button" onClick ={submitSearch}>
-            {/* TODO: change to Submit type button*/}
+            {/* TODO: change to Submit type button */}
             Submit
          </Button>
       </Form>
-   }
+  }
 
+  function ResultsTable () {
+    console.log('sr: ' + searchResults)
+    if (searchResults.length === 0) {
+      console.log('empty')
+      return null
+    }
 
-   function ResultsTable(){
-      console.log('sr: '+searchResults)
-      if (searchResults.length === 0){
-         console.log('empty')
-         return null
-      }
-
-      if (searchResults === 'noResults'){
-         console.log('detected \'noresults\'')
-         return (
+    if (searchResults === 'noResults') {
+      console.log('detected \'noresults\'')
+      return (
                <div>
                   <table>
                      <tbody>
                      <tr>
-                        <th style={{color: 'black'}}>No Results</th>
+                        <th style={{ color: 'black' }}>No Results</th>
                      </tr>
                      </tbody>
                   </table>
                </div>
-         );
-      }
+      )
+    }
 
-      const rows = searchResults.map((user, index) => {
-         return (
+    const rows = searchResults.map((user, index) => {
+      return (
             <tr key={index}>
                <td>
-                  <Link to={'/profile/'+user._id} >
+                  <Link to={'/profile/' + user._id} >
                      {user.name}
                   </Link>
                </td>
             </tr>
-         );
-      });
-      return (
+      )
+    })
+    return (
          <div>
             <table>
                <tbody>
                <tr>
-                  <th style={{color: 'black'}}>Results</th>
+                  <th style={{ color: 'black' }}>Results</th>
                </tr>
                   {rows}
                </tbody>
             </table>
          </div>
-      );
-   }
+    )
+  }
 
-
-   return <div> 
+  return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-      <Container fluid> 
+      <Container fluid>
          <Row>
             <Col className="side-col" />
             <Col xs={8} className="pr-0">
@@ -130,7 +122,7 @@ function SearchPage(props) {
             <Col className="side-col" />
          </Row>
       </Container>
-   </div>;
+   </div>
 }
 
-export default SearchPage;
+export default SearchPage

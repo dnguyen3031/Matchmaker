@@ -1,10 +1,10 @@
-import React from 'react';
-import CustomNavbar from '../CustomNavbar';
-import { Row, Col, Container } from "react-bootstrap";
-import FriendBar from "../FriendBar";
+import React from 'react'
+import CustomNavbar from '../CustomNavbar'
+import { Row, Col, Container } from 'react-bootstrap'
+import FriendBar from '../FriendBar'
 
-function LeaderboardPage(props) {
-   return <div> 
+function LeaderboardPage (props) {
+  return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid>
          <Row>
@@ -20,7 +20,7 @@ function LeaderboardPage(props) {
             <Col className="side-col" />
          </Row>
       </Container>
-   </div>;
+   </div>
 }
- 
-export default LeaderboardPage;
+
+export default LeaderboardPage
