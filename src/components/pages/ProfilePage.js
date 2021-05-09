@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
 import './ProfilePage.css';
 import EditableProfile from './EditableProfilePage'
 import ViewableProfile from './ViewableProfilePage'
 import {useParams} from "react-router-dom";
+
 
 function ProfilePage(props) {
    const viewer_id = props.viewer_id;
@@ -14,7 +15,7 @@ function ProfilePage(props) {
                                  friends: {},
                                  name: "",
                                  password: "",
-                                 _id: ""});
+                                 _id: "NULL"});
    const [viewUser, setViewUser] = useState({email: "",
                               profile_info: {discord: "", profile_pic: "", bio: ""},
                               games_table: {},
@@ -22,7 +23,6 @@ function ProfilePage(props) {
                               name: "",
                               password: "",
                               _id: ""});
-
 
    async function get_game(game_name){
       try {
@@ -84,6 +84,7 @@ function ProfilePage(props) {
             setUser(result);
             console.log("got user");
          } else
+            user._id = ""
             console.log("failed to get user")
       });
 
@@ -143,14 +144,21 @@ function ProfilePage(props) {
             });
       });
    }
-
    
-   if (viewer_id === id && user._id)
+   console.log("user id:", user._id)
+   if (user._id == "NULL") {
       return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
-   else if (user._id)
-      return <ViewableProfile user={user} friendsList={viewUser.friends} handleSubmit={updateFriends} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
-
-   return <h1>404: Failed to load user</h1>
+   }
+   if(user._id != "") {
+      if (viewer_id === id && user._id)
+         return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
+      else if (user._id)
+         return <ViewableProfile user={user} friendsList={viewUser.friends} handleSubmit={updateFriends} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
+   }
+   if (user._id == "")
+         return <h1>404: Failed to load user</h1>
+   return <h1></h1>
+   
 }
 
 export default ProfilePage;
