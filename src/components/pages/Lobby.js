@@ -62,7 +62,7 @@ function Lobby(props) {
                   <Row>
                      <Col>
                         {console.dir(match)}
-                        <TeamBuilder match_id={match_id} teams={match["teams"]} discord={match.discord}></TeamBuilder>
+                        <TeamBuilder match_id={match_id} game_id={match.game_id} teams={match["teams"]} discord={match.discord} time_left={match.time_left}></TeamBuilder>
                      </Col>
                      <Col md={3}>
                         <FriendBar _id={props.viewer_id}/>
