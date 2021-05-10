@@ -26,7 +26,7 @@ function CreateAccount (props) {
   async function fetchUser (email) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://127.0.0.1:5000/users?email=' + email)
+      const response = await axios.get('http://matchmaker-backend01.herokuapp.com/users?email=' + email)
       console.log(response.data.users_list.length)
       return response.data.users_list.length
     } catch (error) {
@@ -44,7 +44,7 @@ function CreateAccount (props) {
     try {
       // get character at index 's id number
       console.log(account)
-      const response = await axios.post('http://127.0.0.1:5000/users', account)
+      const response = await axios.post('http://matchmaker-backend01.herokuapp.com/users', account)
       return response.data
     } catch (error) {
       console.log(error)
