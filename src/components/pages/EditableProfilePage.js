@@ -38,6 +38,11 @@ function EditableProfile (props) {
     }
   }
 
+  function ActivateModalImage (fields) {
+    setModalShowImage(true)
+    setModalField({ dName: fields[0], fName: fields[1] })
+  }
+
   return <div>
          <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
          <Container fluid>
@@ -63,14 +68,6 @@ function EditableProfile (props) {
                            <Col/>
                         </Row>
                         <Row className="justify-content-md-center pb-3">
-                           {/* OLD Contact info box */}
-                           {/* <Col xs={6} className="bg-dark text-white">
-                              <div className="h4">Contact Info</div>
-                              <div className="pt-">Email: {props.user.email} <BsPencil onClick={() => ActivateModal(["Email", "email"])} /></div>
-                              <div className="pt-4">Discord: {props.user.profile_info.discord} <BsPencil onClick={() => ActivateModal(["Discord", "discord", "profile_info"])} /></div>
-                              <div className="pt-4 pb-4">Steam Name: {props.user.profile_info.steam_name}
-                                 <BsPencil onClick={() => ActivateModal(["Steam Name", "steam_name", "profile_info"])} /></div>
-                           </Col> */}
                            <Card bg='dark' text='white'>
                                  <Card.Body>
                                     <Card.Title>Contact Information</Card.Title>
@@ -102,7 +99,7 @@ function EditableProfile (props) {
                         </Row>
                      </Col>
                      <Col md={3}>
-                        <FriendBar _id={props.user._id} />
+                        <FriendBar _id={props.viewerId} />
                         {/* _id="603c339a5ef99cf0de73b4b8" */}
                      </Col>
                   </Row>
@@ -146,25 +143,20 @@ function EditableProfile (props) {
             </Modal.Title>
          </Modal.Header>
          <Modal.Body>
-         <form>
             <label>
-               Select Profile Picture:
-               <select onChange={handleChange}>
-                  <option value="1">Profile Picture 1</option>
-                  <option value="2">Profile Picture 2</option>
-                  <option value="3">Profile Picture 3</option>
-                  <option value="4">Profile Picture 4</option>
-                  <option value="5">Profile Picture 5</option>
-                  <option value="6">Profile Picture 6</option>
-                  <option value="7">Profile Picture 7</option>
-                  <option value="8">Profile Picture 8</option>
-               </select>
+               <div>
+                  <img src={require('../../images/profile_pic_1.jpg').default} width={100} height={100} onClick={() => setData({ input: '1' })}/>
+                  <img src={require('../../images/profile_pic_2.jpg').default} width={100} height={100} onClick={() => setData({ input: '2' })}/>
+                  <img src={require('../../images/profile_pic_3.jpg').default} width={100} height={100} onClick={() => setData({ input: '3' })}/>
+                  <img src={require('../../images/profile_pic_4.jpg').default} width={100} height={100} onClick={() => setData({ input: '4' })}/>
+               </div>
+               <div>
+                  <img src={require('../../images/profile_pic_5.jpg').default} width={100} height={100} onClick={() => setData({ input: '5' })}/>
+                  <img src={require('../../images/profile_pic_6.jpg').default} width={100} height={100} onClick={() => setData({ input: '6' })}/>
+                  <img src={require('../../images/profile_pic_7.jpg').default} width={100} height={100} onClick={() => setData({ input: '7' })}/>
+                  <img src={require('../../images/profile_pic_8.jpg').default} width={100} height={100} onClick={() => setData({ input: '8' })}/>
+               </div>
             </label>
-            <submitField
-                  type="submit"
-                  value={'Submit'}
-                  onChange={handleChange} />
-         </form>
          </Modal.Body>
          <Modal.Footer>
             <Button onClick={submitChange}>Change</Button>

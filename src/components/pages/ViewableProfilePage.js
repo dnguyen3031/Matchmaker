@@ -11,6 +11,29 @@ function ViewableProfile (props) {
   const [profileID] = React.useState(useParams().id)
   const [areFriends, setAreFriends] = React.useState(false)
 
+  function ImageF () {
+    switch (props.user.profile_info.profile_pic) {
+      case '1':
+        return <img src={require('../../images/profile_pic_1.jpg').default} width={200} height={200}/>
+      case '2':
+        return <img src={require('../../images/profile_pic_2.jpg').default} width={200} height={200}/>
+      case '3':
+        return <img src={require('../../images/profile_pic_3.jpg').default} width={200} height={200}/>
+      case '4':
+        return <img src={require('../../images/profile_pic_4.jpg').default} width={200} height={200}/>
+      case '5':
+        return <img src={require('../../images/profile_pic_5.jpg').default} width={200} height={200}/>
+      case '6':
+        return <img src={require('../../images/profile_pic_6.jpg').default} width={200} height={200}/>
+      case '7':
+        return <img src={require('../../images/profile_pic_7.jpg').default} width={200} height={200}/>
+      case '8':
+        return <img src={require('../../images/profile_pic_8.jpg').default} width={200} height={200}/>
+      default:
+        return <img src={require('../../images/DefaultProfilePic.jpg').default} width={200} height={200}/>
+    }
+  }
+
   React.useEffect(() => {
     function confirmFriends () {
       for (const key in props.friendsList) {
@@ -67,10 +90,9 @@ function ViewableProfile (props) {
             <Row>
                <Col>
                   <Row className="pt-3 pb-3">
-                     {/* TODO: Fix pictures */}
-                     {/* <Col>
-                        <Image src="../DefaultProfilePic.jpg" rounded/>
-                     </Col> */}
+                     <Col>
+                        <ImageF/>
+                     </Col>
                      <Col>
                         <Card bg='dark' text='white'>
                            <Card.Body>

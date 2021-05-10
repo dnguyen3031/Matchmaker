@@ -128,8 +128,8 @@ function CreateAccount (props) {
                <FormControl placeholder="password" type="password" value = {password}
                 onChange={(e) => setPassword(e.target.value)}/>
                <Form.Text id="passwordHelpBlock">
-                  Your password must be 8-20 characters long, contain letters and numbers, and
-                  must not contain spaces, special characters, or emoji.
+                  {/* Your password must be 8-20 characters long, contain letters and numbers, and */}
+                  {/* must not contain spaces, special characters, or emoji. */}
                </Form.Text>
             </FormGroup>
          </Col>

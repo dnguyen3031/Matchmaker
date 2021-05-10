@@ -68,8 +68,8 @@ function ProfilePage (props) {
       if (result) {
         setUser(result)
         console.log('got user')
-      } else { 
-        user._id = ""
+      } else {
+        user._id = ''
         console.log('failed to get user')
       }
     })
@@ -122,18 +122,12 @@ function ProfilePage (props) {
     })
   }
 
-  if (user._id == "NULL") {
-    return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
+  if (user._id === 'NULL') {
+    return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
   }
-  if(user._id != "") {
-    if (viewer_id === id && user._id)
-      return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
-    else if (user._id)
-      return <ViewableProfile user={user} friendsList={viewUser.friends} handleSubmit={updateFriends} setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>;
-  }
-  if (user._id == "")
-    return <h1>404: Failed to load user</h1>
-  return <h1></h1>
+  if (user._id !== '') { if (viewerId === id && user._id) { return <EditableProfile user={user} handleSubmit={updateUser} setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/> } else if (user._id) { return <ViewableProfile user={user} friendsList={viewUser.friends} handleSubmit={updateFriends} setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/> } }
+
+  return <h1>404: Failed to load user</h1>
 }
 
 export default ProfilePage
