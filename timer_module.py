@@ -263,7 +263,7 @@ def check_for_end_match(lobbies):
 
 
 def main():
-    clock_delay = 5
+    clock_delay = 3
     print("timer running")
     while True:
         games = Game().find_all()

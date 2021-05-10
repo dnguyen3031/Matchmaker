@@ -31,7 +31,7 @@ function FriendBar (props) {
 
   async function fetchUser (_id) {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/users/' + _id)
+      const response = await axios.get('http://localhost:5000/users/' + _id)
       return response.data
     } catch (error) {
       console.log(error)
@@ -41,7 +41,7 @@ function FriendBar (props) {
 
   async function fetchGroup (_id) {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/groups/' + _id)
+      const response = await axios.get('http://localhost:5000/groups/' + _id)
       return response.data
     } catch (error) {
       console.log(error)

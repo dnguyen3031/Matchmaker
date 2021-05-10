@@ -6,6 +6,7 @@ from suitable_lobby import check_groups_splittable
 
 
 class MyTestCase(unittest.TestCase):
+    # ToDo: automate this
     def test_get_group_sizes(self):
         groups = get_group_sizes(
             [{

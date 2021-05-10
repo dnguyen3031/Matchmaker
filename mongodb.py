@@ -86,6 +86,7 @@ class User(Model):
         return users
 
     def secure_find_by_name(self, name):
+        # ToDo: need to start using this
         # does not return password ect. for security reasons
         cleaned_users = []
         users = self.find_all()

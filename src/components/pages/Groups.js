@@ -38,7 +38,7 @@ function Groups (props) {
     async function fetchUser (id) {
       try {
         // get character at index 's id number
-        return await axios.get('http://127.0.0.1:5000/users/' + props.viewerId)
+        return await axios.get('http://localhost:5000/users/' + props.viewerId)
       } catch (error) {
         console.log(error)
         return false
@@ -78,10 +78,10 @@ function Groups (props) {
     try {
       // get character at index 's id number
       console.log(group)
-      let response = await axios.post('http://127.0.0.1:5000/groups?userID=' + props.viewerId, group)
+      let response = await axios.post('http://localhost:5000/groups?userID=' + props.viewerId, group)
       console.log(response.data)
       group = { group: response.data }
-      response = await axios.patch('http://127.0.0.1:5000/users/' + props.viewerId, group)
+      response = await axios.patch('http://localhost:5000/users/' + props.viewerId, group)
       return response.data
     } catch (error) {
       console.log(error)
