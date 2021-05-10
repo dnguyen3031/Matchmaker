@@ -7,37 +7,36 @@ import { BsPencil } from 'react-icons/bs'
 
 function EditableProfile (props) {
   const [modalShow, setModalShow] = React.useState(false)
-  const [modalShowImage, setModalShowImage] = React.useState(false);
+  const [modalShowImage, setModalShowImage] = React.useState(false)
   const [modalField, setModalField] = useState({ dName: '', fName: '' })
   const [data, setData] = useState({ input: props.user[modalField.fName] })
 
   const handleClose = () => setModalShow(false)
 
-  const handleCloseImage = () => setModalShowImage(false);
+  const handleCloseImage = () => setModalShowImage(false)
 
-   function ImageF() {
-      switch(props.user.profile_info.profile_pic) {
-         case "1":
-            return <img src={require("../../images/profile_pic_1.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         case "2":
-            return <img src={require("../../images/profile_pic_2.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         case "3":
-            return <img src={require("../../images/profile_pic_3.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         case "4":
-            return <img src={require("../../images/profile_pic_4.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         case "5":
-            return <img src={require("../../images/profile_pic_5.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         case "6":
-            return <img src={require("../../images/profile_pic_6.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         case "7":
-            return <img src={require("../../images/profile_pic_7.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         case "8":
-            return <img src={require("../../images/profile_pic_8.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-         default:
-            return <img src={require("../../images/DefaultProfilePic.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
-      }
-   
-   }
+  function ImageF () {
+    switch (props.user.profile_info.profile_pic) {
+      case '1':
+        return <img src={require('../../images/profile_pic_1.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      case '2':
+        return <img src={require('../../images/profile_pic_2.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      case '3':
+        return <img src={require('../../images/profile_pic_3.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      case '4':
+        return <img src={require('../../images/profile_pic_4.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      case '5':
+        return <img src={require('../../images/profile_pic_5.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      case '6':
+        return <img src={require('../../images/profile_pic_6.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      case '7':
+        return <img src={require('../../images/profile_pic_7.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      case '8':
+        return <img src={require('../../images/profile_pic_8.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+      default:
+        return <img src={require('../../images/DefaultProfilePic.jpg').default} width={200} height={200} onClick={() => ActivateModalImage(['Profile Picture', 'profile_pic', 'profile_info'])}/>
+    }
+  }
 
   return <div>
          <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
@@ -163,7 +162,7 @@ function EditableProfile (props) {
             </label>
             <submitField
                   type="submit"
-                  value={"Submit"}
+                  value={'Submit'}
                   onChange={handleChange} />
          </form>
          </Modal.Body>
@@ -208,22 +207,22 @@ function EditableProfile (props) {
   function switchCases (fName) {
     switch (fName) {
       case 'name':
-         return { name: data.input }
+        return { name: data.input }
       case 'bio':
-         return { profile_info: { bio: data.input } }
+        return { profile_info: { bio: data.input } }
       case 'discord':
-         return { profile_info: { discord: data.input } }
+        return { profile_info: { discord: data.input } }
       case 'email':
-         return { email: data.input }
+        return { email: data.input }
       case 'steam_name':
-         return { profile_info: { steam_name: data.input } }
-      case "profile_pic":
-         console.log("returning profile info")
-         return {"profile_info": {"profile_pic": data.input}}
-      }
-   }
+        return { profile_info: { steam_name: data.input } }
+      case 'profile_pic':
+        console.log('returning profile info')
+        return { profile_info: { profile_pic: data.input } }
+    }
+  }
 
-   function GameTable () {
+  function GameTable () {
     const rows = Object.keys(props.user.games_table).map((game, index) => {
       return (
              <tr key={index}>
