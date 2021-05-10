@@ -76,7 +76,7 @@ function CreateAccount (props) {
         profile_info: {
           bio: 'This user has no bio',
           discord: '',
-          profile_pic: 'DefaultProfilePic.jpg',
+          profile_pic: '../../images/DefaultProfilePic.jpg',
           steam_friend_code: '',
           steam_name: ''
         }
