@@ -22,7 +22,7 @@ function Matchmaking (props) {
     async function fetchUser (id) {
       try {
         // get character at index 's id number
-        return await axios.get('http://127.0.0.1:5000/users/' + id)
+        return await axios.get('http://localhost:5000/users/' + id)
       } catch (error) {
         console.log(error)
         return false

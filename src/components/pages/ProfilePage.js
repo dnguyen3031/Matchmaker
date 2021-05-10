@@ -30,7 +30,7 @@ function ProfilePage (props) {
   async function getGame (gameName) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://127.0.0.1:5000/games?game_name=' + gameName)
+      const response = await axios.get('http://localhost:5000/games?game_name=' + gameName)
       // console.log(response)
       return response.data
     } catch (error) {
@@ -55,7 +55,7 @@ function ProfilePage (props) {
   async function fetchUser (id) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://127.0.0.1:5000/users/' + id)
+      const response = await axios.get('http://localhost:5000/users/' + id)
       return await setGameRanks(response.data)
     } catch (error) {
       console.log(error)
