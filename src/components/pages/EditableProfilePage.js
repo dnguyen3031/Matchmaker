@@ -86,6 +86,32 @@ function EditableProfile(props) {
       handleCloseImage()
    }
    /* props.user.profile_info.profile_pic */
+   console.log(props.user.profile_info.profile_pic)
+
+   function ImageF() {
+      switch(props.user.profile_info.profile_pic) {
+         case "1":
+            return <img src={require("../../images/profile_pic_1.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         case "2":
+            return <img src={require("../../images/profile_pic_2.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         case "3":
+            return <img src={require("../../images/profile_pic_3.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         case "4":
+            return <img src={require("../../images/profile_pic_4.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         case "5":
+            return <img src={require("../../images/profile_pic_5.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         case "6":
+            return <img src={require("../../images/profile_pic_6.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         case "7":
+            return <img src={require("../../images/profile_pic_7.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         case "8":
+            return <img src={require("../../images/profile_pic_8.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+         default:
+            return <img src={require("../../images/DefaultProfilePic.jpg").default} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+      }
+      
+   }
+
    return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
       <Container fluid>
@@ -96,7 +122,7 @@ function EditableProfile(props) {
                   <Col>
                      <Row className="pt-3 pb-3">
                         <Col >
-                           <img src={props.user.profile_info.profile_pic} width={200} height={200} onClick={() => ActivateModalImage(["Profile Picture", "profile_pic", "profile_info"])}/>
+                           <ImageF/>
                         </Col>
                         <Col className="pt-2 text-white">
                            <div className="h3">{props.user.name} <BsPencil className="h6" onClick={() => ActivateModal(["Name", "name"])}/></div>
@@ -179,14 +205,14 @@ function EditableProfile(props) {
             <label>
                Select Profile Picture:
                <select onChange={handleChange}>
-                  <option value="../../images/profile_pic_1.jpg">Profile Picture 1</option>
-                  <option value="../../images/profile_pic_2.jpg">Profile Picture 2</option>
-                  <option value="../../images/profile_pic_3.jpg">Profile Picture 3</option>
-                  <option value="../../images/profile_pic_4.jpg">Profile Picture 4</option>
-                  <option value="../../images/profile_pic_5.jpg">Profile Picture 5</option>
-                  <option value="../../images/profile_pic_6.jpg">Profile Picture 6</option>
-                  <option value="../../images/profile_pic_7.jpg">Profile Picture 7</option>
-                  <option value="../../images/profile_pic_8.jpg">Profile Picture 8</option>
+                  <option value="1">Profile Picture 1</option>
+                  <option value="2">Profile Picture 2</option>
+                  <option value="3">Profile Picture 3</option>
+                  <option value="4">Profile Picture 4</option>
+                  <option value="5">Profile Picture 5</option>
+                  <option value="6">Profile Picture 6</option>
+                  <option value="7">Profile Picture 7</option>
+                  <option value="8">Profile Picture 8</option>
                </select>
             </label>
             <submitField
