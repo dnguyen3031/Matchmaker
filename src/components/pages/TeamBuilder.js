@@ -85,7 +85,7 @@ function TeamBuilder (props) {
 
   async function fetchGame (change) {
     try {
-      return await axios.get('http://matchmaker-backend01.herokuapp.com/games/' + change)
+      return await axios.get('https://matchmaker-backend01.herokuapp.com/games/' + change)
     } catch (error) {
       console.log(error)
       return false
@@ -94,7 +94,7 @@ function TeamBuilder (props) {
 
   async function makePatchCall (change) {
     try {
-      return await axios.patch('http://matchmaker-backend01.herokuapp.com/lobbies/submit-results/' + props.matchId, change)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/lobbies/submit-results/' + props.matchId, change)
     } catch (error) {
       console.log(error)
       return false

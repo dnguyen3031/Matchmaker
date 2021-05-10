@@ -13,11 +13,11 @@ function Groups (props) {
   async function makeLeaveCall () {
     try {
       // get character at index 's id number
-      const currGroup = await axios.get('http://matchmaker-backend01.herokuapp.com/users/' + props.viewerId + '?group=true')
+      const currGroup = await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + props.viewerId + '?group=true')
       console.log(currGroup)
-      let response = await axios.patch('http://matchmaker-backend01.herokuapp.com/groups/leave-group?id=' + props.viewerId + '&group=' + currGroup.data)
+      let response = await axios.patch('https://matchmaker-backend01.herokuapp.com/groups/leave-group?id=' + props.viewerId + '&group=' + currGroup.data)
       if (response === 0) {
-        response = await axios.delete('http://matchmaker-backend01.herokuapp.com/groups/' + currGroup.data)
+        response = await axios.delete('https://matchmaker-backend01.herokuapp.com/groups/' + currGroup.data)
       }
       return response.data
     } catch (error) {
@@ -38,7 +38,7 @@ function Groups (props) {
     async function fetchUser (id) {
       try {
         // get character at index 's id number
-        return await axios.get('http://matchmaker-backend01.herokuapp.com/users/' + props.viewerId)
+        return await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + props.viewerId)
       } catch (error) {
         console.log(error)
         return false
@@ -57,7 +57,7 @@ function Groups (props) {
     try {
       // get character at index 's id number
       console.log(groupcode)
-      const response = await axios.patch('http://matchmaker-backend01.herokuapp.com/groups/join-group?id=' + props.viewerId + '&group=' + groupcode)
+      const response = await axios.patch('https://matchmaker-backend01.herokuapp.com/groups/join-group?id=' + props.viewerId + '&group=' + groupcode)
       return response.data
     } catch (error) {
       console.log(error)
@@ -78,10 +78,10 @@ function Groups (props) {
     try {
       // get character at index 's id number
       console.log(group)
-      let response = await axios.post('http://matchmaker-backend01.herokuapp.com/groups?userID=' + props.viewerId, group)
+      let response = await axios.post('https://matchmaker-backend01.herokuapp.com/groups?userID=' + props.viewerId, group)
       console.log(response.data)
       group = { group: response.data }
-      response = await axios.patch('http://matchmaker-backend01.herokuapp.com/users/' + props.viewerId, group)
+      response = await axios.patch('https://matchmaker-backend01.herokuapp.com/users/' + props.viewerId, group)
       return response.data
     } catch (error) {
       console.log(error)

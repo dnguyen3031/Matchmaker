@@ -14,7 +14,7 @@ function LoggedInNavbar (props) {
 
   async function fetchUser (id) {
     try {
-      return await axios.get(`http://matchmaker-backend01.herokuapp.com/users/${id}`)
+      return await axios.get(`https://matchmaker-backend01.herokuapp.com/users/${id}`)
     } catch (error) {
       console.log(error)
       return false

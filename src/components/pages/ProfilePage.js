@@ -30,7 +30,7 @@ function ProfilePage (props) {
   async function getGame (gameName) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://matchmaker-backend01.herokuapp.com/games?game_name=' + gameName)
+      const response = await axios.get('https://matchmaker-backend01.herokuapp.com/games?game_name=' + gameName)
       // console.log(response)
       return response.data
     } catch (error) {
@@ -55,7 +55,7 @@ function ProfilePage (props) {
   async function fetchUser (id) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://matchmaker-backend01.herokuapp.com/users/' + id)
+      const response = await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + id)
       return await setGameRanks(response.data)
     } catch (error) {
       console.log(error)
@@ -84,7 +84,7 @@ function ProfilePage (props) {
 
   async function makePatchCall (change) {
     try {
-      return await axios.patch('http://matchmaker-backend01.herokuapp.com/users/' + user._id, change)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/users/' + user._id, change)
     } catch (error) {
       console.log(error)
       return false
@@ -106,7 +106,7 @@ function ProfilePage (props) {
 
   async function makePatchCallFriends (change) {
     try {
-      return await axios.patch('http://matchmaker-backend01.herokuapp.com/users/' + viewerId, change)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/users/' + viewerId, change)
     } catch (error) {
       console.log(error)
       return false
