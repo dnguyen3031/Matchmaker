@@ -1,23 +1,9 @@
 import time
 
+from suitable_lobby import find_suitable
 from mongodb import *
 from bson import ObjectId
 from ELO import *
-
-
-def within_range(lobby, o_lobby):
-    higher_lobby = o_lobby
-    lower_lobby = lobby
-    if lobby["avg_elo"] > o_lobby["avg_elo"]:
-        higher_lobby = lobby
-        lower_lobby = o_lobby
-
-    l_lobby_upper_bound = lower_lobby["avg_elo"] + lower_lobby["window_size"]
-    h_lobby_lower_bound = higher_lobby["avg_elo"] - higher_lobby["window_size"]
-
-    if l_lobby_upper_bound >= higher_lobby["avg_elo"] and h_lobby_lower_bound <= lower_lobby["avg_elo"]:
-        return True
-    return False
 
 
 def check_sizes(lobby, o_lobby, num_players_needed):
@@ -31,16 +17,8 @@ def check_sizes(lobby, o_lobby, num_players_needed):
     return -1
 
 
-def find_suitable(game, lobby):
-    for o_lobby in game["queue"]:
-        if o_lobby != lobby:
-            if within_range(lobby, o_lobby) and not (check_sizes(lobby, o_lobby, game["num_players"]) == 1):
-                return o_lobby
-    return None
-
-
 def merge_matches(game, lobby, matched_lobby):
-    # TODO: record avg elo for each groop for team-making purposes
+    # TODO: record avg elo for each group for team-making purposes
     merged_elo = (lobby["avg_elo"] * lobby["num_players"] + matched_lobby["avg_elo"] * matched_lobby["num_players"]) / (
             lobby["num_players"] + matched_lobby["num_players"])
     merged_groups = lobby["groups"] + matched_lobby["groups"]
@@ -81,7 +59,7 @@ def find_best_teams(groups):
     return team1["groups"], team2["groups"]
 
 
-def assignteams(full_lobby):
+def assign_teams(full_lobby):
     game = Game({"_id": full_lobby["game_id"]})
     game.reload()
     team1, team2 = find_best_teams(full_lobby["groups"])
@@ -126,13 +104,13 @@ def add_team_info(full_lobby):
     num_teams = len(full_lobby["teams"])
     team_info = []
     for i in range(num_teams):
-        team_info += [{"votes": [0]*num_teams}]
+        team_info += [{"votes": [0] * num_teams}]
         team_info[i]["adv_elo"] = get_adv_elo(full_lobby["teams"][i], full_lobby["game_id"])
     full_lobby["team_info"] = team_info
 
 
 def init_full_lobby(full_lobby):
-    assignteams(full_lobby)
+    assign_teams(full_lobby)
     full_lobby["discord"] = get_next_discord()["room_name"]
     add_team_info(full_lobby)
     full_lobby["time_elapsed"] = 0
@@ -200,7 +178,7 @@ def team_won(lobby):
     for i in range(num_teams):
         got_votes = False
         for place in lobby["team_info"][i]["votes"]:
-            if place > lobby["num_players"]/num_teams:
+            if place > lobby["num_players"] / num_teams:
                 got_votes = True
         if not got_votes:
             is_over = False
@@ -213,7 +191,8 @@ def is_over(lob):
     lobby = Lobby({"_id": lob["_id"]})
     lobby.reload()
     lobby["_id"] = ObjectId(lobby["_id"])
-    lobby["time_left"] = 86400 * 0.0001 ** (lobby["total_votes"] / lobby["num_players"]) + game["avg_length"] - lobby["time_elapsed"]
+    lobby["time_left"] = 86400 * 0.0001 ** (lobby["total_votes"] / lobby["num_players"]) + game["avg_length"] - lobby[
+        "time_elapsed"]
     lobby.save()
     return team_won(lobby) or 0 > lobby["time_left"]  # one day = 86400
 
@@ -235,7 +214,8 @@ def assign_team_elo(team, team_info, oppenent_info, game_name):
     else:
         win = 0.5
 
-    elo_change = int(team_info["adv_elo"])-calc_elo(int(team_info["adv_elo"]), int(oppenent_info["adv_elo"]), float(win))
+    elo_change = int(team_info["adv_elo"]) - calc_elo(int(team_info["adv_elo"]), int(oppenent_info["adv_elo"]),
+                                                      float(win))
     for group in team:
         for player_id in group["players"].keys():
             user = User({"_id": player_id})

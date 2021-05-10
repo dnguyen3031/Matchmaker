@@ -2,17 +2,18 @@
 
 For user install:
 
-## Getting Started for Developers 
+## Getting Started for Developers
 
 ### Clone the repository
- git clone https://github.com/dnguyen3031/Matchmaker.git
 
+git clone https://github.com/dnguyen3031/Matchmaker.git
 
 #### Run the frontend
-1. npm start 
- (if its your first time, you might need to run 
-npm install
-)
+
+1. npm start
+   (if its your first time, you might need to run
+   npm install
+   )
 
 For Future Collaborators:
 
@@ -35,7 +36,5 @@ To use ESLint, follow the directions to install here: https://eslint.org/docs/us
 
 Now, you can type "eslint file1.js file2.js" to check styles
 
-
 Figma Storyboard:
 https://www.figma.com/file/4y3sCg0TQH2MPipsPJ9vks/308-Matchmaker-Journey?node-id=0%3A1
-
