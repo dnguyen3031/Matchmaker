@@ -6,28 +6,37 @@ import FriendBar from '../FriendBar'
 import Lobby from './Lobby'
 
 function Queue (props) {
-  if (props.matchId) { return <Lobby matchId={props.matchId} viewerId={props.viewerId} setToken={props.setToken}/> }
+  if (props.data.user.lobby) { return <Lobby data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData}/> }
+
+  async function checkForUpdates () {
+    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true }).then(result => {
+      console.log('fetched data')
+      props.setData(result)
+    })
+  }
+
+  setTimeout(() => { checkForUpdates() }, 1000)
 
   return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
-      <Container fluid>
-         <Row>
-            <Col className="side-col" />
-            <Col xs={8} className="pr-0 main-col">
-               <Row>
-                  <Col>
-                     <h2 style={{ color: 'white' }}> finding match...</h2>
-                     <h3 style={{ color: 'white' }}> please wait</h3>
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewerId}/>
-                  </Col>
-               </Row>
+    <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
+    <Container fluid>
+      <Row>
+        <Col className="side-col" />
+        <Col xs={8} className="pr-0 main-col">
+          <Row>
+            <Col>
+              <h2 style={{ color: 'white' }}> finding match...</h2>
+              <h3 style={{ color: 'white' }}> please wait</h3>
             </Col>
-            <Col className="side-col" />
-         </Row>
-      </Container>
-   </div>
+            <Col md={3}>
+              <FriendBar data={props.data}/>
+            </Col>
+          </Row>
+        </Col>
+        <Col className="side-col" />
+      </Row>
+    </Container>
+  </div>
 }
 
 export default Queue

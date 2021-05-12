@@ -8,11 +8,61 @@ import {
 } from 'react-router-dom'
 
 function ViewableProfile (props) {
-  const [profileID] = React.useState(useParams().id)
-  const [areFriends, setAreFriends] = React.useState(false)
+  const profileID = useParams().id
+
+  function confirmFriends () {
+    for (const key in props.data.user.friends) {
+      if (key === profileID && props.data.user.friends[key].status !== 'Deleted') {
+        console.log(props.data.id + ' has already added ' + key)
+        return true
+      }
+    }
+    return false
+  }
+
+  const areFriends = confirmFriends()
+
+  function GameTable () {
+    const rows = Object.keys(props.data.user2.games_table).map((game, index) => {
+      return (
+        <tr key={index}>
+          <td>{game}</td>
+          <td>{props.data.user2.games_table[game].Rank}</td>
+        </tr>
+      )
+    })
+    return (
+      <tbody>
+      {rows}
+      </tbody>
+    )
+  }
+
+  function removeFriendAction () {
+    props.handleSubmit({
+      friends: {
+        [profileID]: {
+          status: 'Deleted'
+        }
+      }
+    })
+    console.log('Removing!')
+  }
+
+  function addFriendAction () {
+    props.handleSubmit({
+      friends: {
+        [profileID]: {
+          status: 'Standard',
+          name: props.data.user2.name
+        }
+      }
+    })
+    console.log('Adding this id :' + profileID)
+  }
 
   function ImageF () {
-    switch (props.user.profile_info.profile_pic) {
+    switch (props.data.user2.profile_info.profile_pic) {
       case '1':
         return <img src={require('../../images/profile_pic_1.jpg').default} width={200} height={200}/>
       case '2':
@@ -34,113 +84,64 @@ function ViewableProfile (props) {
     }
   }
 
-  React.useEffect(() => {
-    function confirmFriends () {
-      for (const key in props.friendsList) {
-        if (key === profileID && props.friendsList[key] !== 'Deleted') {
-          console.log(props.viewerId + ' has already added ' + key)
-          setAreFriends(true)
-        }
-      }
-    }
-
-    confirmFriends()
-  }, [profileID, props.friendsList, props.viewerId])
-
-  function addFriendAction () {
-    props.handleSubmit({
-      friends: {
-        [profileID]: 'Standard'
-      }
-    })
-    console.log('Adding this id :' + profileID)
-  }
-
-  function removeFriendAction () {
-    props.handleSubmit({
-      friends: {
-        [profileID]: 'Deleted'
-      }
-    })
-    console.log('Removing!')
-  }
-
-  function GameTable () {
-    const rows = Object.keys(props.user.games_table).map((game, index) => {
-      return (
-               <tr key={index}>
-                  <td>{game}</td>
-                  <td>{props.user.games_table[game].Rank}</td>
-               </tr>
-      )
-    })
-    return (
-            <tbody>
-               {rows}
-            </tbody>
-    )
-  }
-
   return <div>
-   <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
-   <Container fluid>
+    <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
+    <Container fluid>
       <Row>
-         <Col className="side-col" />
-         <Col xs={8} className="main-col pr-0">
-            <Row>
-               <Col>
-                  <Row className="pt-3 pb-3">
-                     <Col>
-                        <ImageF/>
-                     </Col>
-                     <Col>
-                        <Card bg='dark' text='white'>
-                           <Card.Body>
-                              <Card.Title>{props.user.name}</Card.Title>
-                              <Card.Text class="text-white">{props.user.profile_info.bio}</Card.Text>
-                              {!areFriends && <Button variant="info" onClick={addFriendAction}>Add Friend</Button>}
-                              {' '}
-                              <Button variant="info" onClick={removeFriendAction}>Remove Friend</Button>
-                           </Card.Body>
-
-                        </Card>
-                     </Col>
-                     <Col/>
-                  </Row>
-                  <Row className="justify-content-md-center pb-3">
-                     <Card bg='dark' text='white'>
-                        <Card.Body>
-                           <Card.Title>Contact Information</Card.Title>
-                           <Card.Text class="text-white">Email: {props.user.email}</Card.Text>
-                           <Card.Text class="text-white">Discord: {props.user.profile_info.discord}</Card.Text>
-                           <Card.Text class="text-white">Steam Name: {props.user.profile_info.steam_name}</Card.Text>
-                        </Card.Body>
-                     </Card>
-                  </Row>
-                  <Row className="justify-content-md-center">
-                     <Col xs={6}>
-                        <Table variant="dark">
-                           <thead>
-                              <tr>
-                                 <th>Game</th>
-                                 <th>Rank</th>
-                              </tr>
-                           </thead>
-                          <GameTable />
-                        </Table>
-                     </Col>
-                  </Row>
-               </Col>
-               <Col md={3}>
-                  <FriendBar _id={props.viewerId} />
-                  {/* _id="603c339a5ef99cf0de73b4b8" */}
-               </Col>
-            </Row>
-         </Col>
-         <Col className="side-col" />
+        <Col className="side-col" />
+        <Col xs={8} className="main-col pr-0">
+          <Row>
+            <Col>
+              <Row className="pt-3 pb-3">
+                <Col>
+                  <ImageF/>
+                </Col>
+                <Col>
+                  <Card bg='dark' text='white'>
+                    <Card.Body>
+                      <Card.Title>{props.data.user2.name}</Card.Title>
+                      <Card.Text class="text-white">{props.data.user2.profile_info.bio}</Card.Text>
+                      {!areFriends && <Button variant="info" onClick={addFriendAction}>Add Friend</Button>}
+                      {' '}
+                      <Button variant="info" onClick={removeFriendAction}>Remove Friend</Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col/>
+              </Row>
+              <Row className="justify-content-md-center pb-3">
+                <Card bg='dark' text='white'>
+                  <Card.Body>
+                    <Card.Title>Contact Information</Card.Title>
+                    <Card.Text class="text-white">Email: {props.data.user2.email}</Card.Text>
+                    <Card.Text class="text-white">Discord: {props.data.user2.profile_info.discord}</Card.Text>
+                    <Card.Text class="text-white">Steam Name: {props.data.user2.profile_info.steam_name}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Row>
+              <Row className="justify-content-md-center">
+                <Col xs={6}>
+                  <Table variant="dark">
+                    <thead>
+                    <tr>
+                      <th>Game</th>
+                      <th>Rank</th>
+                    </tr>
+                    </thead>
+                    <GameTable />
+                  </Table>
+                </Col>
+              </Row>
+            </Col>
+            <Col md={3}>
+              <FriendBar data={props.data}/>
+            </Col>
+          </Row>
+        </Col>
+        <Col className="side-col" />
       </Row>
-   </Container>
-</div>
+    </Container>
+  </div>
 }
 
 export default ViewableProfile

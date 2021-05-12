@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import CustomNavbar from '../CustomNavbar'
 import FriendBar from '../FriendBar'
@@ -8,6 +8,60 @@ import './PageTemplate.css'
 
 function SearchPage (props) {
   const [searchResults, setSearchResults] = React.useState([])
+
+  useEffect(() => {
+    props.fetchData({ id: props.data.id, get_group: true }).then(result => {
+      console.log('fetched data')
+      props.setData(result)
+    })
+  }, [])
+
+  function ResultsTable () {
+    console.log('sr: ' + searchResults)
+    if (searchResults.length === 0) {
+      console.log('empty')
+      return null
+    }
+
+    if (searchResults === 'noResults') {
+      console.log('detected \'noresults\'')
+      return (
+        <div>
+          <table>
+            <tbody>
+            <tr>
+              <th style={{ color: 'black' }}>No Results</th>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+
+    const rows = searchResults.map((user, index) => {
+      return (
+        <tr key={index}>
+          <td>
+            <Link to={'/profile/' + user._id} >
+              {user.name}
+            </Link>
+          </td>
+        </tr>
+      )
+    })
+    return (
+      <div>
+        <table>
+          <tbody>
+          <tr>
+            <th style={{ color: 'black' }}>Results</th>
+          </tr>
+          {rows}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
 
   function SearchBar () {
     const [searchTerm, setSearchTerm] = React.useState('')
@@ -43,86 +97,39 @@ function SearchPage (props) {
     }
 
     return <Form>
-         <Form.Group controlId="searchForm">
-            <Form.Label>Search term</Form.Label>
-            <Form.Control type="username" placeholder="Enter username"
-                          value={searchTerm}
-                          onChange={e => setSearchTerm(e.target.value)} />
-         </Form.Group>
-         <Button variant="primary" type="button" onClick ={submitSearch}>
-            {/* TODO: change to Submit type button */}
-            Submit
-         </Button>
-      </Form>
-  }
-
-  function ResultsTable () {
-    console.log('sr: ' + searchResults)
-    if (searchResults.length === 0) {
-      console.log('empty')
-      return null
-    }
-
-    if (searchResults === 'noResults') {
-      console.log('detected \'noresults\'')
-      return (
-               <div>
-                  <table>
-                     <tbody>
-                     <tr>
-                        <th style={{ color: 'black' }}>No Results</th>
-                     </tr>
-                     </tbody>
-                  </table>
-               </div>
-      )
-    }
-
-    const rows = searchResults.map((user, index) => {
-      return (
-            <tr key={index}>
-               <td>
-                  <Link to={'/profile/' + user._id} >
-                     {user.name}
-                  </Link>
-               </td>
-            </tr>
-      )
-    })
-    return (
-         <div>
-            <table>
-               <tbody>
-               <tr>
-                  <th style={{ color: 'black' }}>Results</th>
-               </tr>
-                  {rows}
-               </tbody>
-            </table>
-         </div>
-    )
+      <Form.Group controlId="searchForm">
+        <Form.Label>Search term</Form.Label>
+        <Form.Control type="username" placeholder="Enter username"
+                      value={searchTerm}
+                      onChange={e => setSearchTerm(e.target.value)} />
+      </Form.Group>
+      <Button variant="primary" type="button" onClick ={submitSearch}>
+        {/* TODO: change to Submit type button */}
+        Submit
+      </Button>
+    </Form>
   }
 
   return <div>
-      <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
-      <Container fluid>
-         <Row>
-            <Col className="side-col" />
-            <Col xs={8} className="pr-0">
-               <Row>
-                  <Col>
-                    <SearchBar/>
-                    <ResultsTable />
-                  </Col>
-                  <Col md={3}>
-                     <FriendBar _id={props.viewerId}/>
-                  </Col>
-               </Row>
+    <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
+    <Container fluid>
+      <Row>
+        <Col className="side-col" />
+        <Col xs={8} className="pr-0">
+          <Row>
+            <Col>
+              <SearchBar/>
+              <ResultsTable />
             </Col>
-            <Col className="side-col" />
-         </Row>
-      </Container>
-   </div>
+            <Col md={3}>
+              <FriendBar data={props.data}/>
+            </Col>
+          </Row>
+        </Col>
+        <Col className="side-col" />
+      </Row>
+    </Container>
+  </div>
 }
 
 export default SearchPage

@@ -4,23 +4,21 @@ import { Col, Row, Container } from 'react-bootstrap'
 import './PageTemplate.css'
 import FriendBar from '../FriendBar'
 
-function Home (props) {
-  if (props.data.id != null) { window.location.href = '/matchmaking' }
-
+function LoadingPage (props) {
   return <div>
-    <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
+    <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId} user={props.user}/>
     <Container fluid>
       <Row>
         <Col className="side-col" />
         <Col xs={8} className="pr-0 main-col">
           <Row>
             <Col>
-              <h2 style={{ color: 'white' }} onClick={() => { window.location.href = '/login' }}>
-                Please Login to Start Matchmaking
-              </h2>
+              <h1>
+                Loading, Please Wait...
+              </h1>
             </Col>
             <Col md={3}>
-              <FriendBar data={props.data}/>
+              <FriendBar _id={props.viewerId} user={props.user}/>
             </Col>
           </Row>
         </Col>
@@ -30,4 +28,4 @@ function Home (props) {
   </div>
 }
 
-export default Home
+export default LoadingPage

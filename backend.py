@@ -93,14 +93,6 @@ def get_groups():
         groups = Group().find_all()
         return {"groups_list": groups}
     elif request.method == 'POST':
-        user_id = request.args.get('userID')
-        if user_id is not None:
-            user = User({"_id": user_id})
-            user.reload()
-
-            if user.get('group') is not None:
-                resp = jsonify('You are already in a group!'), 400
-                return resp
         group_to_add = request.get_json()
         new_group = Group(group_to_add)
         new_group.save()
