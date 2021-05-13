@@ -10,6 +10,7 @@ import CreateAccount from './components/pages/CreateAccount'
 import SearchPage from './components/pages/SearchPage'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios'
+import LoadingPage from './components/pages/LoadingPage'
 
 async function fetchGame (game) {
   try {
@@ -119,7 +120,8 @@ function App () {
   const initialData = {
     id: getToken(),
     user: null,
-    user2: null
+    user2: null,
+    current_page: LoadingPage
   }
   const [data, setData] = useState(initialData)
 

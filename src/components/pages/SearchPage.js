@@ -7,14 +7,18 @@ import axios from 'axios'
 import './PageTemplate.css'
 
 function SearchPage (props) {
-  const [searchResults, setSearchResults] = React.useState([])
-
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, current_page: SearchPageDisplay }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
+
+  return props.data.current_page(props)
+}
+
+function SearchPageDisplay (props) {
+  const [searchResults, setSearchResults] = React.useState([])
 
   function ResultsTable () {
     console.log('sr: ' + searchResults)

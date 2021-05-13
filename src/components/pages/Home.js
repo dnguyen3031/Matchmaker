@@ -5,7 +5,7 @@ import './PageTemplate.css'
 import FriendBar from '../FriendBar'
 
 function Home (props) {
-  if (props.data.id != null) { window.location.href = '/matchmaking' }
+  if (props.data.id !== null) { window.location.href = '/matchmaking' }
 
   return <div>
     <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>

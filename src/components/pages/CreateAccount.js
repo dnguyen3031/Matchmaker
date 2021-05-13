@@ -7,6 +7,17 @@ import './PageTemplate.css'
 import CustomNavbar from '../CustomNavbar'
 
 function CreateAccount (props) {
+  useEffect(() => {
+    props.fetchData({ id: props.data.id, get_group: true, current_page: CreateAccountDisplay }).then(result => {
+      console.log('fetched data')
+      props.setData(result)
+    })
+  }, [])
+
+  return props.data.current_page(props)
+}
+
+function CreateAccountDisplay (props) {
   const [confirmPassword, setconfirmPassword] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
@@ -163,13 +174,6 @@ function CreateAccount (props) {
       <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
     </Form>
   }
-
-  useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true }).then(result => {
-      console.log('fetched data')
-      props.setData(result)
-    })
-  }, [])
 
   return <div>
     <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>

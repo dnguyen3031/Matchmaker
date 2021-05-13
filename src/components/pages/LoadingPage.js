@@ -6,7 +6,7 @@ import FriendBar from '../FriendBar'
 
 function LoadingPage (props) {
   return <div>
-    <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId} user={props.user}/>
+    <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
     <Container fluid>
       <Row>
         <Col className="side-col" />
@@ -18,7 +18,7 @@ function LoadingPage (props) {
               </h1>
             </Col>
             <Col md={3}>
-              <FriendBar _id={props.viewerId} user={props.user}/>
+              <FriendBar data={props.data}/>
             </Col>
           </Row>
         </Col>

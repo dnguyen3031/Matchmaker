@@ -6,6 +6,17 @@ import axios from 'axios'
 import './PageTemplate.css'
 
 function Login (props) {
+  useEffect(() => {
+    props.fetchData({ id: props.data.id, current_page: LoginDisplay }).then(result => {
+      console.log('fetched data')
+      props.setData(result)
+    })
+  }, [])
+
+  return props.data.current_page(props)
+}
+
+function LoginDisplay (props) {
   const bcrypt = require('bcryptjs')
 
   /* Error Model */
@@ -52,13 +63,6 @@ function Login (props) {
       }
     })
   }
-
-  useEffect(() => {
-    props.fetchData({ id: props.data.id }).then(result => {
-      console.log('fetched data')
-      props.setData(result)
-    })
-  }, [])
 
   return <div>
     <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>

@@ -9,12 +9,16 @@ function ProfilePage (props) {
   const profileId = useParams().id
 
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, id2: profileId, gameRanks2: true }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, id2: profileId, gameRanks2: true, current_page: ProfilePageDisplay }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
 
+  return props.data.current_page(props)
+}
+
+function ProfilePageDisplay (props) {
   async function makePatchCallFriends (change) {
     try {
       return await axios.patch('http://localhost:5000/users/' + props.data.id, change)
@@ -53,7 +57,7 @@ function ProfilePage (props) {
     })
   }
 
-  if (props.data.id === profileId && props.data.user2) {
+  if (props.data.id === props.data.id2 && props.data.user2) {
     return <EditableProfile data={props.data} handleSubmit={updateUser} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData}/>
   } else if (props.data.user2) {
     return <ViewableProfile data={props.data} handleSubmit={updateFriends} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData}/>

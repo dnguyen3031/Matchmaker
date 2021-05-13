@@ -6,13 +6,22 @@ import FriendBar from '../FriendBar'
 import Queue from './Queue'
 
 function Matchmaking (props) {
+  if (props.data.id === null) {
+    window.location.href = '/'
+  }
+
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, current_page: MatchmakingDisplay }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
 
+  return props.data.current_page(props)
+}
+
+function MatchmakingDisplay (props) {
+  console.log('getting into matchmakingdisplay')
   async function makePatchCall (gameName) {
     try {
       return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
@@ -29,10 +38,6 @@ function Matchmaking (props) {
         window.location.reload(false)
       } else { console.log('failed to add to queue') }
     })
-  }
-
-  if (props.data.id === null) {
-    window.location.href = '/'
   }
 
   if (props.data.user === null || props.data.user.in_queue === false) {

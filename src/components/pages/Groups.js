@@ -7,14 +7,18 @@ import axios from 'axios'
 import './PageTemplate.css'
 
 function Groups (props) {
-  const [groupcode, setgroupcode] = useState('')
-
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, current_page: GroupsDisplay }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
+
+  return props.data.current_page(props)
+}
+
+function GroupsDisplay (props) {
+  const [groupcode, setgroupcode] = useState('')
 
   async function makeLeaveCall () {
     try {
