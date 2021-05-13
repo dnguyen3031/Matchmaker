@@ -18,6 +18,7 @@ def get_group_sizes(lobby, o_lobby):
 
 def init_group_matrix(group_sizes, players_per_team):
     """matrix[group][team_size]"""
+    # ToDo: simplify this def
     matrix = [[None for m in range(players_per_team + 1)] for m in range(len(group_sizes) + 1)]
     for i in range(len(group_sizes) + 1):
         # fitting match size of 0 is always possible - use empty list

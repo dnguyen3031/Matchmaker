@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import { Col, Container, Dropdown, DropdownButton, Row } from 'react-bootstrap'
 import CustomNavbar from '../CustomNavbar'
@@ -6,40 +6,25 @@ import FriendBar from '../FriendBar'
 import Queue from './Queue'
 
 function Matchmaking (props) {
-  const [viewUser, setViewUser] = useState({
-    email: '',
-    profile_info: { discord: '', profile_pic: '', bio: '' },
-    games_table: {},
-    friends: {},
-    name: '',
-    password: '',
-    _id: '',
-    lobby: null,
-    in_queue: false
-  })
+  if (props.data.id === null) {
+    window.location.href = '/'
+  }
 
   useEffect(() => {
-    async function fetchUser (id) {
-      try {
-        // get character at index 's id number
-        return await axios.get('https://matchmaker-backend01.herokuapp.com/users/' + id)
-      } catch (error) {
-        console.log(error)
-        return false
-      }
-    }
-
-    fetchUser(props.viewerId).then(result => {
-      if (result) {
-        setViewUser(result)
-        console.log('got viewer')
-      } else { console.log('failed to get user') }
+    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, current_page: MatchmakingDisplay }).then(result => {
+      console.log('fetched data')
+      props.setData(result)
     })
-  }, [props.viewerId])
+  }, [])
 
+  return props.data.current_page(props)
+}
+
+function MatchmakingDisplay (props) {
+  // console.log('getting into matchmakingdisplay')
   async function makePatchCall (gameName) {
     try {
-      return await axios.patch('https://matchmaker-backend01.herokuapp.com/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.viewerId)
+      return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
     } catch (error) {
       console.log(error)
       return false
@@ -55,34 +40,34 @@ function Matchmaking (props) {
     })
   }
 
-  if (viewUser.data === undefined || viewUser.data.in_queue === false) {
+  if (props.data.user === null || props.data.user.in_queue === false) {
     return <div>
-         <CustomNavbar setToken={(id) => props.setToken(id)} viewerId={props.viewerId}/>
-         <Container fluid>
+      <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
+      <Container fluid>
+        <Row>
+          <Col className="side-col" />
+          <Col xs={8} className="main-col pr-0">
             <Row>
-               <Col className="side-col" />
-               <Col xs={8} className="main-col pr-0">
-                  <Row>
-                     <Col>
-                        <Dropdown>
-                        </Dropdown>
-                        <DropdownButton id="dropdown-basic-button" title="Select Game">
-                           <Dropdown.Item onClick={() => addToQueue('Krunker - Hardpoint')}>Krunker - Hardpoint</Dropdown.Item>
-                           <Dropdown.Item onClick={() => addToQueue('Skribbl.io')}>Skribbl.io</Dropdown.Item>
-                        </DropdownButton>
-                     </Col>
-                     <Col md={3}>
-                        <FriendBar _id={props.viewerId} />
-                     </Col>
-                  </Row>
-               </Col>
-               <Col className="side-col" />
+              <Col>
+                <Dropdown>
+                </Dropdown>
+                <DropdownButton id="dropdown-basic-button" title="Select Game">
+                  <Dropdown.Item onClick={() => addToQueue('Krunker - Hardpoint')}>Krunker - Hardpoint</Dropdown.Item>
+                  <Dropdown.Item onClick={() => addToQueue('Skribbl.io')}>Skribbl.io</Dropdown.Item>
+                </DropdownButton>
+              </Col>
+              <Col md={3}>
+                <FriendBar data={props.data}/>
+              </Col>
             </Row>
-         </Container>
-      </div>
+          </Col>
+          <Col className="side-col" />
+        </Row>
+      </Container>
+    </div>
   }
 
-  return <Queue viewerId={props.viewerId} setToken={props.setToken} matchId={viewUser.data.lobby}/>
+  return <Queue data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData} MatchmakingDisplay={MatchmakingDisplay}/>
 }
 
 export default Matchmaking

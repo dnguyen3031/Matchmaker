@@ -93,14 +93,6 @@ def get_groups():
         groups = Group().find_all()
         return {"groups_list": groups}
     elif request.method == 'POST':
-        user_id = request.args.get('userID')
-        if user_id is not None:
-            user = User({"_id": user_id})
-            user.reload()
-
-            if user.get('group') is not None:
-                resp = jsonify('You are already in a group!'), 400
-                return resp
         group_to_add = request.get_json()
         new_group = Group(group_to_add)
         new_group.save()
@@ -123,11 +115,11 @@ def get_group(id):
             return resp
         return jsonify({"error": "Group not found"}), 404
     elif request.method == 'PATCH':
-        groupToUpdate = request.get_json()
-        groupToUpdate["_id"] = ObjectId(id)
-        newGroup = Group(groupToUpdate)
-        newGroup.patch()
-        resp = jsonify(newGroup), 201
+        group_to_update = request.get_json()
+        group_to_update["_id"] = ObjectId(id)
+        new_group = Group(group_to_update)
+        new_group.patch()
+        resp = jsonify(new_group), 201
         return resp
 
 
