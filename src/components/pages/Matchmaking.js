@@ -21,7 +21,7 @@ function Matchmaking (props) {
 }
 
 function MatchmakingDisplay (props) {
-  console.log('getting into matchmakingdisplay')
+  // console.log('getting into matchmakingdisplay')
   async function makePatchCall (gameName) {
     try {
       return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)

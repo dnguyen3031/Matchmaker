@@ -6,28 +6,41 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import axios from 'axios'
 import './PageTemplate.css'
 
+function reassignProps (props) {
+  const newProps = {}
+  for (const key in props) {
+    newProps[key] = props[key]
+  }
+  return newProps
+}
+
 function SearchPage (props) {
+  const [searchResults, setSearchResults] = React.useState([])
+
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, current_page: SearchPageDisplay }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, current_page: SearchPageResult }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
 
-  return props.data.current_page(props)
+  const newProps = reassignProps(props)
+  newProps.searchResults = searchResults
+  newProps.setSearchResults = setSearchResults
+  console.log(newProps)
+  return props.data.current_page(newProps)
 }
 
-function SearchPageDisplay (props) {
-  const [searchResults, setSearchResults] = React.useState([])
-
+function SearchPageResult (props) {
+  console.log(props)
   function ResultsTable () {
-    console.log('sr: ' + searchResults)
-    if (searchResults.length === 0) {
+    console.log('sr: ' + props.searchResults)
+    if (!(props.searchResults) || props.searchResults.length === 0) {
       console.log('empty')
       return null
     }
 
-    if (searchResults === 'noResults') {
+    if (props.searchResults === 'noResults') {
       console.log('detected \'noresults\'')
       return (
         <div>
@@ -42,7 +55,7 @@ function SearchPageDisplay (props) {
       )
     }
 
-    const rows = searchResults.map((user, index) => {
+    const rows = props.searchResults.map((user, index) => {
       return (
         <tr key={index}>
           <td>
@@ -88,9 +101,9 @@ function SearchPageDisplay (props) {
             console.log('sr detek: ' + result.data.users_list.length)
             if (result.data.users_list.length === 0) {
               console.log('setting noResults')
-              setSearchResults('noResults')
+              props.setSearchResults('noResults')
             } else {
-              setSearchResults(result.data.users_list)
+              props.setSearchResults(result.data.users_list)
             }
           } else {
             console.log('failed to find users')
