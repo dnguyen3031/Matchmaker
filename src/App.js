@@ -93,17 +93,17 @@ async function fetchData (fields) {
       fields.user2 = await fetchUser(fields.id2, false)
     }
   }
-  if (fields.get_group) {
+  if (fields.get_group && fields.user && fields.user.group) {
     fields.group = await fetchGroup(fields.user.group)
   } else if ('group' in fields) {
     fields.group = await fetchGroup(fields.group)
   }
-  if (fields.get_lobby) {
+  if (fields.get_lobby && fields.user && fields.user.lobby) {
     fields.lobby = await getMatch(fields.user.lobby)
   } else if ('lobby' in fields) {
     fields.lobby = await getMatch(fields.lobby)
   }
-  if (fields.get_game) {
+  if (fields.get_game && fields.lobby && fields.lobby.game_id) {
     fields.game = await fetchGame(fields.lobby.game_id)
   } else if ('lobby' in fields) {
     fields.game = await fetchGame(fields.game)

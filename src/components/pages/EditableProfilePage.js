@@ -83,7 +83,6 @@ function EditableProfile (props) {
     setModalShowImage(true)
     setModalField({ dName: fields[0], fName: fields[1] })
   }
-  console.log(props)
 
   function ImageF () {
     switch (props.data.user2.profile_info.profile_pic) {
