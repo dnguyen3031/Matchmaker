@@ -6,7 +6,7 @@ import ViewableProfile from './ViewableProfilePage'
 import { useParams } from 'react-router-dom'
 
 function ProfilePage (props) {
-  const profileId = useParams().id
+  let profileId = useParams().id
 
   useEffect(() => {
     props.fetchData({ id: props.data.id, get_group: true, id2: profileId, gameRanks2: true, current_page: ProfilePageDisplay }).then(result => {
@@ -14,6 +14,10 @@ function ProfilePage (props) {
       props.setData(result)
     })
   }, [])
+
+  if (!(profileId)) {
+    profileId = props.data.id
+  }
 
   return props.data.current_page(props)
 }

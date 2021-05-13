@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Button, Container, Row, Col, Form, FormControl, FormGroup, Modal
 } from 'react-bootstrap'
@@ -7,36 +7,50 @@ import './PageTemplate.css'
 import CustomNavbar from '../CustomNavbar'
 
 function CreateAccount (props) {
-  const [confirmPassword, setconfirmPassword] = useState('')
-  const [password, setPassword] = useState('')
-  const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
+  const bcrypt = require('bcryptjs')
+  const saltRounds = 9
 
-  const [showSucess, setSuccessShow] = useState(false)
-  const handleSuccessClose = () => setSuccessShow(false)
-  const handleSuccessShow = () => setSuccessShow(true)
-
+  /* Error Model */
   let errorMessage = ''
   const [showError, setErrorShow] = useState(false)
   const handleErrorClose = () => setErrorShow(false)
-  const handleErrorShow = (message) => {
-    setErrorShow(true)
+  function handleErrorShow (message) {
+    console.log(message)
     errorMessage = message
+    setErrorShow(true)
+  }
+
+  async function fetchUser (email) {
+    try {
+      // get character at index 's id number
+      const response = await axios.get('http://localhost:5000/users?email=' + email)
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  function hashPassword (jsonData) {
+    jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
+    return jsonData
   }
 
   function CreateAccountForm (props) {
-    const bcrypt = require('bcryptjs')
-    const saltRounds = 9
+    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setconfirmPassword] = useState('')
 
-    async function findUser (email) {
-      try {
-        // get character at index 's id number
-        const response = await axios.get('http://localhost:5000/users?email=' + email)
-        return response.data.users_list[0]
-      } catch (error) {
-        console.log(error)
-        return false
-      }
+    async function login (email) {
+      fetchUser(email).then(result => {
+        if (result && result.users_list.length > 0) {
+          props.setToken(result.users_list[0]._id)
+          console.log('login sucessful of' + result.users_list[0]._id)
+          window.location.href = '/profile'
+        }
+      })
     }
 
     async function postUser (account) {
@@ -44,23 +58,8 @@ function CreateAccount (props) {
         // get character at index 's id number
         console.log(account)
         const response = await axios.post('http://localhost:5000/users', account)
+        await login(email)
         return response.data
-      } catch (error) {
-        console.log(error)
-        return false
-      }
-    }
-
-    function hashPassword (jsonData) {
-      jsonData.password = bcrypt.hashSync(jsonData.password, saltRounds)
-      return jsonData
-    }
-
-    async function userExists (email) {
-      try {
-        // get character at index 's id number
-        const response = await axios.get('http://localhost:5000/users?email=' + email)
-        return response.data.users_list.length > 0
       } catch (error) {
         console.log(error)
         return false
@@ -95,24 +94,18 @@ function CreateAccount (props) {
     const handleSubmit = (e) => {
       e.preventDefault()
       const jsonData = makeJson()
-      userExists(email).then(result => {
+      fetchUser(email).then(result => {
         console.log(result)
-        if (result) {
-          console.log('This email is taken\n')
-          handleErrorShow('This email is taken\n')
-        } else if (password.localeCompare(confirmPassword) === 0) {
-          postUser(hashPassword(jsonData))
-          useEffect(() => {
-            findUser(email).then(result => {
-              console.log('fetched data')
-              props.setToken(result._id)
-              window.location.href = '/profile/' + result._id
-            })
-          }, [])
-          handleSuccessShow()
+        if (result.users_list.length === 0) {
+          if (password.localeCompare(confirmPassword) === 0) {
+            postUser(hashPassword(jsonData))
+          } else {
+            console.log('Invalid Password Matching\n')
+            handleErrorShow('Invalid Password Matching\n')
+          }
         } else {
-          console.log('Invalid Password Matching\n')
-          handleErrorShow('Invalid Password Matching\n')
+          console.log('Email is already in use\n')
+          handleErrorShow('Email is already in use\n')
         }
       })
     }
@@ -143,7 +136,7 @@ function CreateAccount (props) {
         <Col>
           <FormGroup controlId="password">
             <Form.Label>Password</Form.Label>
-            <FormControl placeholder="password" type="password" value={password}
+            <FormControl placeholder="password" type="password" value = {password}
                          onChange={(e) => setPassword(e.target.value)}/>
             <Form.Text id="passwordHelpBlock">
               {/* Your password must be 8-20 characters long, contain letters and numbers, and */}
@@ -164,22 +157,15 @@ function CreateAccount (props) {
     </Form>
   }
 
-  useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true }).then(result => {
-      console.log('fetched data')
-      props.setData(result)
-    })
-  }, [])
-
   return <div>
-    <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
+    <CustomNavbar setToken={(id) => props.setToken(id)} user={null}/>
     <Container fluid>
       <Row>
         <Col className="side-col" />
         <Col xs={8} className="main-col">
           <Row>
             <Col>
-              <CreateAccountForm />
+              <CreateAccountForm setToken={props.setToken}/>
             </Col>
           </Row>
         </Col>
@@ -193,13 +179,6 @@ function CreateAccount (props) {
         <Modal.Body>
           {errorMessage}
         </Modal.Body>
-      </Modal>
-
-      <Modal show={showSucess} onHide={handleSuccessClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Success!</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>You have sucessfully created your account!</Modal.Body>
       </Modal>
     </Container>
   </div>

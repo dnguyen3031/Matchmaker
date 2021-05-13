@@ -4,6 +4,11 @@ import { Dropdown, DropdownButton, Nav, Navbar } from 'react-bootstrap'
 function LoggedInNavbar (props) {
   const profileUrl = '/profile/' + props.user._id
 
+  function handleLogOut () {
+    props.setToken(null)
+    window.location.href = '/login'
+  }
+
   return <div>
     <Navbar bg="dark" variant="dark" expand="lg">
       <Navbar.Brand href="/">Matchmaker</Navbar.Brand>
@@ -16,7 +21,7 @@ function LoggedInNavbar (props) {
           <Nav.Link href="/searchpage" style={{ color: 'white' }}>Search</Nav.Link>
         </Nav>
         <DropdownButton variant="secondary" menuAlign="right" title={props.user.name} id="dropdown-menu-align-right">
-          <Dropdown.Item eventKey="3" onClick={() => props.setToken(null)}>Logout</Dropdown.Item>
+          <Dropdown.Item eventKey="3" onClick={() => handleLogOut()}>Logout</Dropdown.Item>
         </DropdownButton>
       </Navbar.Collapse>
     </Navbar>

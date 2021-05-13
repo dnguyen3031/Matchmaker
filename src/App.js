@@ -144,6 +144,9 @@ function App () {
           <Route path="/profile/:id">
             <ProfilePage setToken={(id) => setToken(id)} fetchData={(fields) => fetchData(fields)} data={data} setData={(fields) => setData(fields)}/>
           </Route>
+          <Route path="/profile">
+            <ProfilePage setToken={(id) => setToken(id)} fetchData={(fields) => fetchData(fields)} data={data} setData={(fields) => setData(fields)}/>
+          </Route>
           <Route path="/create-account">
             <CreateAccount setToken={(id) => setToken(id)} fetchData={(fields) => fetchData(fields)} data={data} setData={(fields) => setData(fields)}/>
           </Route>
