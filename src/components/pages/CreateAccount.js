@@ -7,29 +7,17 @@ import './PageTemplate.css'
 import CustomNavbar from '../CustomNavbar'
 
 function CreateAccount (props) {
-  return CreateAccountDisplay(props)
-}
-
-function CreateAccountDisplay (props) {
-  useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, current_page: CreateAccountDisplay }).then(result => {
-      console.log('fetched data')
-      props.setData(result)
-    })
-  }, [])
-
   const [confirmPassword, setconfirmPassword] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
 
   const [showSucess, setSuccessShow] = useState(false)
-  const [showError, setErrorShow] = useState(false)
-
   const handleSuccessClose = () => setSuccessShow(false)
   const handleSuccessShow = () => setSuccessShow(true)
 
   let errorMessage = ''
+  const [showError, setErrorShow] = useState(false)
   const handleErrorClose = () => setErrorShow(false)
   const handleErrorShow = (message) => {
     setErrorShow(true)
@@ -175,6 +163,13 @@ function CreateAccountDisplay (props) {
       <Button block type="submit" onClick = {handleSubmit}>Create Account</Button>
     </Form>
   }
+
+  useEffect(() => {
+    props.fetchData({ id: props.data.id, get_group: true }).then(result => {
+      console.log('fetched data')
+      props.setData(result)
+    })
+  }, [])
 
   return <div>
     <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
