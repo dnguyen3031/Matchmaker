@@ -49,7 +49,7 @@ function ProfilePageDisplay (props) {
   function updateUser (change) {
     makePatchCall(change).then(result => {
       if (result.status === 201) {
-        props.fetchData({ id: props.data.id, get_group: true, id2: props.data.id2, gameRanks2: true }).then(result => {
+        props.fetchData({ id: props.data.id, get_group: true, id2: props.data.id2, gameRanks2: true, current_page: ProfilePageDisplay }).then(result => {
           props.setData(result)
           console.log(props.data)
         })

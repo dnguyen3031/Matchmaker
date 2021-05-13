@@ -67,7 +67,7 @@ function MatchmakingDisplay (props) {
     </div>
   }
 
-  return <Queue data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData}/>
+  return <Queue data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData} MatchmakingDisplay={MatchmakingDisplay}/>
 }
 
 export default Matchmaking
