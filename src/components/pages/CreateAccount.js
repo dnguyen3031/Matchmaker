@@ -11,14 +11,8 @@ function CreateAccount (props) {
   const saltRounds = 9
 
   /* Error Model */
-  let errorMessage = ''
   const [showError, setErrorShow] = useState(false)
   const handleErrorClose = () => setErrorShow(false)
-  function handleErrorShow (message) {
-    console.log(message)
-    errorMessage = message
-    setErrorShow(true)
-  }
 
   async function fetchUser (email) {
     try {
@@ -100,12 +94,12 @@ function CreateAccount (props) {
           if (password.localeCompare(confirmPassword) === 0) {
             postUser(hashPassword(jsonData))
           } else {
-            console.log('Invalid Password Matching\n')
-            handleErrorShow('Invalid Password Matching\n')
+            console.log('Invalid Password Matching')
+            setErrorShow('Invalid Password Matching')
           }
         } else {
-          console.log('Email is already in use\n')
-          handleErrorShow('Email is already in use\n')
+          console.log('Email is already in use')
+          setErrorShow('Email is already in use')
         }
       })
     }
@@ -177,7 +171,7 @@ function CreateAccount (props) {
           <Modal.Title>Error!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {errorMessage}
+          {showError}
         </Modal.Body>
       </Modal>
     </Container>
