@@ -17,7 +17,7 @@ function CreateAccount (props) {
   async function fetchUser (email) {
     try {
       // get character at index 's id number
-      const response = await axios.get('http://localhost:5000/users?email=' + email)
+      const response = await axios.get('https://matchmaker-backend01.herokuapp.com/users?email=' + email)
       console.log(response.data)
       return response.data
     } catch (error) {
@@ -51,7 +51,7 @@ function CreateAccount (props) {
       try {
         // get character at index 's id number
         console.log(account)
-        const response = await axios.post('http://localhost:5000/users', account)
+        const response = await axios.post('https://matchmaker-backend01.herokuapp.com/users', account)
         await login(email)
         return response.data
       } catch (error) {

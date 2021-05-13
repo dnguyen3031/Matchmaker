@@ -14,7 +14,7 @@ import LoadingPage from './components/pages/LoadingPage'
 
 async function fetchGame (game) {
   try {
-    const response = await axios.get('http://localhost:5000/games/' + game)
+    const response = await axios.get('https://matchmaker-backend01.herokuapp.com/games/' + game)
     return response.data
   } catch (error) {
     console.log(error)
@@ -24,7 +24,7 @@ async function fetchGame (game) {
 
 async function getMatch (matchId) {
   try {
-    const response = await axios.get('http://localhost:5000/lobbies/' + matchId)
+    const response = await axios.get('https://matchmaker-backend01.herokuapp.com/lobbies/' + matchId)
     return response.data
   } catch (error) {
     console.log(error)
@@ -34,7 +34,7 @@ async function getMatch (matchId) {
 
 async function fetchGroup (id) {
   try {
-    const response = await axios.get('http://localhost:5000/groups/' + id)
+    const response = await axios.get('https://matchmaker-backend01.herokuapp.com/groups/' + id)
     return response.data
   } catch (error) {
     console.log(error)
@@ -44,7 +44,7 @@ async function fetchGroup (id) {
 
 async function getGameByName (gameName) {
   try {
-    const response = await axios.get('http://localhost:5000/games?game_name=' + gameName)
+    const response = await axios.get('https://matchmaker-backend01.herokuapp.com/games?game_name=' + gameName)
     return response.data
   } catch (error) {
     console.log(error)
@@ -67,7 +67,7 @@ async function setGameRanks (props) {
 
 async function fetchUser (id, gameRanks) {
   try {
-    const response = await axios.get(`http://localhost:5000/users/${id}`)
+    const response = await axios.get(`https://matchmaker-backend01.herokuapp.com/users/${id}`)
     if (gameRanks) {
       return await setGameRanks(response.data)
     }

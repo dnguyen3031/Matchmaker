@@ -34,9 +34,9 @@ function GroupsDisplay (props) {
   async function makeLeaveCall () {
     try {
       const currGroup = props.data.user.group
-      let response = await axios.patch('http://localhost:5000/groups/leave-group?id=' + props.data.id + '&group=' + currGroup)
+      let response = await axios.patch('https://matchmaker-backend01.herokuapp.com/groups/leave-group?id=' + props.data.id + '&group=' + currGroup)
       if (response === 0) {
-        response = await axios.delete('http://localhost:5000/groups/' + currGroup.data)
+        response = await axios.delete('https://matchmaker-backend01.herokuapp.com/groups/' + currGroup.data)
       }
       return response.data
     } catch (error) {
@@ -61,10 +61,10 @@ function GroupsDisplay (props) {
     try {
       // get character at index 's id number
       console.log(group)
-      let response = await axios.post('http://localhost:5000/groups', group)
+      let response = await axios.post('https://matchmaker-backend01.herokuapp.com/groups', group)
       console.log(response.data)
       group = { group: response.data }
-      response = await axios.patch('http://localhost:5000/users/' + props.data.id, group)
+      response = await axios.patch('https://matchmaker-backend01.herokuapp.com/users/' + props.data.id, group)
       return response.data
     } catch (error) {
       console.log(error)
@@ -94,7 +94,7 @@ function GroupsDisplay (props) {
     try {
       // get character at index 's id number
       console.log(groupcode)
-      const response = await axios.patch('http://localhost:5000/groups/join-group?id=' + props.data.id + '&group=' + groupcode)
+      const response = await axios.patch('https://matchmaker-backend01.herokuapp.com/groups/join-group?id=' + props.data.id + '&group=' + groupcode)
       return response.data
     } catch (error) {
       console.log(error)

@@ -25,7 +25,7 @@ function ProfilePage (props) {
 function ProfilePageDisplay (props) {
   async function makePatchCallFriends (change) {
     try {
-      return await axios.patch('http://localhost:5000/users/' + props.data.id, change)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/users/' + props.data.id, change)
     } catch (error) {
       console.log(error)
       return false
@@ -43,7 +43,7 @@ function ProfilePageDisplay (props) {
 
   async function makePatchCall (change) {
     try {
-      return await axios.patch('http://localhost:5000/users/' + props.data.id2, change)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/users/' + props.data.id2, change)
     } catch (error) {
       console.log(error)
       return false

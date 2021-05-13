@@ -24,7 +24,7 @@ function MatchmakingDisplay (props) {
   // console.log('getting into matchmakingdisplay')
   async function makePatchCall (gameName) {
     try {
-      return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
     } catch (error) {
       console.log(error)
       return false
