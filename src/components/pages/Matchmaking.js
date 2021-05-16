@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Col, Container, Dropdown, DropdownButton, Row } from 'react-bootstrap'
+import { Col, Container, Dropdown, Form, FormControl, FormGroup, Button, DropdownButton, Row } from 'react-bootstrap'
 import CustomNavbar from '../CustomNavbar'
 import FriendBar from '../FriendBar'
 import Queue from './Queue'
@@ -21,6 +21,7 @@ function Matchmaking (props) {
 }
 
 function MatchmakingDisplay (props) {
+  const [newGame, setNewGame] = useState('')
   // console.log('getting into matchmakingdisplay')
   async function makePatchCall (gameName) {
     try {
@@ -40,6 +41,27 @@ function MatchmakingDisplay (props) {
     })
   }
 
+  async function newGamePatch (newGame) {
+    console.log(newGame)
+    try {
+      return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + newGame + '&id=' + props.data.id)
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(newGame)
+    newGamePatch(newGame).then(result => {
+      if (result.status === 201) {
+        console.log('Added to games table Successfully')
+        window.location.reload(false)
+      } else { console.log('failed to add to games table') } // error check for bad game name vs inable to insert
+    })
+  }
+
   if (props.data.user === null || props.data.user.in_queue === false) {
     return <div>
       <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
@@ -55,6 +77,15 @@ function MatchmakingDisplay (props) {
                   <Dropdown.Item onClick={() => addToQueue('Krunker - Hardpoint')}>Krunker - Hardpoint</Dropdown.Item>
                   <Dropdown.Item onClick={() => addToQueue('Skribbl.io')}>Skribbl.io</Dropdown.Item>
                 </DropdownButton>
+              </Col>
+              <Col>
+                <FormGroup controlId="newGame">
+                <Form.Label>New Game</Form.Label>
+                <FormControl placeholder="newGame" type="text"
+                         value = {newGame}
+                         onChange={(e) => setNewGame(e.target.value)}/>
+                </FormGroup>
+                <Button block type="submit" onClick = {handleSubmit}>AddNewGame</Button>
               </Col>
               <Col md={3}>
                 <FriendBar data={props.data}/>
