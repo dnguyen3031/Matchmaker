@@ -48,7 +48,6 @@ function TeamBuilder (props) {
   const [scores] = useState([1, 1])
   const [disabled, setDisabled] = useState(false)
   const [timer, setTimer] = useState(props.data.lobby.time_left)
-  const [submitted, setSubmitted] = useState(false)
 
   React.useEffect(() => {
     timer > 0 && setTimeout(() => setTimer(timer - 1), 1000)
@@ -60,10 +59,21 @@ function TeamBuilder (props) {
     )
   })
 
-  async function makePatchCall (change) {
+  async function makeLobbiesPatchCall (change) {
     try {
       return await axios.patch('http://localhost:5000/lobbies/submit-results/' + props.data.lobby._id, change)
     } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  async function makeUsersPatchCall (change) {
+    try {
+      console.log("Updating user's has_voted field")
+      return await axios.patch('http://localhost:5000/users/' + props.data.id, change)
+    } catch (error) {
+      console.log("Failed to update user's has_voted field")
       console.log(error)
       return false
     }
@@ -85,14 +95,17 @@ function TeamBuilder (props) {
 
   function pressedSubmit () {
     setDisabled(true)
-    setSubmitted(true)
-    const obj = {
+    const rankObj = {
       ranking: scores.map((i) => Number(i)) // Convert the scores to an array of Numbers
     }
-    console.dir(obj)
-
-    makePatchCall(obj)
-    // setTimeout(() => { window.location.reload(false) }, 1000)
+    const hasVotedObj = {
+      has_voted: true
+    }
+    // console.dir(obj)
+    console.log(props.data)
+    makeLobbiesPatchCall(rankObj)
+    makeUsersPatchCall(hasVotedObj)
+    setTimeout(() => { window.location.reload(false) }, 1000)
   }
 
   function secondsToHms (d) { // This function from Stack Overflow provides a convientent way to make time left more readable.
@@ -123,7 +136,7 @@ function TeamBuilder (props) {
         {allTeams}
       </Row>
       <Row className="justify-content-md-center mt-3">
-        {!submitted && <Button variant="secondary" onClick={pressedSubmit}>Submit</Button>}
+        {!props.data.user.has_voted && <Button variant="secondary" onClick={pressedSubmit}>Submit</Button>}
       </Row>
     </Container>
   </div>
