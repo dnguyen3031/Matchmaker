@@ -14,6 +14,7 @@ function reassignProps (props) {
 }
 
 function Matchmaking (props) {
+  // console.log('getting into matchmakingdisplay')
   if (props.data.id === null) {
     window.location.href = '/'
   }
@@ -21,7 +22,7 @@ function Matchmaking (props) {
   const [newGame, setNewGame] = useState('')
 
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, current_page: MatchmakingDisplay }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, currentPage: 'Matchmaking' }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
@@ -31,11 +32,14 @@ function Matchmaking (props) {
   newProps.newGame = newGame
   newProps.setNewGame = setNewGame
   console.log(newProps)
+  console.log(props.data.currentPage)
+
+  if (props.data.currentPage !== 'Matchmaking')
+    return props.data.LoadingPage(props)
+
   return props.data.current_page(newProps)
 }
-
-function MatchmakingDisplay (props) {
-  // console.log('getting into matchmakingdisplay')
+  
   async function makePatchCall (gameName) {
     try {
       return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
@@ -111,7 +115,7 @@ function MatchmakingDisplay (props) {
     </div>
   }
 
-  return <Queue data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData} MatchmakingDisplay={MatchmakingDisplay}/>
+  return <Queue data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData} pageName={'Matchmaking'}/>
 }
 
 export default Matchmaking
