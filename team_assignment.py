@@ -1,49 +1,32 @@
 from mongodb import Game
 from suitable_lobby import get_team_combos
-def get_group_sizes(lobby):
+
+def get_group_sizes(groups):
     """returns a sorted list of of ints corresponding to the group sizes of the lobby"""
     group_sizes = []
-    for group in lobby:
+    for group in groups:
         group_sizes.append(group["num_players"])
     group_sizes.sort()
     return group_sizes
 
-def largest_group(unused_groups):
-    largest_group = 0
-    for i in range(len(unused_groups)):
-        if len(unused_groups[i]["players"].keys()) > len(unused_groups[largest_group]["players"].keys()):
-            largest_group = i
-    return unused_groups.pop(largest_group)
-
-def get_match_combo_sizes():
-    """return a list of the different ways to fit the sizes into different teams"""
-    if num_teams == 0:
-        return None
+def get_match_templates(group_sizes, players_per_team, num_teams):
+    """input: a list of possible group sizes
+    return: a list of the different matches that fit the group sizes into different teams.
+    Each match is a list of 2 team templates. Each team template is a list of group sizes"""
+    match_templates = []
+    combos = get_team_combos(group_sizes, players_per_team)
+    for combo in combos:
+        pass
     return []
-def find_best_teams(groups):
-    """return: a list containing the best teams, each formatted as a proper json"""
-    matches = get_match_combo_sizes()
+def find_all_possible_matchups(lobby):
+    """ input: the filled lobby
+    return: a list containing all possible teams, each containing the id of each of the players of those teams """
+    group_sizes = get_group_sizes(lobby["groups"])
+    match_templates = get_match_templates(group_sizes)
     return []
 
 def assign_teams(full_lobby):
     game = Game({"_id": full_lobby["game_id"]})
     game.reload()
-    teams = find_best_teams(full_lobby["groups"])
+    teams = find_all_possible_matchups(full_lobby)
     full_lobby["teams"] = teams
-
-
-"""
-def find_best_teams(groups):
-    team1, team2 = {"size": 0, "groups": []}, {"size": 0, "groups": []}
-    unused_groups = [] + groups
-    for i in range(len(groups)):
-        if team1["size"] > team2["size"]:
-            temp = largest_group(unused_groups)
-            team2["groups"] += [temp]
-            team2["size"] += len(temp["players"].keys())
-        else:
-            temp = largest_group(unused_groups)
-            team1["groups"] += [temp]
-            team1["size"] += len(temp["players"].keys())
-    return team1["groups"], team2["groups"]
-"""
