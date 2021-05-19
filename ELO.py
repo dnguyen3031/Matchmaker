@@ -6,8 +6,7 @@ def expected_win_prob(plr_rating, opp_rating):
 def new_elo(plr_rating, exp_win, plr_win):
     k = 32
     plr_rating += k * (plr_win - exp_win)
-    plr_rating = round(plr_rating, 0)
-    return plr_rating
+    return round(plr_rating, 0)
 
 
 def calc_elo(plr_rating, opp_rating, plr_win):

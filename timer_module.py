@@ -7,6 +7,7 @@ from suitable_lobby import find_suitable
 from team_assignment import assign_teams
 
 
+
 def check_sizes(lobby, o_lobby, num_players_needed):
     # 1 means >  (lobby too big)
     # 0 means =  (lobby just right)
@@ -75,7 +76,7 @@ def add_team_info(full_lobby):
     num_teams = len(full_lobby["teams"])
     team_info = []
     for i in range(num_teams):
-        team_info += [{"votes": [0]*num_teams}]
+        team_info += [{"votes": [0] * num_teams}]
         team_info[i]["adv_elo"] = get_adv_elo(full_lobby["teams"][i], full_lobby["game_id"])
     full_lobby["team_info"] = team_info
 
@@ -149,7 +150,7 @@ def team_won(lobby):
     for i in range(num_teams):
         got_votes = False
         for place in lobby["team_info"][i]["votes"]:
-            if place > lobby["num_players"]/num_teams:
+            if place > lobby["num_players"] / num_teams:
                 got_votes = True
         if not got_votes:
             is_over = False
@@ -162,7 +163,8 @@ def is_over(lob):
     lobby = Lobby({"_id": lob["_id"]})
     lobby.reload()
     lobby["_id"] = ObjectId(lobby["_id"])
-    lobby["time_left"] = 86400 * 0.0001 ** (lobby["total_votes"] / lobby["num_players"]) + game["avg_length"] - lobby["time_elapsed"]
+    lobby["time_left"] = 86400 * 0.0001 ** (lobby["total_votes"] / lobby["num_players"]) + game["avg_length"] - lobby[
+        "time_elapsed"]
     lobby.save()
     return team_won(lobby) or 0 > lobby["time_left"]  # one day = 86400
 
@@ -184,7 +186,8 @@ def assign_team_elo(team, team_info, oppenent_info, game_name):
     else:
         win = 0.5
 
-    elo_change = int(team_info["adv_elo"])-calc_elo(int(team_info["adv_elo"]), int(oppenent_info["adv_elo"]), float(win))
+    elo_change = int(team_info["adv_elo"]) - calc_elo(int(team_info["adv_elo"]), int(oppenent_info["adv_elo"]),
+                                                      float(win))
     for group in team:
         for player_id in group["players"].keys():
             user = User({"_id": player_id})
@@ -230,8 +233,9 @@ def check_for_end_match(lobbies):
             terminate_lobby(lobby)
 
 
-if __name__ == '__main__':
-    clock_delay = 5
+def main():
+    clock_delay = 3
+    print("timer running")
     while True:
         games = Game().find_all()
         lobbies = Lobby().find_all()
