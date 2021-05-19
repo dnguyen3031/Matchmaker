@@ -28,20 +28,18 @@ function Matchmaking (props) {
     })
   }, [])
 
-<<<<<<< HEAD
   const newProps = reassignProps(props)
   newProps.newGame = newGame
   newProps.setNewGame = setNewGame
   console.log(newProps)
+  console.log(props.data.currentPage)
+
+  if (props.data.currentPage !== 'Matchmaking')
+    return props.data.LoadingPage(props)
+
   return props.data.current_page(newProps)
 }
-=======
-  console.log(props.data.currentPage)
-  if (props.data.currentPage !== 'Matchmaking') {
-    return props.data.LoadingPage(props)
-  }
->>>>>>> Sprint7-Development
-
+  
   async function makePatchCall (gameName) {
     try {
       return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
