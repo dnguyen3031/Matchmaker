@@ -5,32 +5,21 @@ import FriendBar from '../FriendBar'
 import axios from 'axios'
 import './PageTemplate.css'
 
-function reassignProps (props) {
-  const newProps = {}
-  for (const key in props) {
-    newProps[key] = props[key]
-  }
-  return newProps
-}
-
 function Groups (props) {
   const [groupcode, setgroupcode] = useState('')
 
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, current_page: GroupsDisplay }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, currentPage: 'Groups' }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
 
-  const newProps = reassignProps(props)
-  newProps.groupcode = groupcode
-  newProps.setgroupcode = setgroupcode
+  console.log(props.data.currentPage)
+  if (props.data.currentPage !== 'Groups') {
+    return props.data.LoadingPage(props)
+  }
 
-  return props.data.current_page(newProps)
-}
-
-function GroupsDisplay (props) {
   async function makeLeaveCall () {
     try {
       const currGroup = props.data.user.group
@@ -90,7 +79,7 @@ function GroupsDisplay (props) {
     })
   }
 
-  async function makePatchCall (groupcode) {
+  async function makePatchCall () {
     try {
       // get character at index 's id number
       console.log(groupcode)
@@ -104,7 +93,7 @@ function GroupsDisplay (props) {
 
   const joinGroup = (e) => {
     e.preventDefault()
-    makePatchCall(props.groupcode).then(result => {
+    makePatchCall().then(result => {
       if (result.status === 201) {
         console.log('Added Successfully')
       } else {
@@ -129,7 +118,7 @@ function GroupsDisplay (props) {
               <Col>
                 <FormGroup controlId="username">
                   <Form.Label>Enter Group Code</Form.Label>
-                  <FormControl type="text" placeholder="Friend's group code" value = {props.groupcode} onChange={(e) => props.setgroupcode(e.target.value)}/>
+                  <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
                 </FormGroup>
                 <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
               </Col>

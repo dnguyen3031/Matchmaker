@@ -8,21 +8,22 @@ import { useParams } from 'react-router-dom'
 function ProfilePage (props) {
   let profileId = useParams().id
 
+  if (!(profileId)) {
+    profileId = props.data.id
+  }
+
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, id2: profileId, gameRanks2: true, current_page: ProfilePageDisplay }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, id2: profileId, gameRanks2: true, currentPage: 'ProfilePage' }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
 
-  if (!(profileId)) {
-    profileId = props.data.id
+  console.log(props.data.currentPage)
+  if (props.data.currentPage !== 'ProfilePage') {
+    return props.data.LoadingPage(props)
   }
 
-  return props.data.current_page(props)
-}
-
-function ProfilePageDisplay (props) {
   async function makePatchCallFriends (change) {
     try {
       return await axios.patch('http://localhost:5000/users/' + props.data.id, change)
@@ -53,7 +54,7 @@ function ProfilePageDisplay (props) {
   function updateUser (change) {
     makePatchCall(change).then(result => {
       if (result.status === 201) {
-        props.fetchData({ id: props.data.id, get_group: true, id2: props.data.id2, gameRanks2: true, current_page: ProfilePageDisplay }).then(result => {
+        props.fetchData({ id: props.data.id, get_group: true, id2: props.data.id2, gameRanks2: true, currentPage: 'ProfilePage' }).then(result => {
           props.setData(result)
         })
       }

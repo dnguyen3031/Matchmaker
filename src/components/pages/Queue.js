@@ -9,7 +9,7 @@ function Queue (props) {
   if (props.data.user.lobby) { return <Lobby data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData} MatchmakingDisplay={props.MatchmakingDisplay}/> }
 
   async function checkForUpdates () {
-    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, current_page: props.MatchmakingDisplay }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, current_page: props.pageName }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
