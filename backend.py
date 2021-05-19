@@ -320,18 +320,16 @@ def add_to_queue():
 def add_new_game():
     if request.method == 'PATCH':
         game_name = request.args.get('game_name')
+        print("asdfasdfasdfasdfasdfasdfasdf:", game_name)
         user_id = request.args.get('id')
         user = User({"_id": user_id})
         search_game = Game().find_by_name(game_name)[0]
         if search_game: #actually returns a game
             if user.reload():
-                table = {
-                        game_name: {
+                user["games_table"][game_name] = {
                             "game_score": 400,
                             "time_played": 0
                         }
-                    }
-                user["games_table"] = user["games_table"].update(table)
                 user.patch()
             else:
                 return jsonify({"error": "User not found"}), 404

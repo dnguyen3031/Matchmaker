@@ -5,10 +5,20 @@ import CustomNavbar from '../CustomNavbar'
 import FriendBar from '../FriendBar'
 import Queue from './Queue'
 
+function reassignProps (props) {
+  const newProps = {}
+  for (const key in props) {
+    newProps[key] = props[key]
+  }
+  return newProps
+}
+
 function Matchmaking (props) {
   if (props.data.id === null) {
     window.location.href = '/'
   }
+
+  const [newGame, setNewGame] = useState('')
 
   useEffect(() => {
     props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, current_page: MatchmakingDisplay }).then(result => {
@@ -17,11 +27,14 @@ function Matchmaking (props) {
     })
   }, [])
 
-  return props.data.current_page(props)
+  const newProps = reassignProps(props)
+  newProps.newGame = newGame
+  newProps.setNewGame = setNewGame
+  console.log(newProps)
+  return props.data.current_page(newProps)
 }
 
 function MatchmakingDisplay (props) {
-  const [newGame, setNewGame] = useState('')
   // console.log('getting into matchmakingdisplay')
   async function makePatchCall (gameName) {
     try {
@@ -41,10 +54,10 @@ function MatchmakingDisplay (props) {
     })
   }
 
-  async function newGamePatch (newGame) {
-    console.log(newGame)
+  async function newGamePatch () {
+    console.log(props.newGame)
     try {
-      return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + newGame + '&id=' + props.data.id)
+      return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + props.newGame + '&id=' + props.data.id)
     } catch (error) {
       console.log(error)
       return false
@@ -53,8 +66,8 @@ function MatchmakingDisplay (props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(newGame)
-    newGamePatch(newGame).then(result => {
+    console.log(props.newGame)
+    newGamePatch().then(result => {
       if (result.status === 201) {
         console.log('Added to games table Successfully')
         window.location.reload(false)
@@ -82,8 +95,8 @@ function MatchmakingDisplay (props) {
                 <FormGroup controlId="newGame">
                 <Form.Label>New Game</Form.Label>
                 <FormControl placeholder="newGame" type="text"
-                         value = {newGame}
-                         onChange={(e) => setNewGame(e.target.value)}/>
+                         value = {props.newGame}
+                         onChange={(e) => props.setNewGame(e.target.value)}/>
                 </FormGroup>
                 <Button block type="submit" onClick = {handleSubmit}>AddNewGame</Button>
               </Col>
