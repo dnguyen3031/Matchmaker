@@ -81,8 +81,9 @@ def add_team_info(full_lobby):
     full_lobby["team_info"] = team_info
 
 
-def init_full_lobby(full_lobby):
-    assign_teams(full_lobby)
+def init_full_lobby(full_lobby, num_teams, num_players):
+    players_per_team = num_players/num_teams
+    assign_teams(full_lobby, num_teams, players_per_team)
     full_lobby["discord"] = get_next_discord()["room_name"]
     add_team_info(full_lobby)
     full_lobby["time_elapsed"] = 0
@@ -114,7 +115,7 @@ def make_matches(game):
             merged_lobby = merge_matches(game, lobby, matched_lobby)
             if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
                 full_lobby = Lobby(merged_lobby)
-                init_full_lobby(full_lobby)
+                init_full_lobby(full_lobby, game["num_teams"], game["num_players"])
                 full_lobby.save()
                 set_player_lobby(full_lobby)
                 remove_groups(full_lobby)

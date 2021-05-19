@@ -9,7 +9,7 @@ def get_group_sizes(groups):
     group_sizes.sort()
     return group_sizes
 
-def get_match_templates(group_sizes, players_per_team, num_teams):
+def get_match_templates(group_sizes, num_teams, players_per_team):
     """input: a list of possible group sizes
     return: a list of the different matches that fit the group sizes into different teams.
     Each match is a list of 2 team templates. Each team template is a list of group sizes"""
@@ -18,15 +18,15 @@ def get_match_templates(group_sizes, players_per_team, num_teams):
     for combo in combos:
         pass
     return []
-def find_all_possible_matchups(lobby):
+def find_all_possible_matchups(lobby, num_teams):
     """ input: the filled lobby
     return: a list containing all possible teams, each containing the id of each of the players of those teams """
     group_sizes = get_group_sizes(lobby["groups"])
     match_templates = get_match_templates(group_sizes)
     return []
 
-def assign_teams(full_lobby):
+def assign_teams(full_lobby, num_teams, players_per_team):
     game = Game({"_id": full_lobby["game_id"]})
     game.reload()
-    teams = find_all_possible_matchups(full_lobby)
+    teams = find_all_possible_matchups(full_lobby, num_teams, players_per_team)
     full_lobby["teams"] = teams
