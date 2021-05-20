@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { Col, Container, Dropdown, Form, FormControl, FormGroup, Button, DropdownButton, Row } from 'react-bootstrap'
 import CustomNavbar from '../CustomNavbar'
 import FriendBar from '../FriendBar'
 import Queue from './Queue'
-
-function reassignProps (props) {
-  const newProps = {}
-  for (const key in props) {
-    newProps[key] = props[key]
-  }
-  return newProps
-}
+import axios from 'axios'
 
 function Matchmaking (props) {
   // console.log('getting into matchmakingdisplay')
@@ -28,18 +20,10 @@ function Matchmaking (props) {
     })
   }, [])
 
-  const newProps = reassignProps(props)
-  newProps.newGame = newGame
-  newProps.setNewGame = setNewGame
-  console.log(newProps)
   console.log(props.data.currentPage)
-
-  if (props.data.currentPage !== 'Matchmaking')
+  if (props.data.currentPage !== 'Matchmaking') {
     return props.data.LoadingPage(props)
-
-  return props.data.current_page(newProps)
-}
-  
+  }
   async function makePatchCall (gameName) {
     try {
       return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
@@ -59,9 +43,8 @@ function Matchmaking (props) {
   }
 
   async function newGamePatch () {
-    console.log(props.newGame)
     try {
-      return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + props.newGame + '&id=' + props.data.id)
+      return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + newGame + '&id=' + props.data.id)
     } catch (error) {
       console.log(error)
       return false
@@ -70,7 +53,7 @@ function Matchmaking (props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(props.newGame)
+    console.log(newGame)
     newGamePatch().then(result => {
       if (result.status === 201) {
         console.log('Added to games table Successfully')
@@ -99,8 +82,8 @@ function Matchmaking (props) {
                 <FormGroup controlId="newGame">
                 <Form.Label>New Game</Form.Label>
                 <FormControl placeholder="newGame" type="text"
-                         value = {props.newGame}
-                         onChange={(e) => props.setNewGame(e.target.value)}/>
+                         value = {newGame}
+                         onChange={(e) => setNewGame(e.target.value)}/>
                 </FormGroup>
                 <Button block type="submit" onClick = {handleSubmit}>AddNewGame</Button>
               </Col>
