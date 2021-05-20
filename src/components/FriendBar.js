@@ -3,7 +3,7 @@ import { Card, Col, Row, Accordion } from 'react-bootstrap'
 
 function FriendBar (props) {
   function GroupPlayersList () {
-    if (!(props.data.group.players)) {
+    if (!(props.data.group) || !(props.data.group.players)) {
       return <div/>
     }
     const rows = Object.keys(props.data.group.players).map((playerId, i) => {
