@@ -7,42 +7,6 @@ from suitable_lobby import check_groups_splittable
 
 class MyTestCase(unittest.TestCase):
     # ToDo: automate this
-    def test_get_group_sizes(self):
-        groups = get_group_sizes(
-            [{
-                "_id": "60907183df22034b908bcf23",
-                "num_players": 2,
-                "players": {
-                    "6024098ac9b27e9f9995df97": "Template",
-                    "607228229a8f71adf99cbfbe": "max"}
-            }]
-            ,
-            [{
-                "_id": "6090e994d26e32720df1f31e",
-                "num_players": 1,
-                "players": {
-                    "6090e975d26e32720df1f31d": "X"
-                }
-            },
-                {
-                    "_id": "6090e994d26e32720df1f31e",
-                    "num_players": 5,
-                    "players": {
-                        "6090e975d26e32720df1f31d": "X"
-                    }
-                },
-                {
-                    "_id": "6090e994d26e32720df1f31e",
-                    "num_players": 3,
-                    "players": {
-                        "6090e975d26e32720df1f31d": "X"
-                    }
-                }
-            ]
-        )
-
-        self.assertEqual(groups, [1, 2, 3, 5])
-
     def test_init_group_matrix(self):
         matrix = init_group_matrix([1, 2, 3, 4], 5)
         self.assertEqual(matrix,
