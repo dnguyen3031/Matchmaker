@@ -30,10 +30,11 @@ def get_match_templates(group_sizes, players_per_team, num_teams):
 
 
 def clean_duplicates(match_templates):
+
     pass
 
 
-def fit_first(match_templates, lobby):
+def find_teams_from_templates(match_templates, lobby):
     teams = []
     unused_groups = list(lobby["groups"])
     arbitrary_template = match_templates[0]
@@ -54,17 +55,15 @@ def fit_first(match_templates, lobby):
 
 
 
-def find_best_teams(lobby, num_teams, players_per_team):
+def choose_best_match(lobby, num_teams, players_per_team):
     """ input: the filled lobby
     return: a match of some teams"""
-    group_sizes = get_group_sizes(lobby["groups"])
-    match_templates = get_match_templates(group_sizes, players_per_team, num_teams)
-    clean_duplicates(match_templates)
-    teams = fit_first(match_templates, lobby)
-    return teams
+    pass
 
 def assign_teams(full_lobby, num_teams, players_per_team):
-    game = Game({"_id": full_lobby["game_id"]})
-    game.reload()
-    teams = find_best_teams(full_lobby, players_per_team, num_teams)
+    group_sizes = get_group_sizes(full_lobby["groups"])
+    match_templates = get_match_templates(group_sizes, players_per_team, num_teams)
+    clean_duplicates(match_templates)
+    all_teams = find_teams_from_templates(match_templates, full_lobby)
+    teams = choose_best_match(all_teams, players_per_team, num_teams)
     full_lobby["teams"] = teams
