@@ -39,7 +39,8 @@ class MyTestCase(unittest.TestCase):
         t = get_match_templates(groups, 6, 3)
         self.assertEqual(t, [[[1,1,1,1,2], [1,2,3], [2,4]],
                              [[1,1,2,2], [1,1,1,3], [2,4]],
-                             [[1,1,4],[1,1,1,3],[2,2,2]]])
+                             [[1,1,4],[1,1,1,3],[2,2,2]],
+                             [[1, 1, 2, 2], [2, 4], [1, 1, 1, 3]]])
 
 
     def test_clean_duplicates_0(self):

@@ -9,23 +9,43 @@ def get_group_sizes(groups):
     group_sizes.sort()
     return group_sizes
 
+def group_sizes_excluding_team(group_sizes, team):
+    other_group_sizes = list(group_sizes)
+    for group_size in team:
+        other_group_sizes.remove(group_size)
+    return other_group_sizes
+
+def join_team_to_all_matches(team, matches):
+    viable_matches = []
+    for match in matches:
+        print("  remaining match:", match)
+        viable_matches.append([team] + match)
+    return viable_matches
+
 def get_match_templates(group_sizes, players_per_team, num_teams):
     """input: a list of possible group sizes
     return: a list of the different matches that fit the group sizes into different teams.
-    Each match is a list of <num_teams> team templates. Each team template is a list of group sizes.
+    Each match is a list of <num_teams> teams. Each team is a list of group sizes.
+    For clarity, the list order is matches, teams, group_sizes
     This function is recursive. It iterates over num_teams."""
     if num_teams == 1:
-        return [group_sizes]
+        return [[group_sizes]]
     match_templates = []
-    team_combos = get_team_combos(group_sizes, players_per_team)
-    for team_combo in team_combos:
-        excluded_group_sizes = list(group_sizes)
-        for group_size in team_combo:
-            excluded_group_sizes.remove(group_size)
-        remaining_team_combos = get_match_templates(excluded_group_sizes, players_per_team, num_teams-1)
-        for remaining_team_combo in remaining_team_combos:
-            potential_team_combo = [team_combo, remaining_team_combo]
-            match_templates.append(potential_team_combo)
+    possible_teams = get_team_combos(group_sizes, players_per_team)
+    print(group_sizes)
+    print("pt's:",possible_teams)
+    print("teams:", num_teams)
+    for i in range(len(possible_teams)):
+        team = possible_teams[i]
+        print(" tc:", team)
+        other_group_sizes = group_sizes_excluding_team(group_sizes, team)
+        print("  other:", other_group_sizes)
+        remaining_match_templates = get_match_templates(other_group_sizes, players_per_team, num_teams-1)
+        print("  remaining matches:", remaining_match_templates)
+        viable_matches = join_team_to_all_matches(team, remaining_match_templates)
+        match_templates += viable_matches
+        print(" temps:", match_templates)
+    print("ret:", match_templates)
     return match_templates
 
 
