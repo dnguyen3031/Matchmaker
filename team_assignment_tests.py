@@ -31,31 +31,23 @@ class MyTestCase(unittest.TestCase):
         groups = [1,1,1,1,2,2]
         t = get_match_templates(groups, 4, 2)
         self.assertEqual(t, [[[1,1,1,1], [2,2]],
-                             [[1,1,2], [1,1,2]],
-                             [[2,2], [1,1,1,1]]])
+                             [[1,1,2], [1,1,2]]])
 
     def test_get_match_templates_2(self):
         groups = [1,1,1,1,1,2,2,2,3,4]
         t = get_match_templates(groups, 6, 3)
-        self.assertEqual(t, [[[1,1,1,1,2], [1,2,3], [2,4]],
-                             [[1,1,2,2], [1,1,1,3], [2,4]],
-                             [[1,1,4],[1,1,1,3],[2,2,2]],
-                             [[1, 1, 2, 2], [2, 4], [1, 1, 1, 3]]])
+        self.assertEqual(t,
+                         [[[1, 1, 1, 1, 2], [1, 2, 3], [2, 4]],
+                          [[1, 1, 2, 2], [1, 1, 1, 3], [2, 4]],
+                          [[1, 1, 2, 2], [1, 2, 3], [1, 1, 4]],
+                          [[2, 2, 2], [1, 1, 1, 3], [1, 1, 4]]])
 
-
-    def test_clean_duplicates_0(self):
-        templates = []
-        t = clean_duplicates(templates)
-        self.assertEqual(templates, [])
-
-    def test_clean_duplicates_1(self):
-        templates = [[[1, 1, 1, 1], [2, 2]],
-                     [[1, 1, 2], [1, 1, 2]],
-                     [[2, 2], [1, 1, 1, 1]]]
-        t = clean_duplicates(templates)
-        self.assertEqual(templates,
-                    [[[1, 1, 1, 1], [2, 2]],
-                     [[1, 1, 2], [1, 1, 2]]])
+    def test_get_match_templates_3(self):
+        groups = [1,1,1,1,1,2,2,3,4,4]
+        t = get_match_templates(groups, 4, 5)
+        self.assertEqual(t,
+                         [[[1, 1, 1, 1], [2, 2], [1, 3], [4], [4]],
+                          [[1, 1, 2], [1, 1, 2], [1, 3], [4], [4]]])
 
     # def test_fit_first(self):
     #     lobby ={

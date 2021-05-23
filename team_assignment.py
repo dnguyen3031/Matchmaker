@@ -18,40 +18,43 @@ def group_sizes_excluding_team(group_sizes, team):
 def join_team_to_all_matches(team, matches):
     viable_matches = []
     for match in matches:
-        print("  remaining match:", match)
         viable_matches.append([team] + match)
     return viable_matches
 
-def get_match_templates(group_sizes, players_per_team, num_teams):
+def clean_teams(teams, blocklist):
+    i = 0
+    while i < len(teams):
+        if teams[i] in blocklist:
+            teams.pop(i)
+            i -= 1
+        i += 1
+
+def get_match_templates(group_sizes, players_per_team, num_teams, blocklist=None):
     """input: a list of possible group sizes
     return: a list of the different matches that fit the group sizes into different teams.
     Each match is a list of <num_teams> teams. Each team is a list of group sizes.
     For clarity, the list order is matches, teams, group_sizes
+    return [] if the only possible teams are in the blocklist
     This function is recursive. It iterates over num_teams."""
+    if blocklist is None:
+        blocklist = []
     if num_teams == 1:
-        return [[group_sizes]]
+        if group_sizes not in blocklist:
+            return [[group_sizes]]
+        else:
+            return []
     match_templates = []
     possible_teams = get_team_combos(group_sizes, players_per_team)
-    print(group_sizes)
-    print("pt's:",possible_teams)
-    print("teams:", num_teams)
-    for i in range(len(possible_teams)):
-        team = possible_teams[i]
-        print(" tc:", team)
+    clean_teams(possible_teams, blocklist)
+    for team in possible_teams:
         other_group_sizes = group_sizes_excluding_team(group_sizes, team)
-        print("  other:", other_group_sizes)
-        remaining_match_templates = get_match_templates(other_group_sizes, players_per_team, num_teams-1)
-        print("  remaining matches:", remaining_match_templates)
-        viable_matches = join_team_to_all_matches(team, remaining_match_templates)
-        match_templates += viable_matches
-        print(" temps:", match_templates)
-    print("ret:", match_templates)
+        remaining_match_templates = get_match_templates(
+            other_group_sizes, players_per_team, num_teams-1, list(blocklist))
+        if len(remaining_match_templates) > 0:
+            viable_matches = join_team_to_all_matches(team, remaining_match_templates)
+            match_templates += viable_matches
+        blocklist.append(team)
     return match_templates
-
-
-def clean_duplicates(match_templates):
-
-    pass
 
 
 def find_teams_from_templates(match_templates, lobby):
@@ -83,7 +86,6 @@ def choose_best_match(lobby, num_teams, players_per_team):
 def assign_teams(full_lobby, num_teams, players_per_team):
     group_sizes = get_group_sizes(full_lobby["groups"])
     match_templates = get_match_templates(group_sizes, players_per_team, num_teams)
-    clean_duplicates(match_templates)
     all_teams = find_teams_from_templates(match_templates, full_lobby)
     teams = choose_best_match(all_teams, players_per_team, num_teams)
     full_lobby["teams"] = teams
