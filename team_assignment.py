@@ -55,20 +55,39 @@ def get_match_templates(group_sizes, players_per_team, num_teams, blocklist=None
         blocklist.append(team)
     return match_templates
 
+def find_all_groups_with_size(target_group_size, lobby):
+    groups_with_size = []
+    for group in lobby:
+        if group["num_players"] == target_group_size:
+            groups_with_size.append(group)
+    return groups_with_size
+
+def find_all_teams_with_template(team_template, groups):
+    if len(team_template) == 0:
+        return []
+    teams = []
+    for target_group_size in team_template:
+        group_candidates = find_all_groups_with_size(target_group_size, lobby)
+        for group in group_candidates:
+            remaining_template = list(team_template)
+            remaining_template.remove(target_group_size)
+            remaining_groups = list(lobby)
+            remaining_groups.remove(group)
+            rest_of_team_possibilities = find_all_teams_with_template(remaining_template, remaining_groups)
+            for rest_of_team in rest_of_team_possibilities:
+                teams.append()
+
+
+
+
+
 def find_all_matches_with_template(match_template, lobby):
     matches = []
     for team_template in match_template:
-        curr_team = []
-        for target_group_size in team_template:
-            print("for each group of size", target_group_size)
-            for group in lobby:
-                print("checking all unused groups...")
-                if group["num_players"] == target_group_size:
-                    curr_team.append(group)
-                    lobby.remove(group)
-                    print("breaking")
-                    break
-        matches.append(curr_team)
+        find_all_teams(team_template, lobby["groups"])
+
+
+
     return matches
 
 def find_all_matches(match_templates, lobby):
