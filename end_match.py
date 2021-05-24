@@ -46,7 +46,7 @@ def assign_elos(lobby):
         compare_other_teams(lobby["teams"][i], lobby["team_info"][i], lobby["team_info"], game["game_name"])
 
 def free_discord(room_name):
-    dis = Discord().find_by_name(room_name)[0]
+    dis = Discord().find_by_name(room_name)[1]
     discord = Discord({"_id": dis["_id"]})
     discord["_id"] = ObjectId(discord["_id"])
     discord["status"] = "open"
