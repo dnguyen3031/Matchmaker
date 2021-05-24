@@ -316,6 +316,29 @@ def add_to_queue():
         else:
             return jsonify({"error": "User not found"}), 404
 
+@app.route('/matchmaking/add-new-game', methods=['PATCH'])
+def add_new_game():
+    if request.method == 'PATCH':
+        game_name = request.args.get('game_name')
+        user_id = request.args.get('id')
+        user = User({"_id": user_id})
+        search_game = Game().find_by_name(game_name)[0]
+        if search_game: #actually returns a game
+            if user.reload():
+                user["games_table"][game_name] = {
+                            "game_score": 400,
+                            "time_played": 0
+                        }
+                user["_id"] = ObjectId(user_id)
+                print("The code made it here LOLOLOL")
+                user.patch()
+                return jsonify({"sucess": "Game added to list"}), 201
+            else:
+                return jsonify({"error": "User not found"}), 404
+        else:
+            return jsonify({"error": "Game not found"}), 404
+
+
 
 @app.route('/discords', methods=['GET', 'POST'])
 def get_discords():
