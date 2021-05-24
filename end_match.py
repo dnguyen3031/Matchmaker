@@ -59,6 +59,7 @@ def unqueue_players(teams):
                 user = User({"_id": player_id})
                 user["_id"] = ObjectId(user["_id"])
                 user["in_queue"] = False
+                user["has_voted"] = False
                 user["lobby"] = None
                 user.patch()
 
