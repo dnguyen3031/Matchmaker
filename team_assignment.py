@@ -64,37 +64,38 @@ def find_all_groups_with_size(target_group_size, lobby):
 
 def find_all_teams_with_template(team_template, groups):
     if len(team_template) == 0:
-        return []
+        return [[]]
     teams = []
     for target_group_size in team_template:
-        group_candidates = find_all_groups_with_size(target_group_size, lobby)
+        print(target_group_size)
+        group_candidates = find_all_groups_with_size(target_group_size, groups)
         for group in group_candidates:
+            print("group",group)
             remaining_template = list(team_template)
             remaining_template.remove(target_group_size)
-            remaining_groups = list(lobby)
+            remaining_groups = list(groups)
             remaining_groups.remove(group)
+            print("recursing...")
             rest_of_team_possibilities = find_all_teams_with_template(remaining_template, remaining_groups)
+            print("returning. found:", rest_of_team_possibilities)
             for rest_of_team in rest_of_team_possibilities:
-                teams.append()
+                possible_team= list(rest_of_team)
+                possible_team.append(group)
+                teams.append(possible_team)
+    return teams
 
-
-
-
-
-def find_all_matches_with_template(match_template, lobby):
+def find_all_matches_with_template(match_template, groups):
     matches = []
     for team_template in match_template:
-        find_all_teams(team_template, lobby["groups"])
-
-
+        find_all_teams_with_template(team_template, groups)
 
     return matches
 
 def find_all_matches(match_templates, lobby):
     matches = []
     for match_template in match_templates:
-        lobby_copy = list(lobby["groups"])
-        matches += find_all_matches_with_template(match_template, lobby_copy)
+        groups = list(lobby["groups"])
+        matches += find_all_matches_with_template(match_template, groups)
     return matches
 
 def choose_best_match(all_matches):

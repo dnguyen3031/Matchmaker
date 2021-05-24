@@ -49,6 +49,53 @@ class MyTestCase(unittest.TestCase):
                          [[[1, 1, 1, 1], [2, 2], [1, 3], [4], [4]],
                           [[1, 1, 2], [1, 1, 2], [1, 3], [4], [4]]])
 
+    def test_find_teams_with_template_1(self):
+        groups =  [
+                {
+                    "_id": "609719c646fabbf5e1931578",
+                    "num_players": 1,
+                    "players": {
+                        "6024098ac9b27e9f9995df97": "mikescott0808",
+                    }
+                },
+                {
+                    "_id": "609716516baf12b180e1a95c",
+                    "num_players": 1,
+                    "players": {
+                        "6024098ac9b27e9f9995df97": "alexd1214",
+                    }
+                },
+                {
+                    "_id": "609cc564b0105c43e02ba04f",
+                    "num_players": 2,
+                    "players": {
+                        "6024098ac9b27e9f9995df97": "template",
+                        "607228229a8f71adf99cbfbe": "max"
+                    }
+                },
+                {
+                    "_id": "60a1861c2d951ae021f05d60",
+                    "num_players": 2,
+                    "players": {
+                        "60a5f2fa05f1815bd50e4522": "braden",
+                        "60a5fec405f1815bd50e452b": "sadfasfas"
+                    }
+                },
+                {
+                    "_id": "60a1861c2d951ae021f05d64",
+                    "num_players": 2,
+                    "players": {
+                        "60a5f2fa05f1815bd50e4522": "gayden",
+                        "60a5fec405f1815bd50e452b": "dad"
+                    }
+                }
+        ]
+        template = [1,1,2]
+        teams = find_all_teams_with_template(template, groups)
+        self.assertEqual(teams, [])
+
+
+
     # def test_fit_first(self):
     #     lobby ={
     #         "groups":[
@@ -56,7 +103,7 @@ class MyTestCase(unittest.TestCase):
     #                     "_id": "609cc564b0105c43e02ba04f",
     #                     "num_players": 2,
     #                     "players": {
-    #                         "6024098ac9b27e9f9995df97": "Template",
+    #                         "6024098ac9b27e9f9995df97": "template",
     #                         "607228229a8f71adf99cbfbe": "max"
     #                     }
     #                 },
@@ -72,13 +119,13 @@ class MyTestCase(unittest.TestCase):
     #     }
     #     templates = [[[2], [2]]]
     #     teams = fit_first(templates, lobby)
-    #     self.assertEqual(teams,
+    #     self.assertequal(teams,
     #                      [[
     #                 {
     #                     "_id": "609cc564b0105c43e02ba04f",
     #                     "num_players": 2,
     #                     "players": {
-    #                         "6024098ac9b27e9f9995df97": "Template",
+    #                         "6024098ac9b27e9f9995df97": "template",
     #                         "607228229a8f71adf99cbfbe": "max"
     #                     }
     #                 }],
@@ -100,14 +147,14 @@ class MyTestCase(unittest.TestCase):
     #                 "_id": "609716516baf12b180e1a95c",
     #                 "num_players": 1,
     #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "AlexD1214",
+    #                     "6024098ac9b27e9f9995df97": "alexd1214",
     #                 }
     #             },
     #             {
     #                 "_id": "609cc564b0105c43e02ba04f",
     #                 "num_players": 2,
     #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "Template",
+    #                     "6024098ac9b27e9f9995df97": "template",
     #                     "607228229a8f71adf99cbfbe": "max"
     #                 }
     #             },
@@ -123,27 +170,27 @@ class MyTestCase(unittest.TestCase):
     #                 "_id": "609719c646fabbf5e1931578",
     #                 "num_players": 1,
     #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "MikeScott0808",
+    #                     "6024098ac9b27e9f9995df97": "mikescott0808",
     #                 }
     #             }
     #         ]
     #     }
     #     templates = [[[1, 2], [1, 2]]]
     #     teams = fit_first(templates, lobby)
-    #     self.assertEqual(teams,
+    #     self.assertequal(teams,
     #      [[
     #          {
     #              "_id": "609716516baf12b180e1a95c",
     #              "num_players": 1,
     #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "AlexD1214",
+    #                  "6024098ac9b27e9f9995df97": "alexd1214",
     #              }
     #          },
     #          {
     #              "_id": "609cc564b0105c43e02ba04f",
     #              "num_players": 2,
     #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "Template",
+    #                  "6024098ac9b27e9f9995df97": "template",
     #                  "607228229a8f71adf99cbfbe": "max"
     #              }
     #          }
@@ -153,7 +200,7 @@ class MyTestCase(unittest.TestCase):
     #              "_id": "609719c646fabbf5e1931578",
     #              "num_players": 1,
     #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "MikeScott0808",
+    #                  "6024098ac9b27e9f9995df97": "mikescott0808",
     #              }
     #          },
     #          {
@@ -174,14 +221,14 @@ class MyTestCase(unittest.TestCase):
     #                 "_id": "609716516baf12b180e1a95c",
     #                 "num_players": 1,
     #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "AlexD1214",
+    #                     "6024098ac9b27e9f9995df97": "alexd1214",
     #                 }
     #             },
     #             {
     #                 "_id": "609cc564b0105c43e02ba04f",
     #                 "num_players": 2,
     #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "Template",
+    #                     "6024098ac9b27e9f9995df97": "template",
     #                     "607228229a8f71adf99cbfbe": "max"
     #                 }
     #             },
@@ -197,27 +244,27 @@ class MyTestCase(unittest.TestCase):
     #                 "_id": "609719c646fabbf5e1931578",
     #                 "num_players": 1,
     #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "MikeScott0808",
+    #                     "6024098ac9b27e9f9995df97": "mikescott0808",
     #                 }
     #             }
     #         ]
     #     }
     #     templates = [[[1,1], [2], [2]]]
     #     teams = fit_first(templates, lobby)
-    #     self.assertEqual(teams,
+    #     self.assertequal(teams,
     #      [[
     #          {
     #              "_id": "609716516baf12b180e1a95c",
     #              "num_players": 1,
     #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "AlexD1214",
+    #                  "6024098ac9b27e9f9995df97": "alexd1214",
     #              }
     #          },
     #          {
     #              "_id": "609719c646fabbf5e1931578",
     #              "num_players": 1,
     #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "MikeScott0808",
+    #                  "6024098ac9b27e9f9995df97": "mikescott0808",
     #              }
     #          }
     #      ],
@@ -226,7 +273,7 @@ class MyTestCase(unittest.TestCase):
     #                  "_id": "609cc564b0105c43e02ba04f",
     #                  "num_players": 2,
     #                  "players": {
-    #                      "6024098ac9b27e9f9995df97": "Template",
+    #                      "6024098ac9b27e9f9995df97": "template",
     #                      "607228229a8f71adf99cbfbe": "max"
     #                  }
     #              }
