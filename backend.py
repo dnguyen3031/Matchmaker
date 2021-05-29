@@ -325,13 +325,16 @@ def add_new_game():
         search_game = Game().find_by_name(game_name)[0]
         if search_game: #actually returns a game
             if user.reload():
-                user["games_table"][game_name] = {
-                            "game_score": 1000,
-                            "time_played": 0
-                        }
-                user["_id"] = ObjectId(user_id)
-                user.patch()
-                return jsonify({"sucess": "Game added to list"}), 201
+                if game_name not in user["games_table"]:
+                    user["games_table"][game_name] = {
+                        "game_score": 1000,
+                        "time_played": 0
+                    }
+                    user["_id"] = ObjectId(user_id)
+                    user.patch()
+                    return jsonify({"sucess": "Game added to list"}), 201
+                else:
+                    return jsonify({"error": "Game already in users"}), 404
             else:
                 return jsonify({"error": "User not found"}), 404
         else:
