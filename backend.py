@@ -7,6 +7,7 @@ from ELO import *
 from bson import ObjectId
 import timer_module
 import threading
+from end_match import terminate_lobby
 
 app = Flask(__name__)
 
@@ -279,6 +280,17 @@ def submit_results(id):
         return resp
 
 
+@app.route('/lobbies/end-lobby/<id>', methods=['PATCH'])
+def end_lobby(id):
+    if request.method == 'PATCH':
+        lobby = Lobby({"_id": id})
+        if lobby.reload():
+            terminate_lobby(lobby)
+            return lobby
+        else:
+            return jsonify({"error": "Lobby not found"}), 404
+
+
 @app.route('/matchmaking/add-to-queue', methods=['PATCH'])
 def add_to_queue():
     if request.method == 'PATCH':
@@ -286,10 +298,9 @@ def add_to_queue():
         game_name = request.args.get('game_name')
         search_game = Game().find_by_name(game_name)[0]
         game = Game({"_id": search_game["_id"]})
-        game.reload()
         user_id = request.args.get('id')
         user = User({"_id": user_id})
-        if user.reload():
+        if user.reload() and game.reload():
             elo = user.games_table[game_name]['game_score']
             print("getting queued")
             if user.group is None:
@@ -308,13 +319,19 @@ def add_to_queue():
                 "window_size": starting_window_size,
             }
             print(new_lobby)
-            user["in_queue"] = True
-            user["_id"] = ObjectId(user_id)
-            user.patch()
             resp = game.append_to_queue(game_name, new_lobby)
+            if not resp == "lobby not added to queue":
+                user["in_queue"] = True
+                user["_id"] = ObjectId(user_id)
+                user.patch()
+            else:
+                print("problem")
+                print(new_lobby)
+                print(game_name)
+                print(resp)
             return jsonify(resp), 201
         else:
-            return jsonify({"error": "User not found"}), 404
+            return jsonify({"error": "User or game not found"}), 404
 
 @app.route('/matchmaking/add-new-game', methods=['PATCH'])
 def add_new_game():
