@@ -21,6 +21,52 @@ def backend_home():
     return 'You have reached the backend'
 
 
+@app.route('/reset', methods=['PATCH'])
+def reset():
+    if request.method == 'PATCH':
+        users = User().find_all()
+        for user_dic in users:
+            user = User(user_dic)
+            user.reload()
+            user["_id"] = ObjectId(user["_id"])
+            user["group"] = None
+            user["in_queue"] = False
+            user["has_voted"] = False
+            user["lobby"] = None
+            user.patch()
+
+        lobbies = Lobby().find_all()
+        for lobby_dic in lobbies:
+            lobby = Lobby(lobby_dic)
+            lobby["_id"] = ObjectId(lobby["_id"])
+            lobby.remove()
+
+        discords = Discord().find_all()
+        for discord_dic in discords:
+            discord = Discord(discord_dic)
+            discord.reload()
+            discord["_id"] = ObjectId(discord["_id"])
+            discord["status"] = "open"
+            discord.patch()
+
+        groups = Group().find_all()
+        for group_dic in groups:
+            group = Group(group_dic)
+            group["_id"] = ObjectId(group["_id"])
+            group.remove()
+
+        games = Game().find_all()
+        for game_dic in games:
+            game = Game(game_dic)
+            game.reload()
+            game["_id"] = ObjectId(game["_id"])
+            game["queue"] = []
+            game.patch()
+
+        resp = jsonify("Everything reset"), 201
+        return resp
+
+
 @app.route('/users', methods=['GET', 'POST'])
 def get_users():
     if request.method == 'GET':
