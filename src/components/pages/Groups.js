@@ -113,7 +113,7 @@ function Groups (props) {
       <Container fluid>
         <Row>
           <Col className="side-col" />
-          <Col xs={8} className="pr-0">
+          <Col xs={8} className="main-col pr-0">
             <Row>
               <Col>
                 <FormGroup controlId="username">
@@ -121,19 +121,11 @@ function Groups (props) {
                   <FormControl type="text" placeholder="Friend's group code" value = {groupcode} onChange={(e) => setgroupcode(e.target.value)}/>
                 </FormGroup>
                 <Button variant="primary" onClick = {joinGroup}>Join Group</Button>{' '}
+                OR
+                <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
               </Col>
               <Col md={3}>
                 <FriendBar data={props.data}/>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                OR
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Button variant="primary" onClick = {handleSubmit}>Create Group</Button>{' '}
               </Col>
             </Row>
           </Col>
@@ -148,7 +140,7 @@ function Groups (props) {
     <Container fluid>
       <Row>
         <Col className="side-col" />
-        <Col xs={8} className="pr-0">
+        <Col xs={8} className="main-col pr-0">
           <Row>
             <Col>
               <Form.Label>Group Code: {props.data.user.group}</Form.Label>
