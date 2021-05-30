@@ -7,15 +7,15 @@
 
 describe('Login, Create/Leave Group, Logout', () => {
    it('Testing Login...', () => {
-     cy.visit('https://matchmaking-01.herokuapp.com/login')
+     cy.visit('http://localhost:3000/login')
 
      cy.get('#formBasicEmail')
-      .type('max@gmail.com')
-      .should('have.value', 'max@gmail.com')
+      .type('test01@gmail.com')
+      .should('have.value', 'test01@gmail.com')
 
       cy.get('#formBasicPassword')
-      .type('asdf')
-      .should('have.value', 'asdf')
+      .type('test01')
+      .should('have.value', 'test01')
 
       cy.get('Button').contains('Login')
       .click()
@@ -35,17 +35,18 @@ describe('Login, Create/Leave Group, Logout', () => {
     })
 
     it('Testing Logout...', () => {
-      cy.contains('max')
+      cy.contains('test01')
       .click()
+
+      cy.wait(100)
  
-       cy.contains('Logout')
-       .click()
+      cy.contains('Logout').click()
     })
  })
 
  describe('Join Lobby', () => {
    it('Login for test01...', () => {
-     cy.visit('https://matchmaking-01.herokuapp.com/login')
+     cy.visit('http://localhost:3000/login')
 
      cy.get('#formBasicEmail')
       .type('test01@gmail.com')
@@ -75,13 +76,14 @@ describe('Login, Create/Leave Group, Logout', () => {
    it('Logout of test01', () => {
       cy.contains('test01')
       .click()
+
+      cy.wait(100)
  
-       cy.contains('Logout')
-       .click()
+      cy.contains('Logout').click()
    })
 
    it('Login for test02...', () => {
-      cy.visit('https://matchmaking-01.herokuapp.com/login')
+      cy.visit('http://localhost:3000/login')
  
       cy.get('#formBasicEmail')
        .type('test02@gmail.com')
@@ -111,13 +113,14 @@ describe('Login, Create/Leave Group, Logout', () => {
     it('Logout of test02', () => {
        cy.contains('test02')
        .click()
+
+       cy.wait(100)
   
-        cy.contains('Logout')
-        .click()
+      cy.contains('Logout').click()
     })
 
     it('Login for test03...', () => {
-      cy.visit('https://matchmaking-01.herokuapp.com/login')
+      cy.visit('http://localhost:3000/login')
  
       cy.get('#formBasicEmail')
        .type('test03@gmail.com')
@@ -147,13 +150,14 @@ describe('Login, Create/Leave Group, Logout', () => {
     it('Logout of test03', () => {
        cy.contains('test03')
        .click()
+
+       cy.wait(100)
   
-        cy.contains('Logout')
-        .click()
+       cy.contains('Logout').click()
     })
 
     it('Login for test04...', () => {
-      cy.visit('https://matchmaking-01.herokuapp.com/login')
+      cy.visit('http://localhost:3000/login')
  
       cy.get('#formBasicEmail')
        .type('test04@gmail.com')
@@ -183,8 +187,11 @@ describe('Login, Create/Leave Group, Logout', () => {
     it('Logout of test04', () => {
        cy.contains('test04')
        .click()
+
+       cy.wait(100)
   
-        cy.contains('Logout')
-        .click()
+       cy.contains('Logout').click()
+
+       cy.url().should('include', '/login/')
     })
  })

@@ -142,7 +142,17 @@ class Game(Model):
             {"game_name": game_name},
             {'$push': {'queue': new_lobby}}
         )
+        # print(self)
+        # for lobby in self.queue:
+        #     print(lobby)
+        #     for group in lobby["groups"]:
+        #         print(group)
+        #         for player in group["players"]:
+        #             print(player)
+        #             if player in new_lobby["groups"][0]["players"]:
+        #                 print("found")
         return new_lobby
+        # return "lobby not added to queue"
 
     def update_window_size(self, game_name, queue):
         self.collection.update(

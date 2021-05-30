@@ -36,6 +36,7 @@ def set_player_lobby(lobby):
             player = User({"_id": id})
             player["lobby"] = lobby["_id"]
             player["_id"] = ObjectId(id)
+            player["in_queue"] = True
             player.patch()
 
 def get_adv_elo(team, game_id):

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Col, Container, Dropdown, Form, FormControl, FormGroup, Button, DropdownButton, Row } from 'react-bootstrap'
+import { Col, Container, Dropdown, Form, FormControl, FormGroup, Button, DropdownButton, Row, Modal } from 'react-bootstrap'
 import CustomNavbar from '../CustomNavbar'
 import FriendBar from '../FriendBar'
 import Queue from './Queue'
@@ -12,6 +12,13 @@ function Matchmaking (props) {
   }
 
   const [newGame, setNewGame] = useState('')
+  /* Error Model */
+  const [showError, setErrorShow] = useState(false)
+  const handleErrorClose = () => setErrorShow(false)
+
+  /* Success Model */
+  const [showSucess, setSucessShow] = useState(false)
+  const handleSuccessClose = () => setSucessShow(false)
 
   useEffect(() => {
     props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, currentPage: 'Matchmaking' }).then(result => {
@@ -38,7 +45,9 @@ function Matchmaking (props) {
       if (result.status === 201) {
         console.log('Added Successfully')
         window.location.reload(false)
-      } else { console.log('failed to add to queue') }
+      } else {
+        console.log('failed to add to queue')
+      }
     })
   }
 
@@ -47,7 +56,7 @@ function Matchmaking (props) {
       return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + newGame + '&id=' + props.data.id)
     } catch (error) {
       console.log(error)
-      return false
+      return error
     }
   }
 
@@ -56,9 +65,13 @@ function Matchmaking (props) {
     console.log(newGame)
     newGamePatch().then(result => {
       if (result.status === 201) {
+        setSucessShow('Game sucessfully added')
         console.log('Added to games table Successfully')
         window.location.reload(false)
-      } else { console.log('failed to add to games table') } // error check for bad game name vs inable to insert
+      } else {
+        console.log(result.error)
+        setErrorShow('Failed to add game')
+      } // error check for bad game name vs inable to insert
     })
   }
 
@@ -94,6 +107,23 @@ function Matchmaking (props) {
           </Col>
           <Col className="side-col" />
         </Row>
+         <Modal show={showError} onHide={handleErrorClose}>
+         <Modal.Header closeButton>
+            <Modal.Title>Error!</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+            {showError}
+         </Modal.Body>
+         </Modal>
+
+         <Modal show={showSucess} onHide={handleSuccessClose}>
+         <Modal.Header closeButton>
+            <Modal.Title>Success!</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+            {showSucess}
+         </Modal.Body>
+         </Modal>
       </Container>
     </div>
   }
