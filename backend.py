@@ -261,21 +261,28 @@ def get_lobby(id):
         return resp
 
 
-@app.route('/lobbies/submit-results/<id>', methods=['PATCH'])
-def submit_results(id):
+@app.route('/lobbies/submit-results', methods=['PATCH'])
+def submit_results():
     if request.method == 'PATCH':
+        lobby_id = request.args.get('lobby_id')
+        user_id = request.args.get('id')
         results = request.get_json()
-        lobby = Lobby({"_id": id})
+        lobby = Lobby({"_id": lobby_id})
+        user = User({"_id": user_id})
         if not lobby.reload():
             return jsonify({"error": "Lobby not found"}), 404
-        lobby["_id"] = ObjectId(id)
+        if not user.reload():
+            return jsonify({"error": "User not found"}), 404
+        lobby["_id"] = ObjectId(lobby_id)
         ranking = results["ranking"]
         print(len(ranking))
         for i in range(len(ranking)):
             lobby["team_info"][i]["votes"][ranking[i] - 1] += 1
         lobby["total_votes"] += 1
         lobby.patch()
-
+        user["has_voted"] = True
+        user["_id"] = ObjectId(user_id)
+        user.patch()
         resp = jsonify(lobby), 200
         return resp
 
@@ -291,8 +298,8 @@ def end_lobby(id):
             return jsonify({"error": "Lobby not found"}), 404
 
 
-def set_users_in_queue(new_lobby):
-    for player in new_lobby["groups"][0]["players"]:
+def set_users_in_queue(lobby):
+    for player in lobby["groups"][0]["players"]:
         user = User({"_id": player})
         user.reload()
         user["in_queue"] = True
@@ -329,13 +336,7 @@ def add_to_queue():
             }
             print(new_lobby)
             resp = game.append_to_queue(game_name, new_lobby)
-            if not resp == "lobby not added to queue":
-                set_users_in_queue(new_lobby)
-            else:
-                print("problem")
-                print(new_lobby)
-                print(game_name)
-                print(resp)
+            set_users_in_queue(new_lobby)
             return jsonify(resp), 201
         else:
             return jsonify({"error": "User or game not found"}), 404

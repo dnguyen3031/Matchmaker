@@ -59,21 +59,11 @@ function TeamBuilder (props) {
     )
   })
 
-  async function makeLobbiesPatchCall (change) {
+  async function makeSubmitResultsPatchCall (change) {
     try {
-      return await axios.patch('http://localhost:5000/lobbies/submit-results/' + props.data.lobby._id, change)
+      console.log('http://localhost:5000/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id)
+      return await axios.patch('http://localhost:5000/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id, change)
     } catch (error) {
-      console.log(error)
-      return false
-    }
-  }
-
-  async function makeUsersPatchCall (change) {
-    try {
-      console.log("Updating user's has_voted field")
-      return await axios.patch('http://localhost:5000/users/' + props.data.id, change)
-    } catch (error) {
-      console.log("Failed to update user's has_voted field")
       console.log(error)
       return false
     }
@@ -98,13 +88,9 @@ function TeamBuilder (props) {
     const rankObj = {
       ranking: scores.map((i) => Number(i)) // Convert the scores to an array of Numbers
     }
-    const hasVotedObj = {
-      has_voted: true
-    }
     // console.dir(obj)
     console.log(props.data)
-    makeLobbiesPatchCall(rankObj)
-    makeUsersPatchCall(hasVotedObj)
+    makeSubmitResultsPatchCall(rankObj)
     setTimeout(() => { window.location.reload(false) }, 1000)
   }
 
