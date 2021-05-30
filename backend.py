@@ -291,6 +291,15 @@ def end_lobby(id):
             return jsonify({"error": "Lobby not found"}), 404
 
 
+def set_users_in_queue(new_lobby):
+    for player in new_lobby["groups"][0]["players"]:
+        user = User({"_id": player})
+        user.reload()
+        user["in_queue"] = True
+        user["_id"] = ObjectId(player)
+        user.patch()
+
+
 @app.route('/matchmaking/add-to-queue', methods=['PATCH'])
 def add_to_queue():
     if request.method == 'PATCH':
@@ -321,9 +330,7 @@ def add_to_queue():
             print(new_lobby)
             resp = game.append_to_queue(game_name, new_lobby)
             if not resp == "lobby not added to queue":
-                user["in_queue"] = True
-                user["_id"] = ObjectId(user_id)
-                user.patch()
+                set_users_in_queue(new_lobby)
             else:
                 print("problem")
                 print(new_lobby)
