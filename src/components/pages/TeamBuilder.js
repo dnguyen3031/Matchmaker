@@ -61,8 +61,9 @@ function TeamBuilder (props) {
 
   async function makeSubmitResultsPatchCall (change) {
     try {
-      console.log('http://localhost:5000/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id)
-      return await axios.patch('http://localhost:5000/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id, change)
+      const result = await axios.patch('http://localhost:5000/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id, change)
+      setTimeout(() => { window.location.reload(false) }, 5000)
+      return result
     } catch (error) {
       console.log(error)
       return false
@@ -91,7 +92,6 @@ function TeamBuilder (props) {
     // console.dir(obj)
     console.log(props.data)
     makeSubmitResultsPatchCall(rankObj)
-    setTimeout(() => { window.location.reload(false) }, 1000)
   }
 
   function secondsToHms (d) { // This function from Stack Overflow provides a convientent way to make time left more readable.
@@ -114,7 +114,7 @@ function TeamBuilder (props) {
           <Card.Body>
             <Card.Text className="text-white">{props.data.game.game_name}</Card.Text>
             <Card.Text className="text-white">Discord {props.data.lobby.discord}</Card.Text>
-            <Card.Text className="text-white">Time Left: {secondsToHms(timer)} seconds</Card.Text>
+            <Card.Text className="text-white">Time Left: {secondsToHms(timer)}</Card.Text>
           </Card.Body>
         </Card>
       </Row>
