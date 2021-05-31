@@ -94,11 +94,11 @@ function Matchmaking (props) {
               <Col>
                 <FormGroup controlId="newGame">
                 <Form.Label>New Game</Form.Label>
-                <FormControl placeholder="newGame" type="text"
+                <FormControl placeholder="New Game" type="text"
                          value = {newGame}
                          onChange={(e) => setNewGame(e.target.value)}/>
                 </FormGroup>
-                <Button block type="submit" onClick = {handleSubmit}>AddNewGame</Button>
+                <Button block type="submit" onClick = {handleSubmit}>Add New Game</Button>
               </Col>
               <Col md={3}>
                 <FriendBar data={props.data}/>
