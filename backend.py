@@ -34,6 +34,8 @@ def reset():
             user["has_voted"] = False
             user["lobby"] = None
             user.patch()
+            if user["email"] == "testCreate@gmail.com":
+                user.remove()
 
         lobbies = Lobby().find_all()
         for lobby_dic in lobbies:
