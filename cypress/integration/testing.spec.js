@@ -394,3 +394,9 @@ describe.skip('Create/Join and Leave Group', () => {
        cy.contains('Logout').click()
      })
  })
+
+ describe('Reset Tests', () => {
+   it('Resetting...', () => {
+     cy.request('PATCH', 'http://localhost:5000/reset', { completed: true} )
+   })
+ })
