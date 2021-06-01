@@ -218,8 +218,7 @@ class MyTestCase(unittest.TestCase):
         team_templates = [[1, 1], [2]]
         lobby  = {"groups": jsonify_group([["mike"], ["alex"], ["brad"], ["bill"], ["template", "max"]])}
         all_matches = find_all_matches(team_templates, lobby, 3)
-        # for match in all_matches:
-        #     print(match)
+        print(all_matches)
         simple_matches = simplify_matches(all_matches)
         self.assertEqual(simple_matches ,
             [[[['mike'], ['alex']], [['brad'], ['bill']], [['template', 'max']]],
@@ -238,201 +237,336 @@ class MyTestCase(unittest.TestCase):
             [[[['mike'], ['alex']], [['template', 'max']], [['bro', 'bob']]]]
         )
 
-    # def test_fit_first(self):
-    #     lobby ={
-    #         "groups":[
-    #                 {
-    #                     "_id": "609cc564b0105c43e02ba04f",
-    #                     "num_players": 2,
-    #                     "players": {
-    #                         "6024098ac9b27e9f9995df97": "template",
-    #                         "607228229a8f71adf99cbfbe": "max"
-    #                     }
-    #                 },
-    #                 {
-    #                     "_id": "60a1861c2d951ae021f05d60",
-    #                     "num_players": 2,
-    #                     "players": {
-    #                         "60a5f2fa05f1815bd50e4522": "braden",
-    #                         "60a5fec405f1815bd50e452b": "sadfasfas"
-    #                     }
-    #                 }
-    #             ]
-    #     }
-    #     templates = [[[2], [2]]]
-    #     teams = fit_first(templates, lobby)
-    #     self.assertequal(teams,
-    #                      [[
-    #                 {
-    #                     "_id": "609cc564b0105c43e02ba04f",
-    #                     "num_players": 2,
-    #                     "players": {
-    #                         "6024098ac9b27e9f9995df97": "template",
-    #                         "607228229a8f71adf99cbfbe": "max"
-    #                     }
-    #                 }],
-    #                 [{
-    #                     "_id": "60a1861c2d951ae021f05d60",
-    #                     "num_players": 2,
-    #                     "players": {
-    #                         "60a5f2fa05f1815bd50e4522": "braden",
-    #                         "60a5fec405f1815bd50e452b": "sadfasfas"
-    #                     }
-    #                 }]
-    #                      ]
-    #                      )
-    #
-    # def test_fit_first_2(self):
-    #     lobby = {
-    #         "groups": [
-    #             {
-    #                 "_id": "609716516baf12b180e1a95c",
-    #                 "num_players": 1,
-    #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "alexd1214",
-    #                 }
-    #             },
-    #             {
-    #                 "_id": "609cc564b0105c43e02ba04f",
-    #                 "num_players": 2,
-    #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "template",
-    #                     "607228229a8f71adf99cbfbe": "max"
-    #                 }
-    #             },
-    #             {
-    #                 "_id": "60a1861c2d951ae021f05d60",
-    #                 "num_players": 2,
-    #                 "players": {
-    #                     "60a5f2fa05f1815bd50e4522": "braden",
-    #                     "60a5fec405f1815bd50e452b": "sadfasfas"
-    #                 }
-    #             },
-    #             {
-    #                 "_id": "609719c646fabbf5e1931578",
-    #                 "num_players": 1,
-    #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "mikescott0808",
-    #                 }
-    #             }
-    #         ]
-    #     }
-    #     templates = [[[1, 2], [1, 2]]]
-    #     teams = fit_first(templates, lobby)
-    #     self.assertequal(teams,
-    #      [[
-    #          {
-    #              "_id": "609716516baf12b180e1a95c",
-    #              "num_players": 1,
-    #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "alexd1214",
-    #              }
-    #          },
-    #          {
-    #              "_id": "609cc564b0105c43e02ba04f",
-    #              "num_players": 2,
-    #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "template",
-    #                  "607228229a8f71adf99cbfbe": "max"
-    #              }
-    #          }
-    #      ],
-    #      [
-    #          {
-    #              "_id": "609719c646fabbf5e1931578",
-    #              "num_players": 1,
-    #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "mikescott0808",
-    #              }
-    #          },
-    #          {
-    #              "_id": "60a1861c2d951ae021f05d60",
-    #              "num_players": 2,
-    #              "players": {
-    #                  "60a5f2fa05f1815bd50e4522": "braden",
-    #                  "60a5fec405f1815bd50e452b": "sadfasfas"
-    #              }
-    #          }
-    #      ]
-    #      ])
-    #
-    # def test_fit_first_3(self):
-    #     lobby = {
-    #         "groups": [
-    #             {
-    #                 "_id": "609716516baf12b180e1a95c",
-    #                 "num_players": 1,
-    #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "alexd1214",
-    #                 }
-    #             },
-    #             {
-    #                 "_id": "609cc564b0105c43e02ba04f",
-    #                 "num_players": 2,
-    #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "template",
-    #                     "607228229a8f71adf99cbfbe": "max"
-    #                 }
-    #             },
-    #             {
-    #                 "_id": "60a1861c2d951ae021f05d60",
-    #                 "num_players": 2,
-    #                 "players": {
-    #                     "60a5f2fa05f1815bd50e4522": "braden",
-    #                     "60a5fec405f1815bd50e452b": "sadfasfas"
-    #                 }
-    #             },
-    #             {
-    #                 "_id": "609719c646fabbf5e1931578",
-    #                 "num_players": 1,
-    #                 "players": {
-    #                     "6024098ac9b27e9f9995df97": "mikescott0808",
-    #                 }
-    #             }
-    #         ]
-    #     }
-    #     templates = [[[1,1], [2], [2]]]
-    #     teams = fit_first(templates, lobby)
-    #     self.assertequal(teams,
-    #      [[
-    #          {
-    #              "_id": "609716516baf12b180e1a95c",
-    #              "num_players": 1,
-    #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "alexd1214",
-    #              }
-    #          },
-    #          {
-    #              "_id": "609719c646fabbf5e1931578",
-    #              "num_players": 1,
-    #              "players": {
-    #                  "6024098ac9b27e9f9995df97": "mikescott0808",
-    #              }
-    #          }
-    #      ],
-    #          [
-    #              {
-    #                  "_id": "609cc564b0105c43e02ba04f",
-    #                  "num_players": 2,
-    #                  "players": {
-    #                      "6024098ac9b27e9f9995df97": "template",
-    #                      "607228229a8f71adf99cbfbe": "max"
-    #                  }
-    #              }
-    #          ],
-    #      [
-    #          {
-    #              "_id": "60a1861c2d951ae021f05d60",
-    #              "num_players": 2,
-    #              "players": {
-    #                  "60a5f2fa05f1815bd50e4522": "braden",
-    #                  "60a5fec405f1815bd50e452b": "sadfasfas"
-    #              }
-    #          }
-    #      ],
-    #
-    #      ])
+    def test_calc_avg_team_elo(self):
+        team = [
+                {
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df97",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8e8cdcc669e1ee3ad26": "test02"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df98",
+                    "num_players": 1,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03"
+                    }
+                },
+                {
+                    "_id": "60a5f2fa05f1815bd50e4522",
+                    "num_players": 1,
+                    "players": {
+                        "60aae916cdcc669e1ee3ad27": "test04"
+                    }
+                }
+        ]
+        team_elo = calc_avg_team_elo(team, "Krunker - Hardpoint")
+        self.assertEqual(team_elo, 996.5)
 
+    def test_match_elo_diff_1(self):
+        match = [
+                [{
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df97",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8e8cdcc669e1ee3ad26": "test02"
+                    }
+                }],
+                [{
+                    "_id": "6024098ac9b27e9f9995df98",
+                    "num_players": 1,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03"
+                    }
+                },
+                {
+                    "_id": "60a5f2fa05f1815bd50e4522",
+                    "num_players": 1,
+                    "players": {
+                        "60aae916cdcc669e1ee3ad27": "test04"
+                    }
+                }]
+            ]
+        match_diff = match_elo_diff(match,"Krunker - Hardpoint")
+        self.assertEqual(match_diff, 1)
+
+    def test_match_elo_diff_2(self):
+        match = [
+                [{
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df97",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8e8cdcc669e1ee3ad26": "test02"
+                    }
+                }],
+                [{
+                    "_id": "60b56a5c43a9b10d4ae5a730",
+                    "num_players": 1,
+                    "players": {
+                        "60b56a5c43a9b10d2ae5a737": "test05"
+                    }
+                },
+                {
+                    "_id": "60aae916cdcc669e1ee1ad37",
+                    "num_players": 1,
+                    "players": {
+                        "60b56a7743a9b10d2ae5a738": "test06"
+                    }
+                }],
+                [{
+                    "_id": "6024098ac9b27e9f9995df38",
+                    "num_players": 2,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03",
+                        "60aae916cdcc669e1ee3ad27": "test04"
+                    }
+                }]
+            ]
+        match_diff = match_elo_diff(match,"Krunker - Hardpoint")
+        self.assertEqual(match_diff, 594.0)
+
+    def test_choose_best_match(self):
+        matches = [
+            [
+                [{
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df97",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8e8cdcc669e1ee3ad26": "test02"
+                    }
+                }],
+                [{
+                    "_id": "6024098ac9b27e9f9995df98",
+                    "num_players": 1,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03"
+                    }
+                },
+                {
+                    "_id": "60a5f2fa05f1815bd50e4522",
+                    "num_players": 1,
+                    "players": {
+                        "60aae916cdcc669e1ee3ad27": "test04"
+                    }
+                }]
+            ],
+            [
+                [{
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df98",
+                    "num_players": 1,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03"
+                    }
+                }],
+                [{
+                    "_id": "60a5f2fa05f1815bd50e4522",
+                    "num_players": 1,
+                    "players": {
+                        "60aae916cdcc669e1ee3ad27": "test04"
+                    }
+                },
+                    {
+                        "_id": "6024098ac9b27e9f9995df97",
+                        "num_players": 1,
+                        "players": {
+                            "60aae8e8cdcc669e1ee3ad26": "test02"
+                        }
+                    }
+                ]
+            ],
+            [
+                [{
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "60a5f2fa05f1815bd50e4522",
+                    "num_players": 1,
+                    "players": {
+                        "60aae916cdcc669e1ee3ad27": "test04"
+                    }
+                }],
+                [{
+                    "_id": "6024098ac9b27e9f9995df98",
+                    "num_players": 1,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03"
+                    }
+                },
+                    {
+                        "_id": "6024098ac9b27e9f9995df97",
+                        "num_players": 1,
+                        "players": {
+                            "60aae8e8cdcc669e1ee3ad26": "test02"
+                        }
+                    }
+                ]
+            ]
+        ]
+        best_match = choose_best_match(matches, "Krunker - Hardpoint")
+        self.assertEqual(best_match, [
+            [{'_id': '6024098ac9b27e9f9995df90',
+               'num_players': 1,
+               'players': {'60aae8d3b71566470d3e855d': 'test01'}},
+              {'_id': '6024098ac9b27e9f9995df97',
+               'num_players': 1,
+               'players': {'60aae8e8cdcc669e1ee3ad26': 'test02'}}],
+             [{'_id': '6024098ac9b27e9f9995df98',
+               'num_players': 1,
+               'players': {'60aae902b71566470d3e855e': 'test03'}},
+              {'_id': '60a5f2fa05f1815bd50e4522',
+               'num_players': 1,
+               'players': {'60aae916cdcc669e1ee3ad27': 'test04'}}]
+            ])
+
+    def test_assign_teams_1(self):
+        full_lobby = {}
+        full_lobby["groups"] = [
+                {
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df97",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8e8cdcc669e1ee3ad26": "test02"
+                    }
+                },
+                {
+                    "_id": "60b56a5c43a9b10d4ae5a730",
+                    "num_players": 1,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03",
+                    }
+                },
+                {
+                    "_id": "60aae916cdcc669e1ee1ad37",
+                    "num_players": 1,
+                    "players": {
+                        "60b56a7743a9b10d2ae5a738": "test06"
+                    }
+                }
+            ]
+        assign_teams(full_lobby, 2, 2, "Krunker - Hardpoint")
+        self.assertEqual(full_lobby["teams"],
+            [[{'_id': '6024098ac9b27e9f9995df90',
+               'num_players': 1,
+               'players': {'60aae8d3b71566470d3e855d': 'test01'}},
+              {'_id': '60b56a5c43a9b10d4ae5a730',
+               'num_players': 1,
+               'players': {'60aae902b71566470d3e855e': 'test03'}}],
+             [{'_id': '6024098ac9b27e9f9995df97',
+               'num_players': 1,
+               'players': {'60aae8e8cdcc669e1ee3ad26': 'test02'}},
+              {'_id': '60aae916cdcc669e1ee1ad37',
+               'num_players': 1,
+               'players': {'60b56a7743a9b10d2ae5a738': 'test06'}}]]
+        )
+
+    def test_assign_teams_2(self):
+        full_lobby = {}
+        full_lobby["groups"] = [
+                {
+                    "_id": "6024098ac9b27e9f9995df90",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8d3b71566470d3e855d": "test01"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df97",
+                    "num_players": 1,
+                    "players": {
+                        "60aae8e8cdcc669e1ee3ad26": "test02"
+                    }
+                },
+                {
+                    "_id": "60b56a5c43a9b10d4ae5a730",
+                    "num_players": 1,
+                    "players": {
+                        "60b56a5c43a9b10d2ae5a737": "test05"
+                    }
+                },
+                {
+                    "_id": "60aae916cdcc669e1ee1ad37",
+                    "num_players": 1,
+                    "players": {
+                        "60b56a7743a9b10d2ae5a738": "test06"
+                    }
+                },
+                {
+                    "_id": "6024098ac9b27e9f9995df38",
+                    "num_players": 2,
+                    "players": {
+                        "60aae902b71566470d3e855e": "test03",
+                        "60aae916cdcc669e1ee3ad27": "test04"
+                    }
+                }
+            ]
+        assign_teams(full_lobby, 3, 2, "Krunker - Hardpoint")
+        self.assertEqual(full_lobby["teams"],
+            [[{'_id': '6024098ac9b27e9f9995df90',
+               'num_players': 1,
+               'players': {'60aae8d3b71566470d3e855d': 'test01'}},
+              {'_id': '60aae916cdcc669e1ee1ad37',
+               'num_players': 1,
+               'players': {'60b56a7743a9b10d2ae5a738': 'test06'}}],
+             [{'_id': '6024098ac9b27e9f9995df97',
+               'num_players': 1,
+               'players': {'60aae8e8cdcc669e1ee3ad26': 'test02'}},
+              {'_id': '60b56a5c43a9b10d4ae5a730',
+               'num_players': 1,
+               'players': {'60b56a5c43a9b10d2ae5a737': 'test05'}}],
+             [{'_id': '6024098ac9b27e9f9995df38',
+               'num_players': 2,
+               'players': {'60aae902b71566470d3e855e': 'test03',
+               '60aae916cdcc669e1ee3ad27': 'test04'}}]]
+
+
+        )
 
 if __name__ == "__main__":
     unittest.main()

@@ -78,9 +78,9 @@ def get_next_discord():
 
     return {"room_name": next_open["room_name"]}
 
-def init_full_lobby(full_lobby, num_teams, num_players):
+def init_full_lobby(full_lobby, num_teams, num_players, game_name):
     players_per_team = num_players/num_teams
-    assign_teams(full_lobby, num_teams, players_per_team)
+    assign_teams(full_lobby, num_teams, players_per_team, game_name)
     full_lobby["discord"] = get_next_discord()["room_name"]
     add_team_info(full_lobby)
     full_lobby["time_elapsed"] = 0
@@ -122,7 +122,7 @@ def make_matches(game):
             merged_lobby = merge_matches(game, lobby, matched_lobby)
             if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
                 full_lobby = Lobby(merged_lobby)
-                init_full_lobby(full_lobby, game["num_teams"], game["num_players"])
+                init_full_lobby(full_lobby, game["num_teams"], game["num_players"], game["game_name"])
                 full_lobby.save()
                 set_player_lobby(full_lobby)
                 remove_groups(full_lobby)

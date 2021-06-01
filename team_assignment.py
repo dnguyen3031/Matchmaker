@@ -1,4 +1,6 @@
-from mongodb import Game
+from bson import ObjectId
+
+from mongodb import Game, User
 from suitable_lobby import get_team_combos
 from itertools import combinations
 
@@ -137,19 +139,49 @@ def find_all_matches(team_templates, lobby, num_teams):
     clean_self_vs_self(matches)
     return matches
 
-def choose_best_match(all_matches):
-    """ input: the filled lobby
-    return: a match of some teams"""
-    pass
+def calc_avg_team_elo(team, game_name):
+    team_elo_sum = 0
+    team_num_players = 0
+    for group in team:
+        team_num_players += group["num_players"]
+        for player_id in group["players"].keys():
+            user = User({"_id": player_id})
+            if user.reload():
+                team_elo_sum += user.games_table[game_name]['game_score']
+    avg_team_elo = team_elo_sum/team_num_players
+    return avg_team_elo
+
+def match_elo_diff(match, game_name):
+    """for each combination of 2 teams, calc the elo diff, then return the sum"""
+    num_teams = len(match)
+    team_elos = [None]*num_teams
+    for i in range(len(match)):
+        team_elos[i] = calc_avg_team_elo(match[i], game_name)
+    match_elo_diff_sum = 0
+    elo_diff_pairs = list(combinations(team_elos, 2))
+    for diff_pair in elo_diff_pairs:
+        elo_diff = abs(diff_pair[0] - diff_pair[1])
+        match_elo_diff_sum += elo_diff
+    return match_elo_diff_sum
+
+def choose_best_match(all_matches, game_name):
+    """input: all possible matches
+    output: the match with minimum elo differential"""
+    elo_diffs = [None] * len(all_matches)
+    for i in range(0, len(all_matches)):
+        match = all_matches[i]
+        elo_diffs[i] = match_elo_diff(match, game_name)
+    best_elo_index = elo_diffs.index(min(elo_diffs))
+    return list(all_matches[best_elo_index])
 
 def group_size(group):
     return group["num_players"]
 
-def assign_teams(full_lobby, num_teams, players_per_team):
+def assign_teams(full_lobby, num_teams, players_per_team, game_name):
     full_lobby["groups"].sort(key=group_size)
     group_sizes = get_group_sizes(full_lobby["groups"])
     match_templates = get_match_templates(group_sizes, players_per_team, num_teams)
     team_templates = get_team_combos(group_sizes, players_per_team)
     all_matches = find_all_matches(team_templates, full_lobby, num_teams)
-    chosen_match = choose_best_match(all_matches)
+    chosen_match = choose_best_match(all_matches, game_name)
     full_lobby["teams"] = chosen_match
