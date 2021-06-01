@@ -80,7 +80,7 @@ def get_next_discord():
     return {"room_name": next_open["room_name"]}
 
 def init_full_lobby(full_lobby, num_teams, num_players, game_name):
-    players_per_team = num_players/num_teams
+    players_per_team = int(num_players/num_teams)
     assign_teams(full_lobby, num_teams, players_per_team, game_name)
     full_lobby["discord"] = get_next_discord()["room_name"]
     add_team_info(full_lobby)
