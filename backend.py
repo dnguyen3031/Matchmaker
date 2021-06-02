@@ -225,154 +225,146 @@ def get_group(id):
         return get_group_patch(id, request.get_json())
 
 
-def join_group_patch():
-    pass
+def join_group_patch(groupID, userID):
+    group = Group({"_id": groupID})
+    group.reload()
+
+    user = User({"_id": userID})
+    user.reload()
+
+    if user.get('group') is not None:
+        resp = jsonify('You are already in a group!'), 400
+        return resp
+
+    groupPlayers = group.get('players')
+    groupPlayers[userID] = user.get('name')
+    group['players'] = groupPlayers
+    group['num_players'] += 1
+    group["_id"] = ObjectId(groupID)
+    group.patch()
+
+    user['group'] = groupID
+    user["_id"] = ObjectId(userID)
+    user.patch()
+
+    resp = jsonify(group), 201
+    return resp
 
 
 @app.route('/groups/join-group', methods=['PATCH'])
 def join_group():
     if request.method == 'PATCH':
-        groupID = request.args.get('group')
-        userID = request.args.get('id')
-        group = Group({"_id": groupID})
-        group.reload()
+        return join_group_patch(request.args.get('group'), request.args.get('id'))
 
-        user = User({"_id": userID})
-        user.reload()
 
-        if user.get('group') is not None:
-            resp = jsonify('You are already in a group!'), 400
-            return resp
+def leave_group_patch(group_id, user_id):
+    group = Group({"_id": group_id})
+    group.reload()
+    user = User({"_id": user_id})
+    user.reload()
 
-        groupPlayers = group.get('players')
-        groupPlayers[userID] = user.get('name')
-        group['players'] = groupPlayers
-        group['num_players'] += 1
-        group["_id"] = ObjectId(groupID)
-        group.patch()
-
-        user['group'] = groupID
-        user["_id"] = ObjectId(userID)
-        user.patch()
-
-        resp = jsonify(group), 201
+    popped_value = group['players'].pop(str(user_id))
+    if popped_value != user.get('name'):
+        resp = jsonify(popped_value), 400
         return resp
 
+    group['num_players'] -= 1
+    group["_id"] = ObjectId(group_id)
 
-def leave_group_patch():
-    pass
+    if group['num_players'] == 0:
+        group.remove()
+    else:
+        group.save()
+
+    user['group'] = None
+    user["_id"] = ObjectId(user_id)
+    user.patch()
+
+    resp = jsonify(group), 201
+    return resp
 
 
 @app.route('/groups/leave-group', methods=['PATCH'])
 def leave_group():
     if request.method == 'PATCH':
-        group_id = request.args.get('group')
-        user_id = request.args.get('id')
-        group = Group({"_id": group_id})
-        group.reload()
-        user = User({"_id": user_id})
-        user.reload()
-
-        popped_value = group['players'].pop(str(user_id))
-        if popped_value != user.get('name'):
-            resp = jsonify(popped_value), 400
-            return resp
-
-        group['num_players'] -= 1
-        group["_id"] = ObjectId(group_id)
-
-        if group['num_players'] == 0:
-            group.remove()
-        else:
-            group.save()
-
-        user['group'] = None
-        user["_id"] = ObjectId(user_id)
-        user.patch()
-
-        resp = jsonify(group), 201
-        return resp
+        return leave_group_patch(request.args.get('group'), request.args.get('id'))
 
 
-def get_games_post():
-    pass
+def get_games_post(game_to_add):
+    new_game = Game(game_to_add)
+    new_game.save()
+    resp = jsonify(new_game), 201
+    return resp
 
 
-def get_games_get():
-    pass
+def get_games_get(search_gamename):
+    if search_gamename:
+        games = Game().find_by_name(search_gamename)
+    else:
+        games = Game().find_all()
+    return {"games_list": games}
 
 
 @app.route('/games', methods=['GET', 'POST'])
 def get_games():
     if request.method == 'GET':
-        search_gamename = request.args.get('game_name')
-        if search_gamename:
-            games = Game().find_by_name(search_gamename)
-        else:
-            games = Game().find_all()
-        return {"games_list": games}
+        return get_games_get(request.args.get('game_name'))
     elif request.method == 'POST':
-        game_to_add = request.get_json()
-        new_game = Game(game_to_add)
-        new_game.save()
-        resp = jsonify(new_game), 201
+        return get_games_post(request.get_json())
+
+
+def get_game_patch(id, game_to_update):
+    game_to_update["_id"] = ObjectId(id)
+    new_game = Game(game_to_update)
+    new_game.patch()
+    resp = jsonify(new_game), 201
+    return resp
+
+
+def get_game_delete(id):
+    game = Game({"_id": id})
+    if game.remove():
+        resp = jsonify(), 204
         return resp
+    return jsonify({"error": "Game not found"}), 404
 
 
-def get_game_patch():
-    pass
-
-
-def get_game_delete():
-    pass
-
-
-def get_game_get():
-    pass
+def get_game_get(id):
+    game = Game({"_id": id})
+    if game.reload():
+        return game
+    else:
+        return jsonify({"error": "Game not found"}), 404
 
 
 @app.route('/games/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_game(id):
     if request.method == 'GET':
-        game = Game({"_id": id})
-        if game.reload():
-            return game
-        else:
-            return jsonify({"error": "Game not found"}), 404
+        return get_game_get(id)
     elif request.method == 'DELETE':
-        game = Game({"_id": id})
-        if game.remove():
-            resp = jsonify(), 204
-            return resp
-        return jsonify({"error": "Game not found"}), 404
+        return get_game_delete(id)
     elif request.method == 'PATCH':
-        game_to_update = request.get_json()
-        game_to_update["_id"] = ObjectId(id)
-        new_game = Game(game_to_update)
-        new_game.patch()
-        resp = jsonify(new_game), 201
-        return resp
+        return get_game_patch(id, request.get_json())
 
 
-def get_lobbies_post():
-    pass
+def get_lobbies_post(lobby_to_add):
+    new_lobby = Lobby(lobby_to_add)
+    new_lobby.save()
+    resp = jsonify(new_lobby), 201
+    return resp
 
 
 def get_lobbies_get():
-    pass
+    lobbies = Lobby().find_all()
+    return {"lobbies_list": lobbies}
 
 
 @app.route('/lobbies', methods=['GET', 'POST'])
 def get_lobbies():
     if request.method == 'GET':
-        lobbies = Lobby().find_all()
-        return {"lobbies_list": lobbies}
+        return get_lobbies_get()
     elif request.method == 'POST':
-        lobby_to_add = request.get_json()
-        new_lobby = Lobby(lobby_to_add)
-        new_lobby.save()
-        resp = jsonify(new_lobby), 201
-        return resp
+        return get_lobbies_post(request.get_json())
 
 
 def get_lobby_patch():
