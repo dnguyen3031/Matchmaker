@@ -38,6 +38,120 @@ describe.skip('Login, Logout', () => {
     })
  })
 
+ describe.skip('Add friend', () => {
+   it('Testing Login...', () => {
+     cy.visit('http://localhost:3000/login')
+
+     cy.get('#formBasicEmail')
+      .type('test01@gmail.com')
+      .should('have.value', 'test01@gmail.com')
+
+      cy.get('#formBasicPassword')
+      .type('test01')
+      .should('have.value', 'test01')
+
+      cy.get('Button').contains('Login')
+      .click()
+
+      cy.url().should('include', '/profile/')
+   })
+
+   it('Search for person and add them', () => {
+      cy.contains('Search')
+      .click()
+ 
+      cy.get('#searchForm')
+      .type('Template')
+ 
+      cy.contains('Submit')
+      .click()
+
+      cy.contains('Template').should('be.visible')
+      .click()
+
+      cy.contains('Add Friend')
+      .click()
+
+      cy.wait(1000)
+
+      cy.contains('Remove Friend')
+      .click()
+    })
+
+    it('Testing Logout...', () => {
+      cy.wait(1000)
+
+      cy.contains('Profile')
+      .click()
+
+      cy.wait(1000)
+
+      cy.contains('test01')
+      .click()
+
+      cy.wait(1000)
+ 
+      cy.contains('Logout').click()
+    })
+ })
+
+ describe.skip('Join and Leave Group', () => {
+   it('Testing Login...', () => {
+     cy.visit('http://localhost:3000/login')
+
+     cy.get('#formBasicEmail')
+      .type('test01@gmail.com')
+      .should('have.value', 'test01@gmail.com')
+
+      cy.get('#formBasicPassword')
+      .type('test01')
+      .should('have.value', 'test01')
+
+      cy.get('Button').contains('Login')
+      .click()
+
+      cy.url().should('include', '/profile/')
+   })
+
+   it('Testing Group Creation and Destruction...', () => {
+      cy.contains('Groups')
+      .click()
+ 
+       cy.contains('Create Group')
+       .click()
+
+       cy.wait(1000)
+
+      cy.get('label').contains('Group Code').should(($div) => {
+         const text = $div.text()
+
+         cy.log(text)
+
+         cy.contains('Search').click()
+
+         cy.get('#searchForm')
+         .type(text)
+       })
+ 
+       cy.contains('Leave Group')
+      .click()
+    })
+
+    it('Testing Logout...', () => {
+      cy.contains('Profile')
+      .click()
+
+      cy.wait(1000)
+
+      cy.contains('test01')
+      .click()
+
+      cy.wait(1000)
+ 
+      cy.contains('Logout').click()
+    })
+ })
+
 describe.skip('Create/Join and Leave Group', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
@@ -82,7 +196,51 @@ describe.skip('Create/Join and Leave Group', () => {
     })
  })
 
- describe('Create Account and Adding Game', () => {
+ describe.skip('Create Account', () => {
+   it('Testing Creation...', () => {
+     cy.visit('http://localhost:3000/create-account')
+
+     cy.get('#username')
+      .type('testCreate')
+      .should('have.value', 'testCreate')
+
+     cy.get('#email')
+      .type('testCreate@gmail.com')
+      .should('have.value', 'testCreate@gmail.com')
+
+      cy.get('#password')
+      .type('testCreate')
+      .should('have.value', 'testCreate')
+
+      cy.get('#confirmedPassword')
+      .type('testCreate')
+      .should('have.value', 'testCreate')
+
+      cy.contains('Create Account').click()
+
+      cy.url().should('include', '/profile')
+   })
+
+    it('Testing Logout...', () => {
+      cy.contains('Profile')
+      .click()
+
+      cy.wait(1000)
+
+      cy.contains('testCreate')
+      .click()
+
+      cy.wait(1000)
+ 
+      cy.contains('Logout').click()
+    })
+
+    it('Resetting...', () => {
+      cy.request('PATCH', 'http://localhost:5000/reset', { completed: true} )
+    })
+ })
+
+ describe.skip('Adding Game', () => {
    it('Testing Creation...', () => {
      cy.visit('http://localhost:3000/create-account')
 
@@ -137,9 +295,13 @@ describe.skip('Create/Join and Leave Group', () => {
  
       cy.contains('Logout').click()
     })
+
+    it('Resetting...', () => {
+      cy.request('PATCH', 'http://localhost:5000/reset', { completed: true} )
+    })
  })
 
- describe.skip('Join Lobby', () => {
+ describe.skip('Join and complete Lobby', () => {
    it('Login for test01...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -393,6 +555,10 @@ describe.skip('Create/Join and Leave Group', () => {
    
        cy.contains('Logout').click()
      })
+
+     it('Resetting...', () => {
+      cy.request('PATCH', 'http://localhost:5000/reset', { completed: true} )
+    })
  })
 
  describe('Reset Tests', () => {
