@@ -21,102 +21,135 @@ def backend_home():
     return 'You have reached the backend'
 
 
+def reset_games():
+    games = Game().find_all()
+    for game_dic in games:
+        game = Game(game_dic)
+        game.reload()
+        game["_id"] = ObjectId(game["_id"])
+        game["queue"] = []
+        game.patch()
+
+
+def reset_groups():
+    groups = Group().find_all()
+    for group_dic in groups:
+        group = Group(group_dic)
+        group["_id"] = ObjectId(group["_id"])
+        group.remove()
+
+
+def reset_discords():
+    discords = Discord().find_all()
+    for discord_dic in discords:
+        discord = Discord(discord_dic)
+        discord.reload()
+        discord["_id"] = ObjectId(discord["_id"])
+        discord["status"] = "open"
+        discord.patch()
+
+
+def reset_lobbies():
+    lobbies = Lobby().find_all()
+    for lobby_dic in lobbies:
+        lobby = Lobby(lobby_dic)
+        lobby["_id"] = ObjectId(lobby["_id"])
+        lobby.remove()
+
+
+def reset_users():
+    users = User().find_all()
+    for user_dic in users:
+        user = User(user_dic)
+        user.reload()
+        user["_id"] = ObjectId(user["_id"])
+        user["group"] = None
+        user["in_queue"] = False
+        user["has_voted"] = False
+        user["lobby"] = None
+        user.patch()
+        if user["email"] == "testCreate@gmail.com":
+            user.remove()
+
+
+def reset_patch():
+    reset_users()
+    reset_lobbies()
+    reset_discords()
+    reset_groups()
+    reset_games()
+
+
 @app.route('/reset', methods=['PATCH'])
 def reset():
     if request.method == 'PATCH':
-        users = User().find_all()
-        for user_dic in users:
-            user = User(user_dic)
-            user.reload()
-            user["_id"] = ObjectId(user["_id"])
-            user["group"] = None
-            user["in_queue"] = False
-            user["has_voted"] = False
-            user["lobby"] = None
-            user.patch()
-            if user["email"] == "testCreate@gmail.com":
-                user.remove()
-
-        lobbies = Lobby().find_all()
-        for lobby_dic in lobbies:
-            lobby = Lobby(lobby_dic)
-            lobby["_id"] = ObjectId(lobby["_id"])
-            lobby.remove()
-
-        discords = Discord().find_all()
-        for discord_dic in discords:
-            discord = Discord(discord_dic)
-            discord.reload()
-            discord["_id"] = ObjectId(discord["_id"])
-            discord["status"] = "open"
-            discord.patch()
-
-        groups = Group().find_all()
-        for group_dic in groups:
-            group = Group(group_dic)
-            group["_id"] = ObjectId(group["_id"])
-            group.remove()
-
-        games = Game().find_all()
-        for game_dic in games:
-            game = Game(game_dic)
-            game.reload()
-            game["_id"] = ObjectId(game["_id"])
-            game["queue"] = []
-            game.patch()
-
+        reset_patch()
         resp = jsonify("Everything reset"), 201
         return resp
+
+
+def get_users_post(userToAdd):
+    newUser = User(userToAdd)
+    newUser.save()
+    resp = jsonify(newUser), 201
+    return resp
+
+
+def get_users_get(search_username, search_username_secure, search_email):
+    if search_email:
+        users = User().find_by_email(search_email)
+    elif search_username:
+        users = User().find_by_name(search_username)
+    elif search_username_secure:
+        users = User().secure_find_by_name(search_username_secure)
+    else:
+        users = User().find_all()
+    return {"users_list": users}
 
 
 @app.route('/users', methods=['GET', 'POST'])
 def get_users():
     if request.method == 'GET':
-        search_username = request.args.get('name')
-        search_username_secure = request.args.get('secureName')
-        search_email = request.args.get('email')
-        if search_email:
-            users = User().find_by_email(search_email)
-        elif search_username:
-            users = User().find_by_name(search_username)
-        elif search_username_secure:
-            users = User().secure_find_by_name(search_username_secure)
-        else:
-            users = User().find_all()
-        return {"users_list": users}
+        return get_users_get(request.args.get('name'), request.args.get('secureName'), request.args.get('email'))
     elif request.method == 'POST':
-        userToAdd = request.get_json()
-        newUser = User(userToAdd)
-        newUser.save()
-        resp = jsonify(newUser), 201
+        return get_users_post(request.get_json())
+
+
+def get_user_patch(id, userToUpdate):
+    userToUpdate["_id"] = ObjectId(id)
+    newUser = User(userToUpdate)
+    newUser.patch()
+    resp = jsonify(newUser), 201
+    return resp
+
+
+def get_user_delete(id):
+    user = User({"_id": id})
+    if user.remove():
+        resp = jsonify(), 204
         return resp
+    return jsonify({"error": "User not found"}), 404
+
+
+def get_user_get(id, search_for_group):
+    user = User({"_id": id})
+    if user.reload():
+        if search_for_group:
+            return str(user.get('group'))
+        else:
+            return user
+    else:
+        return jsonify({"error": "User not found"}), 404
 
 
 @app.route('/users/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_user(id):
     if request.method == 'GET':
-        search_for_group = request.args.get('group')
-        user = User({"_id": id})
-        if user.reload():
-            if search_for_group:
-                return str(user.get('group'))
-            else:
-                return user
-        else:
-            return jsonify({"error": "User not found"}), 404
+        return get_user_get(id, request.args.get('group'))
     elif request.method == 'DELETE':
-        user = User({"_id": id})
-        if user.remove():
-            resp = jsonify(), 204
-            return resp
-        return jsonify({"error": "User not found"}), 404
+        return get_user_delete(id)
     elif request.method == 'PATCH':
-        userToUpdate = request.get_json()
-        userToUpdate["_id"] = ObjectId(id)
-        newUser = User(userToUpdate)
-        newUser.patch()
-        resp = jsonify(newUser), 201
-        return resp
+        return get_user_patch(id, request.get_json())
 
 
 @app.route('/users/submit-results2', methods=['PATCH'])
