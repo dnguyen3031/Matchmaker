@@ -152,57 +152,81 @@ def get_user(id):
         return get_user_patch(id, request.get_json())
 
 
+def submit_results2_patch(results):
+    user = User({"_id": results['user_id']})
+    if user.reload():
+        elo = user.current_match['team_elo']
+        new_elo = calc_elo(int(elo), int(user.current_match['opp_elo']), float(results['win']))
+        user.games_table[results['game_name']]['game_score'] += (new_elo - elo)
+        user["_id"] = ObjectId(results['user_id'])
+        user.patch()
+        resp = jsonify(user), 201
+        return resp
+    else:
+        return jsonify({"error": "User not found"}), 404
+
+
 @app.route('/users/submit-results2', methods=['PATCH'])
 def submit_results2():
     if request.method == 'PATCH':
-        results = request.get_json()
-        user = User({"_id": results['user_id']})
-        if user.reload():
-            elo = user.current_match['team_elo']
-            new_elo = calc_elo(int(elo), int(user.current_match['opp_elo']), float(results['win']))
-            user.games_table[results['game_name']]['game_score'] += (new_elo - elo)
-            user["_id"] = ObjectId(results['user_id'])
-            user.patch()
-            resp = jsonify(user), 201
-            return resp
-        else:
-            return jsonify({"error": "User not found"}), 404
+        return submit_results2_patch(request.get_json())
+
+
+def get_groups_post(group_to_add):
+    new_group = Group(group_to_add)
+    new_group.save()
+    resp = jsonify(new_group._id), 201
+    return resp
+
+
+def get_groups_get(groups):
+    return {"groups_list": groups}
 
 
 @app.route('/groups', methods=['GET', 'POST'])
 def get_groups():
     if request.method == 'GET':
-        groups = Group().find_all()
-        return {"groups_list": groups}
+        return get_groups_get(Group().find_all())
     elif request.method == 'POST':
-        group_to_add = request.get_json()
-        new_group = Group(group_to_add)
-        new_group.save()
-        resp = jsonify(new_group._id), 201
+        return get_groups_post(request.get_json())
+
+
+def get_group_patch(id, group_to_update):
+    group_to_update["_id"] = ObjectId(id)
+    new_group = Group(group_to_update)
+    new_group.patch()
+    resp = jsonify(new_group), 201
+    return resp
+
+
+def get_group_delete(id):
+    group = Group({"_id": id})
+    if group.remove():
+        resp = jsonify(), 204
         return resp
+    return jsonify({"error": "Group not found"}), 404
+
+
+def get_group_get(id):
+    group = Group({"_id": id})
+    if group.reload():
+        return group
+    else:
+        return jsonify({"error": "Group not found"}), 404
 
 
 @app.route('/groups/<id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_group(id):
     if request.method == 'GET':
-        group = Group({"_id": id})
-        if group.reload():
-            return group
-        else:
-            return jsonify({"error": "Group not found"}), 404
+        return get_group_get(id)
     elif request.method == 'DELETE':
-        group = Group({"_id": id})
-        if group.remove():
-            resp = jsonify(), 204
-            return resp
-        return jsonify({"error": "Group not found"}), 404
+        return get_group_delete(id)
     elif request.method == 'PATCH':
-        group_to_update = request.get_json()
-        group_to_update["_id"] = ObjectId(id)
-        new_group = Group(group_to_update)
-        new_group.patch()
-        resp = jsonify(new_group), 201
-        return resp
+        return get_group_patch(id, request.get_json())
+
+
+def join_group_patch():
+    pass
 
 
 @app.route('/groups/join-group', methods=['PATCH'])
@@ -233,6 +257,10 @@ def join_group():
 
         resp = jsonify(group), 201
         return resp
+
+
+def leave_group_patch():
+    pass
 
 
 @app.route('/groups/leave-group', methods=['PATCH'])
@@ -266,6 +294,14 @@ def leave_group():
         return resp
 
 
+def get_games_post():
+    pass
+
+
+def get_games_get():
+    pass
+
+
 @app.route('/games', methods=['GET', 'POST'])
 def get_games():
     if request.method == 'GET':
@@ -281,6 +317,18 @@ def get_games():
         new_game.save()
         resp = jsonify(new_game), 201
         return resp
+
+
+def get_game_patch():
+    pass
+
+
+def get_game_delete():
+    pass
+
+
+def get_game_get():
+    pass
 
 
 @app.route('/games/<id>', methods=['GET', 'DELETE', 'PATCH'])
@@ -306,6 +354,14 @@ def get_game(id):
         return resp
 
 
+def get_lobbies_post():
+    pass
+
+
+def get_lobbies_get():
+    pass
+
+
 @app.route('/lobbies', methods=['GET', 'POST'])
 def get_lobbies():
     if request.method == 'GET':
@@ -317,6 +373,18 @@ def get_lobbies():
         new_lobby.save()
         resp = jsonify(new_lobby), 201
         return resp
+
+
+def get_lobby_patch():
+    pass
+
+
+def get_lobby_delete():
+    pass
+
+
+def get_lobby_get():
+    pass
 
 
 @app.route('/lobbies/<id>', methods=['GET', 'DELETE', 'PATCH'])
@@ -340,6 +408,10 @@ def get_lobby(id):
         new_lobby.patch()
         resp = jsonify(new_lobby), 201
         return resp
+
+
+def submit_results_patch():
+    pass
 
 
 @app.route('/lobbies/submit-results', methods=['PATCH'])
@@ -368,6 +440,10 @@ def submit_results():
         return resp
 
 
+def end_lobby_patch():
+    pass
+
+
 @app.route('/lobbies/end-lobby/<id>', methods=['PATCH'])
 def end_lobby(id):
     if request.method == 'PATCH':
@@ -386,6 +462,10 @@ def set_users_in_queue(lobby):
         user["in_queue"] = True
         user["_id"] = ObjectId(player)
         user.patch()
+
+
+def add_to_queue_patch():
+    pass
 
 
 @app.route('/matchmaking/add-to-queue', methods=['PATCH'])
@@ -422,6 +502,11 @@ def add_to_queue():
         else:
             return jsonify({"error": "User or game not found"}), 404
 
+
+def add_new_game_patch():
+    pass
+
+
 @app.route('/matchmaking/add-new-game', methods=['PATCH'])
 def add_new_game():
     if request.method == 'PATCH':
@@ -447,6 +532,13 @@ def add_new_game():
             return jsonify({"error": "Game not found"}), 404
 
 
+def get_discords_post():
+    pass
+
+
+def get_discords_get():
+    pass
+
 
 @app.route('/discords', methods=['GET', 'POST'])
 def get_discords():
@@ -459,6 +551,18 @@ def get_discords():
         newDiscord.save()
         resp = jsonify(newDiscord), 201
         return resp
+
+
+def get_discord_patch():
+    pass
+
+
+def get_discord_delete():
+    pass
+
+
+def get_discord_get():
+    pass
 
 
 @app.route('/discords/<id>', methods=['GET', 'DELETE', 'PATCH'])
@@ -482,6 +586,10 @@ def get_discord(id):
         new_discord.patch()
         resp = jsonify(new_discord), 201
         return resp
+
+
+def get_next_discord_get():
+    pass
 
 
 @app.route('/discords/next', methods=['GET'])
