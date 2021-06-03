@@ -59,9 +59,11 @@ function TeamBuilder (props) {
     )
   })
 
-  async function makePatchCall (change) {
+  async function makeSubmitResultsPatchCall (change) {
     try {
-      return await axios.patch('http://localhost:5000/lobbies/submit-results/' + props.data.lobby._id, change)
+      const result = await axios.patch('http://localhost:5000/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id, change)
+      setTimeout(() => { window.location.reload(false) }, 5000)
+      return result
     } catch (error) {
       console.log(error)
       return false
@@ -84,13 +86,12 @@ function TeamBuilder (props) {
 
   function pressedSubmit () {
     setDisabled(true)
-    const obj = {
+    const rankObj = {
       ranking: scores.map((i) => Number(i)) // Convert the scores to an array of Numbers
     }
-    console.dir(obj)
-
-    makePatchCall(obj)
-    setTimeout(() => { window.location.reload(false) }, 1000)
+    // console.dir(obj)
+    console.log(props.data)
+    makeSubmitResultsPatchCall(rankObj)
   }
 
   function secondsToHms (d) { // This function from Stack Overflow provides a convientent way to make time left more readable.
@@ -113,7 +114,7 @@ function TeamBuilder (props) {
           <Card.Body>
             <Card.Text className="text-white">{props.data.game.game_name}</Card.Text>
             <Card.Text className="text-white">Discord {props.data.lobby.discord}</Card.Text>
-            <Card.Text className="text-white">Time Left: {secondsToHms(timer)} seconds</Card.Text>
+            <Card.Text className="text-white">Time Left: {secondsToHms(timer)}</Card.Text>
           </Card.Body>
         </Card>
       </Row>
@@ -121,7 +122,7 @@ function TeamBuilder (props) {
         {allTeams}
       </Row>
       <Row className="justify-content-md-center mt-3">
-        <Button variant="secondary" onClick={pressedSubmit}>Submit</Button>
+        {!props.data.user.has_voted && <Button variant="secondary" onClick={pressedSubmit}>Submit</Button>}
       </Row>
     </Container>
   </div>

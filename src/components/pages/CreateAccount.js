@@ -74,6 +74,7 @@ function CreateAccount (props) {
         },
         group: null,
         in_queue: false,
+        has_voted: false,
         lobby: null,
         profile_info: {
           bio: 'This user has no bio',

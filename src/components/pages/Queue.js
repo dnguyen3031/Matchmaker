@@ -15,13 +15,7 @@ function Queue (props) {
   }
 
   async function checkForUpdates () {
-    props.fetchData({
-      id: props.data.id,
-      get_group: true,
-      get_lobby: true,
-      get_game: true,
-      current_page: props.pageName
-    }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, currentPage: 'Matchmaking' }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })

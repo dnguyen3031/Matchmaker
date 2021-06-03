@@ -7,6 +7,7 @@ from ELO import *
 from bson import ObjectId
 import timer_module
 import threading
+from end_match import terminate_lobby
 
 app = Flask(__name__)
 
@@ -18,6 +19,54 @@ threading.Thread(target=timer_module.main).start()
 @app.route('/')
 def backend_home():
     return 'You have reached the backend'
+
+
+@app.route('/reset', methods=['PATCH'])
+def reset():
+    if request.method == 'PATCH':
+        users = User().find_all()
+        for user_dic in users:
+            user = User(user_dic)
+            user.reload()
+            user["_id"] = ObjectId(user["_id"])
+            user["group"] = None
+            user["in_queue"] = False
+            user["has_voted"] = False
+            user["lobby"] = None
+            user.patch()
+            if user["email"] == "testCreate@gmail.com":
+                user.remove()
+
+        lobbies = Lobby().find_all()
+        for lobby_dic in lobbies:
+            lobby = Lobby(lobby_dic)
+            lobby["_id"] = ObjectId(lobby["_id"])
+            lobby.remove()
+
+        discords = Discord().find_all()
+        for discord_dic in discords:
+            discord = Discord(discord_dic)
+            discord.reload()
+            discord["_id"] = ObjectId(discord["_id"])
+            discord["status"] = "open"
+            discord.patch()
+
+        groups = Group().find_all()
+        for group_dic in groups:
+            group = Group(group_dic)
+            group["_id"] = ObjectId(group["_id"])
+            group.remove()
+
+        games = Game().find_all()
+        for game_dic in games:
+            game = Game(game_dic)
+            game.reload()
+            game["_id"] = ObjectId(game["_id"])
+            game["queue"] = []
+            game.patch()
+
+        resp = jsonify("Everything reset"), 201
+        return resp
 
 
 @app.route('/users', methods=['GET', 'POST'])
@@ -260,23 +309,50 @@ def get_lobby(id):
         return resp
 
 
-@app.route('/lobbies/submit-results/<id>', methods=['PATCH'])
-def submit_results(id):
+@app.route('/lobbies/submit-results', methods=['PATCH'])
+def submit_results():
     if request.method == 'PATCH':
+        lobby_id = request.args.get('lobby_id')
+        user_id = request.args.get('id')
         results = request.get_json()
-        lobby = Lobby({"_id": id})
+        lobby = Lobby({"_id": lobby_id})
+        user = User({"_id": user_id})
         if not lobby.reload():
             return jsonify({"error": "Lobby not found"}), 404
-        lobby["_id"] = ObjectId(id)
+        if not user.reload():
+            return jsonify({"error": "User not found"}), 404
+        lobby["_id"] = ObjectId(lobby_id)
         ranking = results["ranking"]
         print(len(ranking))
         for i in range(len(ranking)):
             lobby["team_info"][i]["votes"][ranking[i] - 1] += 1
         lobby["total_votes"] += 1
         lobby.patch()
-
+        user["has_voted"] = True
+        user["_id"] = ObjectId(user_id)
+        user.patch()
         resp = jsonify(lobby), 200
         return resp
+
+
+@app.route('/lobbies/end-lobby/<id>', methods=['PATCH'])
+def end_lobby(id):
+    if request.method == 'PATCH':
+        lobby = Lobby({"_id": id})
+        if lobby.reload():
+            terminate_lobby(lobby)
+            return lobby
+        else:
+            return jsonify({"error": "Lobby not found"}), 404
+
+
+def set_users_in_queue(lobby):
+    for player in lobby["groups"][0]["players"]:
+        user = User({"_id": player})
+        user.reload()
+        user["in_queue"] = True
+        user["_id"] = ObjectId(player)
+        user.patch()
 
 
 @app.route('/matchmaking/add-to-queue', methods=['PATCH'])
@@ -286,10 +362,9 @@ def add_to_queue():
         game_name = request.args.get('game_name')
         search_game = Game().find_by_name(game_name)[0]
         game = Game({"_id": search_game["_id"]})
-        game.reload()
         user_id = request.args.get('id')
         user = User({"_id": user_id})
-        if user.reload():
+        if user.reload() and game.reload():
             elo = user.games_table[game_name]['game_score']
             print("getting queued")
             if user.group is None:
@@ -308,13 +383,36 @@ def add_to_queue():
                 "window_size": starting_window_size,
             }
             print(new_lobby)
-            user["in_queue"] = True
-            user["_id"] = ObjectId(user_id)
-            user.patch()
             resp = game.append_to_queue(game_name, new_lobby)
+            set_users_in_queue(new_lobby)
             return jsonify(resp), 201
         else:
-            return jsonify({"error": "User not found"}), 404
+            return jsonify({"error": "User or game not found"}), 404
+
+@app.route('/matchmaking/add-new-game', methods=['PATCH'])
+def add_new_game():
+    if request.method == 'PATCH':
+        game_name = request.args.get('game_name')
+        user_id = request.args.get('id')
+        user = User({"_id": user_id})
+        search_game = Game().find_by_name(game_name)[0]
+        if search_game: #actually returns a game
+            if user.reload():
+                if game_name not in user["games_table"]:
+                    user["games_table"][game_name] = {
+                        "game_score": 1000,
+                        "time_played": 0
+                    }
+                    user["_id"] = ObjectId(user_id)
+                    user.patch()
+                    return jsonify({"sucess": "Game added to list"}), 201
+                else:
+                    return jsonify({"error": "Game already in users"}), 404
+            else:
+                return jsonify({"error": "User not found"}), 404
+        else:
+            return jsonify({"error": "Game not found"}), 404
+
 
 
 @app.route('/discords', methods=['GET', 'POST'])

@@ -122,7 +122,7 @@ function SearchPage (props) {
     <Container fluid>
       <Row>
         <Col className="side-col" />
-        <Col xs={8} className="pr-0">
+        <Col xs={8} className="main-col pr-0">
           <Row>
             <Col>
               <SearchBar/>
