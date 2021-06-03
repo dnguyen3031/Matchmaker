@@ -142,7 +142,7 @@ class MyTestCase(unittest.TestCase):
 
         #test patch
         bioUpdate = { "profile_info": {
-                "bio": 'This user has no bio',
+                "bio": 'This user has a bio',
                 "discord": '',
                 "profile_pic": '../../images/DefaultProfilePic.jpg',
                 "steam_friend_code": '',
@@ -166,7 +166,7 @@ class MyTestCase(unittest.TestCase):
             "has_voted": False,
             "lobby": None,
             "profile_info": {
-                "bio": 'This user has no bio',
+                "bio": 'This user has a bio',
                 "discord": '',
                 "profile_pic": '../../images/DefaultProfilePic.jpg',
                 "steam_friend_code": '',
