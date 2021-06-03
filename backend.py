@@ -389,6 +389,41 @@ def add_to_queue():
         else:
             return jsonify({"error": "User or game not found"}), 404
 
+def remove_group_from_all_games(group):
+    games_list = Game.find_all()
+    removed = False
+    for game in games_list:
+        for lobby in game["queue"]:
+            try:
+                lobby.remove(group)
+                removed = True
+            except ValueError:
+                pass
+    if removed:
+        del group
+    return removed
+
+@app.route('/queue', methods=['DELETE'])
+def leave_queue():
+    if request.method == 'DELETE':
+        print("removing from queue")
+        user_id = request.args.get('user_id')
+        user = User({"_id": user_id})
+        if user.reload():
+            current_group = user.get('group')
+            if current_group.reload():
+                print("checking games")
+                success = remove_group_from_all_games(current_group)
+                if success:
+                    return jsonify({"success": "User removed from queue"}), 204
+                else:
+                    return jsonify({"error": "User's group not found in queues"}), 404
+            else:
+                return jsonify({"error": "User's group not found"}), 404
+    return jsonify({"error": "User not found"}), 404
+
+
+
 @app.route('/matchmaking/add-new-game', methods=['PATCH'])
 def add_new_game():
     if request.method == 'PATCH':
@@ -405,7 +440,7 @@ def add_new_game():
                     }
                     user["_id"] = ObjectId(user_id)
                     user.patch()
-                    return jsonify({"sucess": "Game added to list"}), 201
+                    return jsonify({"success": "Game added to list"}), 201
                 else:
                     return jsonify({"error": "Game already in users"}), 404
             else:

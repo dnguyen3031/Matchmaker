@@ -20,9 +20,9 @@ function Queue (props) {
       props.setData(result)
     })
   }
-  async function makePatchCallGames () {
+  async function makeDeleteCallQueue () {
     try {
-      return await axios.patch('http://localhost:5000/games/' + props.data.lobby._id, change)
+      return await axios.delete('http://localhost:5000/queue?user_id=' + props.data.id) /*props.data.lobby._id?*/
     } catch (error) {
       console.log(error)
       return false
@@ -43,13 +43,7 @@ function Queue (props) {
       in_queue: false
     }
     makePatchCallUsers(inQueueObj)
-    /*
-    find group id
-    for each lobby in queue
-      for each group in lobby
-        remove group with that id
-    patch new lobby
-    */
+    makeDeleteCallQueue()
   }
   setTimeout(() => { checkForUpdates() }, 1000)
 
