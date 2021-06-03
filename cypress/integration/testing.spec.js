@@ -38,7 +38,7 @@ describe.skip('Login, Logout', () => {
     })
  })
 
- describe.skip('Add friend', () => {
+ describe.skip('Search friend', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -67,15 +67,9 @@ describe.skip('Login, Logout', () => {
       .click()
 
       cy.contains('Template').should('be.visible')
-      .click()
+      .click() 
 
-      cy.contains('Add Friend')
-      .click()
-
-      cy.wait(1000)
-
-      cy.contains('Remove Friend')
-      .click()
+      cy.url().should('include', '/profile/6024098ac9b27e9f9995df97')
     })
 
     it('Testing Logout...', () => {
@@ -95,7 +89,7 @@ describe.skip('Login, Logout', () => {
     })
  })
 
- describe.skip('Join and Leave Group', () => {
+ describe.skip('Add/Remove friend', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -113,31 +107,21 @@ describe.skip('Login, Logout', () => {
       cy.url().should('include', '/profile/')
    })
 
-   it('Testing Group Creation and Destruction...', () => {
-      cy.contains('Groups')
+   it('Search for person and add them', () => {
+      cy.visit('http://localhost:3000/profile/6024098ac9b27e9f9995df97')
+
+      cy.contains('Add Friend')
       .click()
- 
-       cy.contains('Create Group')
-       .click()
 
-       cy.wait(1000)
+      cy.wait(1000)
 
-      cy.get('label').contains('Group Code').should(($div) => {
-         const text = $div.text()
-
-         cy.log(text)
-
-         cy.contains('Search').click()
-
-         cy.get('#searchForm')
-         .type(text)
-       })
- 
-       cy.contains('Leave Group')
+      cy.contains('Remove Friend')
       .click()
     })
 
     it('Testing Logout...', () => {
+      cy.wait(1000)
+
       cy.contains('Profile')
       .click()
 
