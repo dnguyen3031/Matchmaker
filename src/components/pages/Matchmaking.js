@@ -1,6 +1,5 @@
-/*eslint-disable*/
 import React, { useEffect, useState } from 'react'
-import { Col, Container, Dropdown, Form, FormControl, FormGroup, Button, DropdownButton, Row, Modal } from 'react-bootstrap'
+import { Col, Container, Dropdown, Button, DropdownButton, Row, Modal } from 'react-bootstrap'
 import CustomNavbar from '../CustomNavbar'
 import FriendBar from '../FriendBar'
 import Queue from './Queue'
