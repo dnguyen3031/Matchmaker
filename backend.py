@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 CORS(app)
 
-threading.Thread(target=timer_module.main).start()
+# threading.Thread(target=timer_module.main).start()
 
 
 @app.route('/')
@@ -460,13 +460,16 @@ def add_to_queue_patch(game_name, user_id):
     if user.reload() and game.reload():
         elo = user.games_table[game_name]['game_score']
         print("getting queued")
-        if user.group is None:
+        if user['group'] is None:
             group_to_add = {"players": {user_id: user["name"]}, "num_players": 1}
             current_group = Group(group_to_add)
             current_group.save()
-            user["group"] = current_group._id
+            print("current_group",current_group)
+            user["group"] = current_group['_id']
+            user['_id'] = ObjectId(user['_id'])
+            user.patch()
         else:
-            current_group = Group({"_id": user.group})
+            current_group = Group({"_id": user['group']})
             current_group.reload()
         new_lobby = {
             "game_id": game["_id"],
@@ -501,7 +504,7 @@ def add_new_game_patch(game_name, user_id):
                 }
                 user["_id"] = ObjectId(user_id)
                 user.patch()
-                return jsonify({"sucess": "Game added to list"}), 201
+                return jsonify({"success": "Game added to list"}), 201
             else:
                 return jsonify({"error": "Game already in users"}), 404
         else:
@@ -510,13 +513,13 @@ def add_new_game_patch(game_name, user_id):
         return jsonify({"error": "Game not found"}), 404
 
 
-def remove_group_from_all_games(group):
-    games_list = Game.find_all()
+def remove_group_from_all_queues(group):
+    games_list = Game().find_all()
     removed = False
     for game in games_list:
         for lobby in game["queue"]:
             try:
-                lobby.remove(group)
+                lobby["groups"].remove(group)
                 removed = True
             except ValueError:
                 pass
@@ -531,10 +534,12 @@ def leave_queue():
         user_id = request.args.get('user_id')
         user = User({"_id": user_id})
         if user.reload():
-            current_group = user.get('group')
+            print(user['group'])
+            print("user:", user)
+            current_group = Group({"_id": user['group']})
             if current_group.reload():
                 print("checking games")
-                success = remove_group_from_all_games(current_group)
+                success = remove_group_from_all_queues(current_group)
                 if success:
                     return jsonify({"success": "User removed from queue"}), 204
                 else:

@@ -16,7 +16,7 @@ def increment_time_elpased(lobbies, clock_delay):
 
 def expand_window(game):
     window_increment = 10
-    print("expanding")
+    # print("expanding")
     for lobby in game["queue"]:
         lobby["window_size"] += window_increment  # use dot operator?
     updated_game = Game(game)  # create updated game
