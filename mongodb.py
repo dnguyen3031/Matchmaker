@@ -86,13 +86,12 @@ class User(Model):
         return users
 
     def secure_find_by_name(self, name):
-        # ToDo: need to start using this
-        # does not return password ect. for security reasons
+        # does not return password ect. for security reasons. Used for search page
         cleaned_users = []
         users = self.find_all()
         users_copy = users.copy()
         for user in users_copy:
-            if user["name"].lower() != name.lower():
+            if user["name"].lower() != name.lower(): # search is case insensitive
                 users.remove(user)
         for user in users:
             user_copy = {"_id": str(user["_id"]), "name": user["name"], "profile_info": user["profile_info"]}
