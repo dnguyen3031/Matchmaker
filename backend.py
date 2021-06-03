@@ -179,14 +179,14 @@ def get_groups_post(group_to_add):
     return resp
 
 
-def get_groups_get(groups):
-    return {"groups_list": groups}
+def get_groups_get():
+    return {"groups_list": Group().find_all()}
 
 
 @app.route('/groups', methods=['GET', 'POST'])
 def get_groups():
     if request.method == 'GET':
-        return get_groups_get(Group().find_all())
+        return get_groups_get()
     elif request.method == 'POST':
         return get_groups_post(request.get_json())
 
