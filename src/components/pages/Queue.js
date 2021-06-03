@@ -54,7 +54,7 @@ function Queue (props) {
     for each lobby in queue
       for each group in lobby
         remove group with that id
-    patch new queue
+    patch new lobby
     */
   }
   setTimeout(() => { checkForUpdates() }, 1000)
