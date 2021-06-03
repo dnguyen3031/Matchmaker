@@ -5,7 +5,7 @@
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
 
-describe.skip('Login, Logout', () => {
+ describe.skip('Login, Logout', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -22,6 +22,64 @@ describe.skip('Login, Logout', () => {
 
       cy.url().should('include', '/profile/')
    })
+
+
+
+    it('Testing Logout...', () => {
+      cy.contains('Profile')
+      .click()
+
+      cy.wait(1000)
+
+      cy.contains('test01')
+      .click()
+
+      cy.wait(1000)
+ 
+      cy.contains('Logout').click()
+    })
+ })
+
+ describe('Edit Profile', () => {
+   it('Testing Login...', () => {
+     cy.visit('http://localhost:3000/login')
+
+     cy.get('#formBasicEmail')
+      .type('test01@gmail.com')
+      .should('have.value', 'test01@gmail.com')
+
+      cy.get('#formBasicPassword')
+      .type('test01')
+      .should('have.value', 'test01')
+
+      cy.get('Button').contains('Login')
+      .click()
+
+      cy.url().should('include', '/profile/')
+   })
+
+   it('Testing Profile Editing...', () => {
+      cy.contains('Profile')
+      .click()
+
+      cy.wait(1000)
+
+      cy.get('[controlId="changeBio"]').click()
+
+      cy.get('input').type('{selectall}').type('This is a change bio')
+
+      cy.contains('Change').click()
+
+      cy.wait(1000)
+
+      cy.get('[controlId="changeBio"]').click()
+
+      cy.get('input').type('{selectall}').type('This user has no bio')
+
+      cy.contains('Change').click()
+
+      cy.wait(1000)
+    })
 
     it('Testing Logout...', () => {
       cy.contains('Profile')
