@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Dropdown, Form, FormControl, FormGroup, Button, DropdownButton, Row, Modal } from 'react-bootstrap'
 import CustomNavbar from '../CustomNavbar'
@@ -92,13 +93,24 @@ function Matchmaking (props) {
                 </DropdownButton>
               </Col>
               <Col>
-                <FormGroup controlId="newGame">
-                <Form.Label>New Game</Form.Label>
-                <FormControl placeholder="New Game" type="text"
-                         value = {newGame}
-                         onChange={(e) => setNewGame(e.target.value)}/>
-                </FormGroup>
-                <Button block type="submit" onClick = {handleSubmit}>Add New Game</Button>
+                <Row>
+                  <Col></Col>
+                  <Col>
+                    <select className="mb-3 bg-white" onChange={(e) => setNewGame(e.target.value)}>
+                    <option value="none" selected disabled hidden>
+                      Select Game to Add
+                      </option>
+                      <option value="Krunker - Hardpoint">Krunker - Hardpoint</option>
+                      <option value="Skribbl.io">Skribbl.io</option>
+                    </select>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col></Col>
+                  <Col>
+                  <Button block type="submit" onClick = {handleSubmit}>Add New Game</Button>
+                  </Col>
+                </Row>
               </Col>
               <Col md={3}>
                 <FriendBar data={props.data}/>
