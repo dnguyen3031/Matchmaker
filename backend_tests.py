@@ -2,6 +2,29 @@ import unittest
 from backend import *
 
 class MyTestCase(unittest.TestCase):
+    userToAdd = {
+        "name": "Backend_testAcc",
+        "email": "Backend_testAcc@gmail.com",
+        "password": "asdf",
+        "friends": {},
+        "games_table": {
+            'Krunker - Hardpoint': {
+                "game_score": 1000,
+                "time_played": 0
+            }
+        },
+        "group": None,
+        "in_queue": False,
+        "has_voted": False,
+        "lobby": None,
+        "profile_info": {
+            "bio": 'This user has no bio',
+            "discord": '',
+            "profile_pic": '../../images/DefaultProfilePic.jpg',
+            "steam_friend_code": '',
+            "steam_name": ''
+        }
+    }
 
     def test_reset(self):
         reset_patch()
@@ -109,30 +132,53 @@ class MyTestCase(unittest.TestCase):
         assert actual_users_list_3 == expected_users_list_1
 
     def get_users_post_test(self):
-        userToAdd = {
+        assert get_users_post(userToAdd) == userToAdd
+
+    def get_user_get_patch_delete_test(self):
+        actual_users_list_1 = get_users_get("Backend_testAcc", None, None)
+
+        #test get
+        assert get_user_get(actual_users_list_1["_id"], None) == actual_users_list_1
+
+        #test patch
+        bioUpdate = { "profile_info": {
+                "bio": 'This user has no bio',
+                "discord": '',
+                "profile_pic": '../../images/DefaultProfilePic.jpg',
+                "steam_friend_code": '',
+                "steam_name": ''
+                }
+            }
+        get_user_patch(actual_users_list_1["_id"], bioUpdate)
+        patchedAcc = {
             "name": "Backend_testAcc",
             "email": "Backend_testAcc@gmail.com",
             "password": "asdf",
             "friends": {},
             "games_table": {
-              'Krunker - Hardpoint': {
-                "game_score": 1000,
-                "time_played": 0
-              }
+                'Krunker - Hardpoint': {
+                    "game_score": 1000,
+                    "time_played": 0
+                }
             },
             "group": None,
             "in_queue": False,
             "has_voted": False,
             "lobby": None,
             "profile_info": {
-              "bio": 'This user has no bio',
-              "discord": '',
-              "profile_pic": '../../images/DefaultProfilePic.jpg',
-              "steam_friend_code": '',
-              "steam_name": ''
-            }
+                "bio": 'This user has no bio',
+                "discord": '',
+                "profile_pic": '../../images/DefaultProfilePic.jpg',
+                "steam_friend_code": '',
+                "steam_name": ''
+                }
         }
-        assert get_users_post(userToAdd) == userToAdd
+        assert get_users_get("Backend_testAcc", None, None) == patchedAcc
+
+        #test delete
+        assert get_user_delete(actual_users_list_1["_id"]) == None
+
+
 
 
 
