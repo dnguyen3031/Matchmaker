@@ -30,6 +30,16 @@ start-backend
 Please refer to the backend.py file to get all the different routes.
 
 
+#### Running Tests Locally
+
+We utilize coverage to give us code coverage feedback.
+
+1. In another terminal, run the following commands:
+```
+coverage run backend_tests.py
+coverage report backend.py
+```
+
 #### For Future Collaborators:
 
 Style Guide for JavaScript: https://google.github.io/styleguide/jsguide.html
