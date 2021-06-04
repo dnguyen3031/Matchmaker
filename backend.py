@@ -265,19 +265,19 @@ def leave_group_patch(group_id, user_id):
     user.patch()
 
     group = Group({"_id": group_id})
-    group.reload()
-    popped_value = group['players'].pop(str(user_id))
-    if popped_value != user.get('name'):
-        resp = jsonify(popped_value), 400
-        return resp
+    if group.reload():
+        popped_value = group['players'].pop(str(user_id))
+        if popped_value != user.get('name'):
+            resp = jsonify(popped_value), 400
+            return resp
 
-    group['num_players'] -= 1
-    group["_id"] = ObjectId(group_id)
+        group['num_players'] -= 1
+        group["_id"] = ObjectId(group_id)
 
-    if group['num_players'] == 0:
-        group.remove()
-    else:
-        group.save()
+        if group['num_players'] == 0:
+            group.remove()
+        else:
+            group.save()
 
     resp = jsonify(group), 201
     return resp
