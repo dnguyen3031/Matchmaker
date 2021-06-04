@@ -5,7 +5,7 @@
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
 
- describe.skip('Login, Logout', () => {
+ describe('Login, Logout', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -96,7 +96,7 @@
     })
  })
 
- describe.skip('Search friend', () => {
+ describe('Search friend', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -147,7 +147,7 @@
     })
  })
 
- describe.skip('Add/Remove friend', () => {
+ describe('Add/Remove friend', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -194,7 +194,7 @@
     })
  })
 
-describe.skip('Create/Join and Leave Group', () => {
+describe('Create/Join and Leave Group', () => {
    it('Testing Login...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -238,7 +238,7 @@ describe.skip('Create/Join and Leave Group', () => {
     })
  })
 
- describe.skip('Create Account', () => {
+ describe('Create Account', () => {
    it('Testing Creation...', () => {
      cy.visit('http://localhost:3000/create-account')
 
@@ -282,7 +282,7 @@ describe.skip('Create/Join and Leave Group', () => {
     })
  })
 
- describe.skip('Adding Game', () => {
+ describe('Adding Game', () => {
    it('Testing Creation...', () => {
      cy.visit('http://localhost:3000/create-account')
 
@@ -313,9 +313,7 @@ describe.skip('Create/Join and Leave Group', () => {
 
       cy.wait(1000)
 
-      cy.get('#newGame')
-      .type('Skribbl.io')
-      .should('have.value', 'Skribbl.io')
+      cy.get('select').select('Skribbl.io')
 
       cy.contains('Add New Game').click()
 
@@ -343,7 +341,7 @@ describe.skip('Create/Join and Leave Group', () => {
     })
  })
 
- describe.skip('Join and complete Lobby', () => {
+ describe('Join and complete Lobby', () => {
    it('Login for test01...', () => {
      cy.visit('http://localhost:3000/login')
 
@@ -365,8 +363,8 @@ describe.skip('Create/Join and Leave Group', () => {
       cy.contains('Find Match')
       .click()
  
-       cy.contains('Select Game')
-       .click()
+      cy.contains('Select Game')
+      .click()
  
        cy.contains('Krunker - Hardpoint')
       .click()
