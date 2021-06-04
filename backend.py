@@ -258,11 +258,14 @@ def join_group():
 
 
 def leave_group_patch(group_id, user_id):
-    group = Group({"_id": group_id})
-    group.reload()
     user = User({"_id": user_id})
     user.reload()
+    user['group'] = None
+    user["_id"] = ObjectId(user_id)
+    user.patch()
 
+    group = Group({"_id": group_id})
+    group.reload()
     popped_value = group['players'].pop(str(user_id))
     if popped_value != user.get('name'):
         resp = jsonify(popped_value), 400
@@ -275,10 +278,6 @@ def leave_group_patch(group_id, user_id):
         group.remove()
     else:
         group.save()
-
-    user['group'] = None
-    user["_id"] = ObjectId(user_id)
-    user.patch()
 
     resp = jsonify(group), 201
     return resp
