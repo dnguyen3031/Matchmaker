@@ -4,9 +4,13 @@ This project uses a React frontend, powered by a Flask backend, featuring a data
 
 We used unit testing and cypress as our main methods of automated testing, as well as Travis CI and Heroku for automated building and deployment.
 
+Figma Storyboard:
+https://www.figma.com/file/4y3sCg0TQH2MPipsPJ9vks/308-Matchmaker-Journey?node-id=0%3A1
+
+
 ## Getting Started for Developers
 
-### Clone the repository
+#### Clone the repository
 
 git clone https://github.com/dnguyen3031/Matchmaker.git
 
@@ -23,9 +27,10 @@ npm start
 ```
 start-backend
 ```
-Please refer to the backend.py file to get all the different routes
+Please refer to the backend.py file to get all the different routes.
 
-For Future Collaborators:
+
+#### For Future Collaborators:
 
 Style Guide for JavaScript: https://google.github.io/styleguide/jsguide.html
 
@@ -45,10 +50,6 @@ To use PyLint, install it first here https://www.pylint.org/ and after simple ju
 To use ESLint, follow the directions to install here: https://eslint.org/docs/user-guide/command-line-interface
 
 Now, you can type "eslint file1.js file2.js" to check styles
-
-
-Figma Storyboard:
-https://www.figma.com/file/4y3sCg0TQH2MPipsPJ9vks/308-Matchmaker-Journey?node-id=0%3A1
 
 
 ## Automated Acceptance Tests
