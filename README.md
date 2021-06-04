@@ -71,6 +71,8 @@ Now, you can type "eslint file1.js file2.js" to check styles
 ## Code Coverage Report (50% coverage met)
 
 ![matchmen_50coverage](https://user-images.githubusercontent.com/26192953/120853057-f5a07300-c52f-11eb-9f6c-db095931a5a5.JPG)
+![Screenshot 2021-06-04 161637](https://user-images.githubusercontent.com/55599092/120872792-8a1ccc80-c554-11eb-8bf1-d1adcd297dd8.jpg)
+
 
 
 
