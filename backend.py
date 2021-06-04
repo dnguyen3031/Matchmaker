@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 CORS(app)
 
-# threading.Thread(target=timer_module.main).start()
+threading.Thread(target=timer_module.main).start()
 
 
 @app.route('/')
@@ -523,6 +523,9 @@ def remove_group_from_all_queues(group):
                 removed = True
             except ValueError:
                 pass
+            if removed:
+                lobby["num_players"] -= 1
+
     if removed:
         del group
     return removed
