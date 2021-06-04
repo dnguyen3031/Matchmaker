@@ -1,18 +1,29 @@
-# Matchmaker Platform
+# Matchmaker
 
-For user install:
+This project uses a React frontend, powered by a Flask backend, featuring a database using MongoDB. We chose this tech stack because we had already used React and MongoDB in 308 assignments so it made sense for us to build on our existing experience. We chose to use Flask for our backend because we all have intermediate experience with Python from previous courses.
 
-## Getting Started for Developers 
+We used unit testing and cypress as our main methods of automated testing, as well as Travis CI and Heroku for automated building and deployment.
+
+## Getting Started for Developers
 
 ### Clone the repository
- git clone https://github.com/dnguyen3031/Matchmaker.git
 
+git clone https://github.com/dnguyen3031/Matchmaker.git
 
-#### Run the frontend
-1. npm start 
- (if its your first time, you might need to run 
-npm install
-)
+#### Runing the frontend
+
+1. In a terminal, run the following command(s):
+```
+npm install (run this command after cloning or after pulling new changes)
+npm start
+```
+#### Runing the backend
+
+1. In another terminal, run the following command:
+```
+start-backend
+```
+Please refer to the backend.py file to get all the different routes
 
 For Future Collaborators:
 
