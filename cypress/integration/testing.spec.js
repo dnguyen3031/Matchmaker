@@ -127,7 +127,7 @@
       cy.contains('Template').should('be.visible')
       .click() 
 
-      cy.url().should('include', '/profile/6024098ac9b27e9f9995df97')
+      cy.url().should('include', '/profile/60b9bdbc43967866c21dc9fe')
     })
 
     it('Testing Logout...', () => {
@@ -166,7 +166,7 @@
    })
 
    it('Search for person and add them', () => {
-      cy.visit('http://localhost:3000/profile/6024098ac9b27e9f9995df97')
+      cy.visit('http://localhost:3000/profile/60b9bdbc43967866c21dc9fe')
 
       cy.contains('Add Friend')
       .click()
