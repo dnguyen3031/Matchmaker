@@ -15,6 +15,13 @@ git clone https://github.com/dnguyen3031/Matchmaker.git
    npm install
    )
 
+#### Acceptance Tests
+
+The acceptance test code is fount at Matchmaker\cypress\integration\testing.spec.js
+
+There is no need for prior setup to run the cypress test, simply select the file in cypress and it
+will run fully
+
 For Future Collaborators:
 
 Style Guide for JavaScript: https://google.github.io/styleguide/jsguide.html
