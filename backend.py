@@ -512,50 +512,6 @@ def add_new_game_patch(game_name, user_id):
         return jsonify({"error": "Game not found"}), 404
 
 
-def remove_group_from_all_queues(group):
-    games_list = Game().find_all()
-    removed = False
-    for game in games_list:
-        for lobby in game["queue"]:
-            try:
-                lobby["groups"].remove(group)
-                removed = True
-            except ValueError:
-                pass
-            if removed:
-                lobby["num_players"] -= 1
-
-    if removed:
-        del group
-    return removed
-
-
-def leave_queue_patch(user_id):
-    print("removing from queue")
-    user = User({"_id": user_id})
-    if user.reload():
-        print(user['group'])
-        print("user:", user)
-        current_group = Group({"_id": user['group']})
-        if current_group.reload():
-            print("checking games")
-            success = remove_group_from_all_queues(current_group)
-            if success:
-                return jsonify({"success": "User removed from queue"}), 204
-            else:
-                return jsonify({"error": "User's group not found in queues"}), 404
-        else:
-            return jsonify({"error": "User's group not found"}), 404
-
-
-@app.route('/queue', methods=['PATCH'])
-def leave_queue():
-    if request.method == 'PATCH':
-        return leave_queue_patch(request.args.get('user_id'))
-    return jsonify({"error": "User not found"}), 404
-
-
-
 @app.route('/matchmaking/add-new-game', methods=['PATCH'])
 def add_new_game():
     if request.method == 'PATCH':
@@ -640,3 +596,46 @@ def get_next_discord_get():
 def get_next_discord():
     if request.method == 'GET':
         return get_next_discord_get()
+
+
+def remove_group_from_all_queues(group):
+    games_list = Game().find_all()
+    removed = False
+    for game in games_list:
+        for lobby in game["queue"]:
+            try:
+                lobby["groups"].remove(group)
+                removed = True
+            except ValueError:
+                pass
+            if removed:
+                lobby["num_players"] -= 1
+
+    if removed:
+        del group
+    return removed
+
+
+def leave_queue_patch(user_id):
+    print("removing from queue")
+    user = User({"_id": user_id})
+    if user.reload():
+        print(user['group'])
+        print("user:", user)
+        current_group = Group({"_id": user['group']})
+        if current_group.reload():
+            print("checking games")
+            success = remove_group_from_all_queues(current_group)
+            if success:
+                return jsonify({"success": "User removed from queue"}), 204
+            else:
+                return jsonify({"error": "User's group not found in queues"}), 404
+        else:
+            return jsonify({"error": "User's group not found"}), 404
+
+
+@app.route('/queue', methods=['PATCH'])
+def leave_queue():
+    if request.method == 'PATCH':
+        return leave_queue_patch(request.args.get('user_id'))
+    return jsonify({"error": "User not found"}), 404
