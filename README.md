@@ -15,7 +15,7 @@ git clone https://github.com/dnguyen3031/Matchmaker.git
    npm install
    )
 
-#### Acceptance Tests
+#### Acceptance Tests and Unit Tests
 
 The acceptance test code is fount at Matchmaker\cypress\integration\testing.spec.js
 
