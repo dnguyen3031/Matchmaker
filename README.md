@@ -14,6 +14,11 @@ git clone https://github.com/dnguyen3031/Matchmaker.git
    (if its your first time, you might need to run
    npm install
    )
+   
+#### Run the backend
+
+1. activate virtual environment
+2. start-backend.bat
 
 #### Acceptance Tests and Unit Tests
 
