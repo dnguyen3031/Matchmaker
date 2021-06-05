@@ -28,7 +28,7 @@ Frontend: https://dashboard.heroku.com/apps/matchmaking-01
 
 Backend: https://dashboard.heroku.com/apps/matchmaker-backend01
 
-Travis-CI Badge: https://travis-ci.com/dnguyen3031/Matchmaker.svg?branch=main
+Travis-CI Badge(s): https://travis-ci.com/dnguyen3031/Matchmaker.svg?branch=heroku-frontend https://travis-ci.com/dnguyen3031/Matchmaker.svg?branch=heroku-backend
 
 #### Acceptance Tests and Unit Tests
 
