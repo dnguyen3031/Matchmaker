@@ -86,12 +86,12 @@ class User(Model):
         return users
 
     def secure_find_by_name(self, name):
-        # does not return password ect. for security reasons. Used for search page
+        # does not return password ect. for security reasons
         cleaned_users = []
         users = self.find_all()
         users_copy = users.copy()
         for user in users_copy:
-            if user["name"].lower() != name.lower(): # search is case insensitive
+            if user["name"].lower() != name.lower():
                 users.remove(user)
         for user in users:
             user_copy = {"_id": str(user["_id"]), "name": user["name"], "profile_info": user["profile_info"]}
@@ -141,17 +141,7 @@ class Game(Model):
             {"game_name": game_name},
             {'$push': {'queue': new_lobby}}
         )
-        # print(self)
-        # for lobby in self.queue:
-        #     print(lobby)
-        #     for group in lobby["groups"]:
-        #         print(group)
-        #         for player in group["players"]:
-        #             print(player)
-        #             if player in new_lobby["groups"][0]["players"]:
-        #                 print("found")
         return new_lobby
-        # return "lobby not added to queue"
 
     def update_window_size(self, game_name, queue):
         self.collection.update(

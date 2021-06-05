@@ -10,13 +10,6 @@
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.6.0",
-    "coverage": "^0.4.1",
-    "eslint": "^7.26.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-react": "^7.23.2",
-    "npx": "^10.2.2",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
     "react-dom": "^17.0.1",
@@ -26,9 +19,6 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "lint": "eslint src",
-    "lint:fix": "eslint --fix src",
-    "prettier": "prettier --write --no-semi --single-quote \"src/**/*.js\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -51,8 +41,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "cypress": "^7.3.0"
   }
 }

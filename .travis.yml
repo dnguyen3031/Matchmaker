@@ -1,0 +1,10 @@
+language: python
+# command to install dependencies
+script:
+ - cd Backend
+install:
+  - pip install -r requirements.txt
+# safelist
+branches:
+  only:
+  - Sprint5-Development
