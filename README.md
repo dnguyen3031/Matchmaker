@@ -20,6 +20,16 @@ git clone https://github.com/dnguyen3031/Matchmaker.git
 1. activate virtual environment
 2. start-backend.bat
 
+###Managing CI/CD
+
+Any changes are to be merged into branches Heroku-Frontend, and Heroku-Backend. The self-deployment will take care of the rest.
+
+Frontend: https://dashboard.heroku.com/apps/matchmaking-01
+
+Backend: https://dashboard.heroku.com/apps/matchmaker-backend01
+
+Travis-CI Badge: https://travis-ci.com/dnguyen3031/Matchmaker.svg?branch=main
+
 #### Acceptance Tests and Unit Tests
 
 The acceptance test code is fount at Matchmaker\cypress\integration\testing.spec.js
