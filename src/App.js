@@ -108,6 +108,7 @@ async function fetchData (fields) {
   } else if ('lobby' in fields) {
     fields.game = await fetchGame(fields.game)
   }
+  fields.LoadingPage = LoadingPage
   return fields
 }
 
@@ -121,7 +122,8 @@ function App () {
     id: getToken(),
     user: null,
     user2: null,
-    current_page: LoadingPage
+    LoadingPage: LoadingPage,
+    currentPage: 'LoadingPage'
   }
   const [data, setData] = useState(initialData)
 

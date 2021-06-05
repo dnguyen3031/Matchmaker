@@ -1,6 +1,6 @@
-# Matchmaker Platform
+# Matchmaker
 
-For user install:
+This project uses a React frontend, powered by a Flask backend, featuring a database using MongoDB. We chose this tech stack because we had already used React and MongoDB in 308 assignments so it made sense for us to build on our existing experience. We chose to use Flask for our backend because we all have intermediate experience with Python from previous courses.
 
 ## Getting Started for Developers
 
@@ -15,7 +15,20 @@ git clone https://github.com/dnguyen3031/Matchmaker.git
    npm install
    )
 
-For Future Collaborators:
+#### Acceptance Tests
+
+The acceptance test code is fount at Matchmaker\cypress\integration\testing.spec.js
+
+There is no need for prior setup to run the cypress test, simply select the file in cypress and it
+will run fully
+
+1. In another terminal, run the following commands:
+```
+coverage run backend_tests.py
+coverage report backend.py
+```
+
+#### For Future Collaborators:
 
 Style Guide for JavaScript: https://google.github.io/styleguide/jsguide.html
 

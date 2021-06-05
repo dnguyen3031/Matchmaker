@@ -6,41 +6,31 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import axios from 'axios'
 import './PageTemplate.css'
 
-function reassignProps (props) {
-  const newProps = {}
-  for (const key in props) {
-    newProps[key] = props[key]
-  }
-  return newProps
-}
-
 function SearchPage (props) {
+  console.log(props)
+
   const [searchResults, setSearchResults] = React.useState([])
 
   useEffect(() => {
-    props.fetchData({ id: props.data.id, get_group: true, current_page: SearchPageResult }).then(result => {
+    props.fetchData({ id: props.data.id, get_group: true, currentPage: 'SearchPage' }).then(result => {
       console.log('fetched data')
       props.setData(result)
     })
   }, [])
 
-  const newProps = reassignProps(props)
-  newProps.searchResults = searchResults
-  newProps.setSearchResults = setSearchResults
-  console.log(newProps)
-  return props.data.current_page(newProps)
-}
+  console.log(props.data.currentPage)
+  if (props.data.currentPage !== 'SearchPage') {
+    return props.data.LoadingPage(props)
+  }
 
-function SearchPageResult (props) {
-  console.log(props)
   function ResultsTable () {
-    console.log('sr: ' + props.searchResults)
-    if (!(props.searchResults) || props.searchResults.length === 0) {
+    console.log('sr: ' + searchResults)
+    if (!(searchResults) || searchResults.length === 0) {
       console.log('empty')
       return null
     }
 
-    if (props.searchResults === 'noResults') {
+    if (searchResults === 'noResults') {
       console.log('detected \'noresults\'')
       return (
         <div>
@@ -55,7 +45,7 @@ function SearchPageResult (props) {
       )
     }
 
-    const rows = props.searchResults.map((user, index) => {
+    const rows = searchResults.map((user, index) => {
       return (
         <tr key={index}>
           <td>
@@ -101,9 +91,9 @@ function SearchPageResult (props) {
             console.log('sr detek: ' + result.data.users_list.length)
             if (result.data.users_list.length === 0) {
               console.log('setting noResults')
-              props.setSearchResults('noResults')
+              setSearchResults('noResults')
             } else {
-              props.setSearchResults(result.data.users_list)
+              setSearchResults(result.data.users_list)
             }
           } else {
             console.log('failed to find users')
@@ -132,7 +122,7 @@ function SearchPageResult (props) {
     <Container fluid>
       <Row>
         <Col className="side-col" />
-        <Col xs={8} className="pr-0">
+        <Col xs={8} className="main-col pr-0">
           <Row>
             <Col>
               <SearchBar/>

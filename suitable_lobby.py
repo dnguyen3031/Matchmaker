@@ -1,3 +1,4 @@
+
 def too_many_players(lobby, o_lobby, num_players_needed):
     if lobby["num_players"] + o_lobby["num_players"] > num_players_needed:
         return True

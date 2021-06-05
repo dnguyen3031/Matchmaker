@@ -14,7 +14,7 @@ function Lobby (props) {
         get_group: true,
         get_lobby: true,
         get_game: true,
-        current_page: props.MatchmakingDisplay
+        currentPage: 'Matchmaking'
       }).then(result => {
         console.log('fetched data')
         props.setData(result)

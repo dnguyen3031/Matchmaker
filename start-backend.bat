@@ -1,4 +1,3 @@
-cd Backend
 pip install flask
 pip install flask_cors
 pip install flask-cors
