@@ -16,7 +16,7 @@ def increment_time_elpased(lobbies, clock_delay):
 
 def expand_window(game):
     window_increment = 10
-    print("expanding")
+    # print("expanding")
     for lobby in game["queue"]:
         lobby["window_size"] += window_increment  # use dot operator?
     updated_game = Game(game)  # create updated game
@@ -36,6 +36,7 @@ def set_player_lobby(lobby):
             player = User({"_id": id})
             player["lobby"] = lobby["_id"]
             player["_id"] = ObjectId(id)
+            player["in_queue"] = True
             player.patch()
 
 def get_adv_elo(team, game_id):
@@ -78,9 +79,9 @@ def get_next_discord():
 
     return {"room_name": next_open["room_name"]}
 
-def init_full_lobby(full_lobby, num_teams, num_players):
-    players_per_team = num_players/num_teams
-    assign_teams(full_lobby, num_teams, players_per_team)
+def init_full_lobby(full_lobby, num_teams, num_players, game_name):
+    players_per_team = int(num_players/num_teams)
+    assign_teams(full_lobby, num_teams, players_per_team, game_name)
     full_lobby["discord"] = get_next_discord()["room_name"]
     add_team_info(full_lobby)
     full_lobby["time_elapsed"] = 0
@@ -98,7 +99,6 @@ def check_sizes(lobby, o_lobby, num_players_needed):
     return -1
 
 def merge_matches(game, lobby, matched_lobby):
-    # TODO: record avg elo for each group for team-making purposes
     merged_elo = (lobby["avg_elo"] * lobby["num_players"] + matched_lobby["avg_elo"] * matched_lobby["num_players"]) / (
             lobby["num_players"] + matched_lobby["num_players"])
     merged_groups = lobby["groups"] + matched_lobby["groups"]
@@ -122,7 +122,7 @@ def make_matches(game):
             merged_lobby = merge_matches(game, lobby, matched_lobby)
             if check_sizes(lobby, matched_lobby, game["num_players"]) == 0:
                 full_lobby = Lobby(merged_lobby)
-                init_full_lobby(full_lobby, game["num_teams"], game["num_players"])
+                init_full_lobby(full_lobby, game["num_teams"], game["num_players"], game["game_name"])
                 full_lobby.save()
                 set_player_lobby(full_lobby)
                 remove_groups(full_lobby)

@@ -122,9 +122,9 @@ function EditableProfile (props) {
                 <Col>
                   <Card bg='dark' text='white'>
                     <Card.Body>
-                      <Card.Title>{props.data.user2.name} <BsPencil className="h6" onClick={() => ActivateModal(['Name', 'name'])}/></Card.Title>
+                      <Card.Title>{props.data.user2.name} <BsPencil controlId="changeName" className="h6" onClick={() => ActivateModal(['Name', 'name'])}/></Card.Title>
                       <Card.Text class="text-white">
-                        {props.data.user2.profile_info.bio} <BsPencil onClick={() => ActivateModal(['Bio', 'bio', 'profile_info'])}/>
+                        {props.data.user2.profile_info.bio} <BsPencil controlId="changeBio" onClick={() => ActivateModal(['Bio', 'bio', 'profile_info'])}/>
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -136,14 +136,14 @@ function EditableProfile (props) {
                   <Card.Body>
                     <Card.Title>Contact Information</Card.Title>
                     <Card.Text class="text-white">
-                      Email: {props.data.user2.email} <BsPencil onClick={() => ActivateModal(['Email', 'email'])} />
+                      Email: {props.data.user2.email} <BsPencil controlId="changeEmail" onClick={() => ActivateModal(['Email', 'email'])} />
                     </Card.Text>
                     <Card.Text class="text-white" >
-                      Discord: {props.data.user2.profile_info.discord} <BsPencil onClick={() => ActivateModal(['Discord', 'discord', 'profile_info'])} />
+                      Discord: {props.data.user2.profile_info.discord} <BsPencil controlId="changeDiscord" onClick={() => ActivateModal(['Discord', 'discord', 'profile_info'])} />
                     </Card.Text>
                     <Card.Text class="text-white">
                       Steam Name: {props.data.user2.profile_info.steam_name}
-                      <BsPencil onClick={() => ActivateModal(['Steam Name', 'steam_name', 'profile_info'])} />
+                      <BsPencil controlId="changeSteamName" onClick={() => ActivateModal(['Steam Name', 'steam_name', 'profile_info'])} />
                     </Card.Text>
                   </Card.Body>
                 </Card>
