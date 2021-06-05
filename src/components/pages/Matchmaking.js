@@ -1,92 +1,145 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import {Button, Col, Container, Dropdown, DropdownButton, Row} from 'react-bootstrap';
-import CustomNavbar from '../CustomNavbar';
-import FriendBar from "../FriendBar";
-import Queue from './Queue';
+import React, { useEffect, useState } from 'react'
+import { Col, Container, Dropdown, Button, DropdownButton, Row, Modal } from 'react-bootstrap'
+import CustomNavbar from '../CustomNavbar'
+import FriendBar from '../FriendBar'
+import Queue from './Queue'
+import axios from 'axios'
 
-function Matchmaking(props) {
-   const [viewUser, setViewUser] = useState({email: "", 
-                              profile_info: {discord: "", profile_pic: "", bio: ""},
-                              games_table: {},
-                              friends: {},
-                              name: "",
-                              password: "",
-                              _id: "",
-                              lobby: null,
-                              in_queue: false});
+function Matchmaking (props) {
+  // console.log('getting into matchmakingdisplay')
+  if (props.data.id === null) {
+    window.location.href = '/'
+  }
 
+  const [newGame, setNewGame] = useState('')
+  /* Error Model */
+  const [showError, setErrorShow] = useState(false)
+  const handleErrorClose = () => setErrorShow(false)
 
-   useEffect(() => {
-      async function fetchUser(id){
-         try {
-            // get character at index 's id number
-            return await axios.get('http://127.0.0.1:5000/users/' + id);
-         }
-         catch (error) {
-            console.log(error);
-            return false;
-         }
+  /* Success Model */
+  const [showSucess, setSucessShow] = useState(false)
+  const handleSuccessClose = () => setSucessShow(false)
+
+  useEffect(() => {
+    props.fetchData({ id: props.data.id, get_group: true, get_lobby: true, get_game: true, currentPage: 'Matchmaking' }).then(result => {
+      console.log('fetched data')
+      props.setData(result)
+    })
+  }, [])
+
+  console.log(props.data.currentPage)
+  if (props.data.currentPage !== 'Matchmaking') {
+    return props.data.LoadingPage(props)
+  }
+  async function makePatchCall (gameName) {
+    try {
+      return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=' + gameName + '&id=' + props.data.id)
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  function addToQueue (gameName) {
+    makePatchCall(gameName).then(result => {
+      if (result.status === 201) {
+        console.log('Added Successfully')
+        window.location.reload(false)
+      } else {
+        console.log('failed to add to queue')
       }
-      
-      fetchUser(props.viewer_id).then( result => {
-         if (result) {
-            setViewUser(result);
-            console.log("got viewer");
-         } else
-            console.log("failed to get user")
-      });
-   }, [props.viewer_id]);
+    })
+  }
 
+  async function newGamePatch () {
+    try {
+      return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + newGame + '&id=' + props.data.id)
+    } catch (error) {
+      console.log(error)
+      return error
+    }
+  }
 
-   async function makePatchCall(){
-      try{
-         return await axios.patch('http://localhost:5000/matchmaking/add-to-queue?game_name=Krunker - Hardpoint&id=' + props.viewer_id);
-      }
-      catch(error){
-         console.log(error)
-         return false
-      }
-   }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(newGame)
+    newGamePatch().then(result => {
+      if (result.status === 201) {
+        setSucessShow('Game sucessfully added')
+        console.log('Added to games table Successfully')
+        window.location.reload(false)
+      } else {
+        console.log(result.error)
+        setErrorShow('Failed to add game')
+      } // error check for bad game name vs inable to insert
+    })
+  }
 
-   function addToQueue() {
-      makePatchCall().then( result => {
-         if (result.status === 201) {
-            console.log('Added Successfully')
-            window.location.reload(false);
-         } else
-            console.log('failed to add to queue')
-      });
-   }
-
-
-   if (viewUser.data === undefined || viewUser.data.in_queue === false)
-      return <div> 
-         <CustomNavbar setToken={(id) => props.setToken(id)} viewer_id={props.viewer_id}/>
-         <Container fluid> 
+  if (props.data.user === null || props.data.user.in_queue === false) {
+    return <div>
+      <CustomNavbar setToken={(id) => props.setToken(id)} user={props.data.user}/>
+      <Container fluid>
+        <Row>
+          <Col className="side-col" />
+          <Col xs={8} className="main-col pr-0">
             <Row>
-               <Col className="side-col" />
-               <Col xs={8} className="main-col pr-0">
-                  <Row>
-                     <Col>
-                        <Dropdown>
-                        </Dropdown>
-                        <DropdownButton id="dropdown-basic-button" title="Select Game">
-                           <Dropdown.Item onClick={addToQueue}>Krunker - Hardpoint</Dropdown.Item>
-                        </DropdownButton>
-                        {/*<Button variant="outline-primary">Add New Game</Button>{' '}*/}
-                     </Col>
-                     <Col md={3}>
-                        <FriendBar _id={props.viewer_id} />
-                     </Col>
-                  </Row>
-               </Col>
-               <Col className="side-col" />
+              <Col>
+                <Dropdown>
+                </Dropdown>
+                <DropdownButton id="dropdown-basic-button" title="Select Game">
+                  <Dropdown.Item onClick={() => addToQueue('Krunker - Hardpoint')}>Krunker - Hardpoint</Dropdown.Item>
+                  <Dropdown.Item onClick={() => addToQueue('Skribbl.io')}>Skribbl.io</Dropdown.Item>
+                </DropdownButton>
+              </Col>
+              <Col>
+                <Row>
+                  <Col></Col>
+                  <Col>
+                    <select className="mb-3 bg-white" onChange={(e) => setNewGame(e.target.value)}>
+                    <option value="none" selected disabled hidden>
+                      Select Game to Add
+                      </option>
+                      <option value="Krunker - Hardpoint">Krunker - Hardpoint</option>
+                      <option value="Skribbl.io">Skribbl.io</option>
+                    </select>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col></Col>
+                  <Col>
+                  <Button block type="submit" onClick = {handleSubmit}>Add New Game</Button>
+                  </Col>
+                </Row>
+              </Col>
+              <Col md={3}>
+                <FriendBar data={props.data}/>
+              </Col>
             </Row>
-         </Container>
-      </div>;
+          </Col>
+          <Col className="side-col" />
+        </Row>
+         <Modal show={showError} onHide={handleErrorClose}>
+         <Modal.Header closeButton>
+            <Modal.Title>Error!</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+            {showError}
+         </Modal.Body>
+         </Modal>
 
-   return <Queue viewer_id={props.viewer_id} setToken={props.setToken} match_id={viewUser.data.lobby}/>
+         <Modal show={showSucess} onHide={handleSuccessClose}>
+         <Modal.Header closeButton>
+            <Modal.Title>Success!</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+            {showSucess}
+         </Modal.Body>
+         </Modal>
+      </Container>
+    </div>
+  }
+
+  return <Queue data={props.data} setToken={props.setToken} fetchData={props.fetchData} setData={props.setData} pageName={'Matchmaking'}/>
 }
- 
-export default Matchmaking;
+
+export default Matchmaking
