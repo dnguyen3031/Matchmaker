@@ -332,6 +332,9 @@ class MyTestCase(unittest.TestCase):
         with app.app_context():
             assert get_lobby_delete("60240d8261cfcfb0e9a958cc") != None
 
+    def test_end_lobby_patch(self):
+        with app.app_context():
+            assert end_lobby_patch("60240d8261cfcfb0e9a958cc") != None
 
     def test_get_game_get(self):
         with app.app_context():
@@ -352,13 +355,16 @@ class MyTestCase(unittest.TestCase):
             assert get_discord_get(None) != None
             assert get_discord_get("60240d8261cfcfb0e9a958ca") != None
 
-
     def test_get_discord_patch(self):
         change = {
             "status" : "open"
         }
         with app.app_context():
             assert get_discord_patch("6081b22d21529f0c00073c5b", change) != None
+
+    def test_leave_queue_patch(self):
+        with app.app_context():
+            assert leave_queue_patch("60abefd1771783071dda65bd") != None
 
     def test_get_users_post_test(self):
         with app.app_context():
