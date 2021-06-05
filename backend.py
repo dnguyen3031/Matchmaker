@@ -529,25 +529,29 @@ def remove_group_from_all_queues(group):
         del group
     return removed
 
-@app.route('/queue', methods=['DELETE'])
-def leave_queue():
-    if request.method == 'DELETE':
-        print("removing from queue")
-        user_id = request.args.get('user_id')
-        user = User({"_id": user_id})
-        if user.reload():
-            print(user['group'])
-            print("user:", user)
-            current_group = Group({"_id": user['group']})
-            if current_group.reload():
-                print("checking games")
-                success = remove_group_from_all_queues(current_group)
-                if success:
-                    return jsonify({"success": "User removed from queue"}), 204
-                else:
-                    return jsonify({"error": "User's group not found in queues"}), 404
+
+def leave_queue_patch(user_id):
+    print("removing from queue")
+    user = User({"_id": user_id})
+    if user.reload():
+        print(user['group'])
+        print("user:", user)
+        current_group = Group({"_id": user['group']})
+        if current_group.reload():
+            print("checking games")
+            success = remove_group_from_all_queues(current_group)
+            if success:
+                return jsonify({"success": "User removed from queue"}), 204
             else:
-                return jsonify({"error": "User's group not found"}), 404
+                return jsonify({"error": "User's group not found in queues"}), 404
+        else:
+            return jsonify({"error": "User's group not found"}), 404
+
+
+@app.route('/queue', methods=['PATCH'])
+def leave_queue():
+    if request.method == 'PATCH':
+        return leave_queue_patch(request.args.get('user_id'))
     return jsonify({"error": "User not found"}), 404
 
 
