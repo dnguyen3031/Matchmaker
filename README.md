@@ -68,10 +68,10 @@ Now, you can type "eslint file1.js file2.js" to check styles
 ![309_cypress_test_2](https://user-images.githubusercontent.com/26192953/120852725-727f1d00-c52f-11eb-9c40-51eb0e9eb481.png)
 ![309_cypress_test_3](https://user-images.githubusercontent.com/26192953/120852735-757a0d80-c52f-11eb-8120-d9b1f2a54de1.png)
 
-## Code Coverage Report (50% coverage met)
+## Backend Code Coverage Report (50% coverage met)
+![final_cc](https://user-images.githubusercontent.com/55599092/120875191-74f96b00-c55f-11eb-8e62-0ab3603a7949.jpg)
+obtained after running backend_tests.py, suitable_lobby_tests.py, and team_assignment_tests.py
 
-![matchmen_50coverage](https://user-images.githubusercontent.com/26192953/120853057-f5a07300-c52f-11eb-9f6c-db095931a5a5.JPG)
-![Screenshot 2021-06-04 161637](https://user-images.githubusercontent.com/55599092/120872792-8a1ccc80-c554-11eb-8bf1-d1adcd297dd8.jpg)
 
 
 
