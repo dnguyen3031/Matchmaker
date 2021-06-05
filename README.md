@@ -20,7 +20,7 @@ git clone https://github.com/dnguyen3031/Matchmaker.git
 1. activate virtual environment
 2. start-backend.bat
 
-###Managing CI/CD
+####Managing CI/CD
 
 Any changes are to be merged into branches Heroku-Frontend, and Heroku-Backend. The self-deployment will take care of the rest.
 
@@ -42,6 +42,7 @@ will run fully
 coverage run backend_tests.py
 coverage report backend.py
 ```
+Screenshot proof of passing tests are at the bottom of the readme
 
 #### For Future Collaborators:
 
