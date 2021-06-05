@@ -22,7 +22,7 @@ function Queue (props) {
   }
   async function makeDeleteCallQueue () {
     try {
-      return await axios.delete('http://localhost:5000/queue?user_id=' + props.data.id) /*props.data.lobby._id?*/
+      return await axios.delete('https://matchmaker-backend01.herokuapp.com/queue?user_id=' + props.data.id) /*props.data.lobby._id?*/
     } catch (error) {
       console.log(error)
       return false
@@ -31,7 +31,7 @@ function Queue (props) {
 
   async function makePatchCallUsers (change) {
     try {
-      return await axios.patch('http://localhost:5000/users/' + props.data.id, change)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/users/' + props.data.id, change)
     } catch (error) {
       console.log(error)
       return false

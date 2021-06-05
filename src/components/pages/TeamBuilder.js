@@ -61,7 +61,7 @@ function TeamBuilder (props) {
 
   async function makeSubmitResultsPatchCall (change) {
     try {
-      const result = await axios.patch('http://localhost:5000/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id, change)
+      const result = await axios.patch('https://matchmaker-backend01.herokuapp.com/lobbies/submit-results?lobby_id=' + props.data.lobby._id + '&id=' + props.data.id, change)
       setTimeout(() => { window.location.reload(false) }, 5000)
       return result
     } catch (error) {

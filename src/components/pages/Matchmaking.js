@@ -53,7 +53,7 @@ function Matchmaking (props) {
 
   async function newGamePatch () {
     try {
-      return await axios.patch('http://localhost:5000/matchmaking/add-new-game?game_name=' + newGame + '&id=' + props.data.id)
+      return await axios.patch('https://matchmaker-backend01.herokuapp.com/matchmaking/add-new-game?game_name=' + newGame + '&id=' + props.data.id)
     } catch (error) {
       console.log(error)
       return error
